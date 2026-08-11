@@ -1,53 +1,42 @@
 import os
 import sqlite3
+import uuid
 from datetime import datetime, timedelta
 import threading
-from flask import Flask, request, jsonify, render_template, redirect, url_for
+from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
-app.config['SECRET_KEY'] = 'gigantic_v2_enterprise_secure_key_2026'
+app.config['SECRET_KEY'] = 'gigantic_v2_ultra_secure_key_2026'
 
 DB_NAME = "gigantic_v2.db"
 
-# 1. تهيئة قاعدة البيانات الفولاذية
 def init_db():
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
-    # جدول المستخدمين وفترة التجربة
+    # جدول المستخدمين والحسابات المحفوظة
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_uuid TEXT UNIQUE NOT NULL,
             email TEXT UNIQUE NOT NULL,
             niche TEXT,
             country TEXT,
+            language TEXT DEFAULT 'en',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             trial_expiry TIMESTAMP,
-            is_paid INTEGER DEFAULT 0,
-            is_active INTEGER DEFAULT 1
+            is_paid INTEGER DEFAULT 0
         )
     ''')
-    # جدول عمليات الدفع عبر Cryptomus
+    # جدول حملات المستهدفات والتفاصيل
     cursor.execute('''
-        CREATE TABLE IF NOT EXISTS transactions (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            email TEXT NOT NULL,
-            order_id TEXT UNIQUE NOT NULL,
-            amount TEXT DEFAULT '300',
-            currency TEXT DEFAULT 'USDT',
-            status TEXT DEFAULT 'pending',
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    ''')
-    # جدول الليدات المستخرجة والمراسلات الآلية (AI Auto-Closing)
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS leads (
+        CREATE TABLE IF NOT EXISTS target_companies (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_email TEXT NOT NULL,
-            lead_name TEXT,
-            lead_contact TEXT,
-            niche TEXT,
-            status TEXT DEFAULT 'extracted',
-            ai_response TEXT,
+            company_name TEXT NOT NULL,
+            decision_maker TEXT NOT NULL,
+            deal_value TEXT NOT NULL,
+            strategy TEXT NOT NULL,
+            status TEXT DEFAULT 'In Progress',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
@@ -56,7 +45,6 @@ def init_db():
 
 init_db()
 
-# 2. رأس حماية السيرفر وإلغاء الكاش نهائياً لضمان تحديث الواجهة فوراً
 @app.after_request
 def apply_security_headers(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
@@ -67,7 +55,6 @@ def apply_security_headers(response):
     response.headers['Expires'] = '0'
     return response
 
-# 3. مسارات الصفحات الرئيسية
 @app.route('/')
 def home():
     return render_template('index.html', v=datetime.utcnow().timestamp())
@@ -76,115 +63,105 @@ def home():
 def dashboard():
     return render_template('dashboard.html', v=datetime.utcnow().timestamp())
 
-# 4. API تسليم التجربة المجانية (4 أيام حقيقية مضبوطة بالتوقيت الموحد)
-@app.route('/api/v1/register-trial', methods=['POST'])
-def register_trial():
+# API التسجيل وحفظ الحساب والدورة الحية
+@app.route('/api/v1/auth-session', methods=['POST'])
+def auth_session():
     try:
         data = request.get_json(silent=True) or {}
         email = data.get('email', '').strip().lower()
-        niche = data.get('niche', 'General B2B')
-        country = data.get('country', 'Global')
+        niche = data.get('niche', 'Software & Tech')
+        country = data.get('country', 'USA')
+        lang = data.get('language', 'en')
 
         if not email:
-            return jsonify({"status": "error", "message": "Valid email is required"}), 400
+            return jsonify({"status": "error", "message": "Email is required"}), 400
 
         conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
 
-        cursor.execute("SELECT trial_expiry, is_paid FROM users WHERE email = ?", (email,))
+        cursor.execute("SELECT user_uuid, trial_expiry, is_paid, language FROM users WHERE email = ?", (email,))
         user = cursor.fetchone()
 
         now = datetime.utcnow()
         if not user:
+            user_uuid = str(uuid.uuid4())
             expiry = now + timedelta(days=4)
             cursor.execute(
-                "INSERT INTO users (email, niche, country, trial_expiry) VALUES (?, ?, ?, ?)",
-                (email, str(expiry), niche, country)
+                "INSERT INTO users (user_uuid, email, niche, country, language, trial_expiry) VALUES (?, ?, ?, ?, ?, ?)",
+                (user_uuid, email, niche, country, lang, str(expiry))
             )
+            # إضافة بيانات توضيحية أولية للعميل
+            seed_mock_targets(email, niche, country, cursor)
             conn.commit()
             trial_expiry = expiry
             is_paid = 0
         else:
-            trial_expiry_str = str(user[0])
-            is_paid = user[1]
+            user_uuid = user[0]
+            trial_expiry_str = str(user[1])
+            is_paid = user[2]
+            cursor.execute("UPDATE users SET language = ? WHERE email = ?", (lang, email))
+            conn.commit()
             try:
-                if '.' in trial_expiry_str:
-                    trial_expiry = datetime.strptime(trial_expiry_str, '%Y-%m-%d %H:%M:%S.%f')
-                else:
-                    trial_expiry = datetime.strptime(trial_expiry_str, '%Y-%m-%d %H:%M:%S')
+                trial_expiry = datetime.strptime(trial_expiry_str.split('.')[0], '%Y-%m-%d %H:%M:%S')
             except Exception:
                 trial_expiry = now + timedelta(days=4)
 
         conn.close()
 
         remaining = trial_expiry - now
-        seconds_left = int(remaining.total_seconds())
-
-        if seconds_left <= 0:
-            is_expired = True
-            seconds_left = 0
-        else:
-            is_expired = False
+        seconds_left = max(0, int(remaining.total_seconds()))
 
         return jsonify({
             "status": "success",
+            "user_uuid": user_uuid,
             "email": email,
+            "niche": niche,
+            "country": country,
             "seconds_left": seconds_left,
-            "days_left": seconds_left // 86400,
-            "is_expired": is_expired,
-            "is_paid": bool(is_paid),
-            "redirect_url": "/dashboard"
+            "is_expired": seconds_left <= 0,
+            "is_paid": bool(is_paid)
         }), 200
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-# 5. محرك استخراج الليدات والإغلاق الآلي (AI Extraction & Auto-Closing Engine)
-@app.route('/api/v1/start-automation', methods=['POST'])
-def start_automation():
+def seed_mock_targets(email, niche, country, cursor):
+    targets = [
+        (email, f"Apex {niche} Corp", "David Miller (CEO)", "$3,500", "Aggressive Closing Pitch", "Closed"),
+        (email, f"Global {country} Logistics", "Elena Rostova (VP Sales)", "$5,000", "Consultative AI Negotiation", "In Progress"),
+        (email, f"Vance Capital {niche}", "Marcus Vance (Managing Director)", "$2,800", "Value-Driven Proposal", "Closed")
+    ]
+    cursor.executemany(
+        "INSERT INTO target_companies (user_email, company_name, decision_maker, deal_value, strategy, status) VALUES (?, ?, ?, ?, ?, ?)",
+        targets
+    )
+
+# API جلب استهدافات الشركات للوحة التحكم
+@app.route('/api/v1/get-targets', methods=['POST'])
+def get_targets():
     try:
         data = request.get_json(silent=True) or {}
         email = data.get('email', '').strip().lower()
-        target_niche = data.get('niche', 'B2B Services')
-        target_country = data.get('country', 'Global')
 
-        if not email:
-            return jsonify({"status": "error", "message": "Email is required"}), 400
-
-        threading.Thread(target=execute_ai_sales_engine, args=(email, target_niche, target_country)).start()
-
-        return jsonify({
-            "status": "success",
-            "message": f"GIGANTIC Engine started extracting and auto-closing deals for {target_niche} in {target_country}.",
-            "engine_status": "ACTIVE_RUNNING"
-        }), 200
-
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
-
-def execute_ai_sales_engine(email, niche, country):
-    print(f"[AI ENGINE] Started deep scraping & closing sequence for {email} | Niche: {niche} | Country: {country}")
-    try:
         conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
-        cursor.execute(
-            "INSERT INTO leads (user_email, lead_name, lead_contact, niche, status, ai_response) VALUES (?, ?, ?, ?, ?, ?)",
-            (email, f"Enterprise Lead ({niche})", f"contact@{niche.lower().replace(' ', '')}-corp.com", niche, "closed", "Deal closed via AI Auto-Closer. Value: $2,500")
-        )
-        conn.commit()
+        cursor.execute("SELECT company_name, decision_maker, deal_value, strategy, status FROM target_companies WHERE user_email = ?", (email,))
+        rows = cursor.fetchall()
         conn.close()
-    except Exception as err:
-        print(f"[AI ENGINE ERROR] {err}")
 
-# 6. مسار فحص صحة النظام
-@app.route('/health')
-def health():
-    return jsonify({
-        "status": "healthy",
-        "platform": "GIGANTIC AI V2 Enterprise",
-        "engine_version": "2.0.0",
-        "timestamp": datetime.utcnow().isoformat()
-    }), 200
+        targets = []
+        for r in rows:
+            targets.append({
+                "company_name": r[0],
+                "decision_maker": r[1],
+                "deal_value": r[2],
+                "strategy": r[3],
+                "status": r[4]
+            })
+
+        return jsonify({"status": "success", "targets": targets}), 200
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))

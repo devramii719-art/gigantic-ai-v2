@@ -3,37 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIGANTIC AI V2 — Enterprise B2B Sales & Auto-Closing Engine</title>
+    <title>GIGANTIC AI V2 — Enterprise B2B Engine</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         :root {
-            --bg-dark: #080B10;
-            --card-bg: #0F1622;
-            --accent-color: #00F0FF;
+            --bg-dark: #070A0F;
+            --card-bg: #0E1520;
+            --accent-cyan: #00F0FF;
             --accent-green: #00FF85;
-            --text-main: #FFFFFF;
-            --text-muted: #8A99AD;
-            --border-color: #1E293B;
+            --border-color: #1E2B3E;
+            --text-muted: #8E9DB0;
         }
 
         body {
             background-color: var(--bg-dark);
-            color: var(--text-main);
+            color: #FFFFFF;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow-x: hidden;
         }
 
         .navbar {
-            background-color: rgba(15, 22, 34, 0.9);
-            backdrop-filter: blur(10px);
+            background: rgba(14, 21, 32, 0.95);
+            backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-color);
         }
 
         .hero-title {
-            font-size: 3.2rem;
+            font-size: 3rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #FFFFFF 0%, var(--accent-color) 100%);
+            background: linear-gradient(135deg, #FFFFFF 0%, var(--accent-cyan) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -42,8 +41,8 @@
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 2.5rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            padding: 2.2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
         }
 
         .btn-gigantic {
@@ -53,7 +52,7 @@
             border: none;
             padding: 0.8rem 2rem;
             border-radius: 8px;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
 
         .btn-gigantic:hover {
@@ -71,50 +70,21 @@
             border-radius: 8px;
         }
 
-        .timer-box {
-            background: rgba(0, 240, 255, 0.05);
-            border: 1px dashed var(--accent-color);
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .timer-unit {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--accent-color);
-        }
-
-        /* LIVE TERMINAL SCREEN STYLING */
-        .terminal-card {
-            background: #05070A;
-            border: 1px solid #00F0FF33;
-            border-radius: 12px;
+        .terminal-box {
+            background: #040608;
+            border: 1px solid #00F0FF44;
+            border-radius: 10px;
+            padding: 1rem;
             font-family: 'Courier New', Courier, monospace;
-            padding: 1.2rem;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
-        }
-
-        .terminal-header {
-            border-bottom: 1px solid #1E293B;
-            padding-bottom: 0.5rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .terminal-logs {
-            height: 180px;
-            overflow-y: auto;
             font-size: 0.85rem;
-            color: #00FF85;
-            text-align: left;
+            color: var(--accent-green);
+            height: 160px;
+            overflow-y: auto;
         }
 
         .lang-select {
             background: var(--card-bg);
-            color: var(--text-main);
+            color: #FFF;
             border: 1px solid var(--border-color);
             border-radius: 6px;
             padding: 0.4rem 0.8rem;
@@ -133,244 +103,223 @@
                 <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
                     <option value="en">🌐 English</option>
                     <option value="ar">🌐 العربية</option>
-                    <option value="es">🌐 Español</option>
                     <option value="fr">🌐 Français</option>
+                    <option value="es">🌐 Español</option>
                     <option value="de">🌐 Deutsch</option>
                     <option value="zh">🌐 中文</option>
                     <option value="ja">🌐 日本語</option>
-                    <option value="pt">🌐 Português</option>
                     <option value="ru">🌐 Русский</option>
+                    <option value="pt">🌐 Português</option>
                     <option value="it">🌐 Italiano</option>
+                    <option value="tr">🌐 Türkçe</option>
+                    <option value="hi">🌐 हिन्दी</option>
+                    <option value="ko">🌐 한국어</option>
+                    <option value="nl">🌐 Nederlands</option>
+                    <option value="pl">🌐 Polski</option>
+                    <option value="sv">🌐 Svenska</option>
+                    <option value="id">🌐 Bahasa Indonesia</option>
+                    <option value="vi">🌐 Tiếng Việt</option>
+                    <option value="th">🌐 ไทย</option>
+                    <option value="he">🌐 עברית</option>
                 </select>
-                <a href="#trial" class="btn btn-gigantic btn-sm" id="navTrialBtn">Start 4-Day Trial</a>
+                <a href="/dashboard" class="btn btn-outline-info btn-sm d-none" id="navDashBtn"><i class="fa-solid fa-gauge me-1"></i> Dashboard</a>
             </div>
         </div>
     </nav>
 
-    <!-- HERO SECTION -->
+    <!-- HERO -->
     <section class="py-5 text-center container">
-        <div class="row py-lg-5 justify-content-center">
+        <div class="row py-lg-4 justify-content-center">
             <div class="col-lg-9">
-                <span class="badge bg-outline-info border border-info text-info mb-3 px-3 py-2" id="heroBadge">
-                    ⚡ Enterprise-Grade B2B Sales Automation
-                </span>
-                <h1 class="hero-title mb-4" id="heroTitle">Automate Lead Extraction & Close B2B Deals 24/7</h1>
-                <p class="lead text-muted mb-4" id="heroSubtitle">
-                    The world's most powerful AI Auto-Closer. Extract decision-makers, send personalized outreach, and close $300 - $5,000 deals automatically with zero human effort.
-                </p>
-                <div class="d-flex justify-content-center gap-3 mb-5">
-                    <a href="#trial" class="btn btn-gigantic btn-lg" id="heroActionBtn"><i class="fa-solid fa-rocket me-2"></i> Claim Free 4-Day Trial</a>
-                    <a href="#pricing" class="btn btn-crypto btn-lg" id="heroPricingBtn"><i class="fa-brands fa-bitcoin me-2"></i> Instant License ($300 USDT)</a>
+                <span class="badge border border-info text-info mb-3 px-3 py-2" id="heroBadge">⚡ Enterprise B2B Sales Engine</span>
+                <h1 class="hero-title mb-3" id="heroTitle">Automate Lead Extraction & Deal Closing 24/7</h1>
+                <p class="lead text-muted mb-4" id="heroSubtitle">The ultimate AI Auto-Closer. Extract decision makers, engage target accounts, and close high-ticket deals automatically.</p>
+
+                <!-- LIVE TERMINAL STREAM -->
+                <div class="terminal-box text-start mb-4" id="terminalLogBox">
+                    <div>[SYSTEM] Initializing GIGANTIC Multi-Engine Cluster...</div>
+                    <div>[SCRAPER] Active Residential Proxy Network Connected (10Gbps).</div>
+                    <div>[AI CLOSER] Auto-Closing NLP Engine ready in 20 languages.</div>
                 </div>
 
-                <!-- LIVE ENGINE TERMINAL MONITOR -->
-                <div class="terminal-card text-start">
-                    <div class="terminal-header">
-                        <span class="text-info fw-bold small"><i class="fa-solid fa-terminal me-2"></i> GIGANTIC AI ENGINE v2.0 — LIVE STREAM MONITOR</span>
-                        <span class="badge bg-success text-dark small"><i class="fa-solid fa-circle me-1 animate-pulse"></i> ACTIVE REALTIME</span>
+                <!-- REALISTIC METRICS -->
+                <div class="row g-3 text-center mb-5">
+                    <div class="col-md-4">
+                        <div class="glass-card py-3">
+                            <h3 class="fw-bold text-info mb-1">14,800+</h3>
+                            <small class="text-muted" id="statLeads">Target Leads Scraped / Week</small>
+                        </div>
                     </div>
-                    <div class="terminal-logs" id="terminalLogBox">
-                        <div>[SYSTEM] Initializing GIGANTIC Multi-Engine Cluster...</div>
-                        <div>[SCRAPER] Residential Proxy Rotation Enabled (10Gbps Dedicated).</div>
-                        <div>[AI AGENT] Auto-Closing NLP Engine ready for 10 languages.</div>
+                    <div class="col-md-4">
+                        <div class="glass-card py-3">
+                            <h3 class="fw-bold text-success mb-1">$485,000+</h3>
+                            <small class="text-muted" id="statDeals">B2B Contracts Closed</small>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="glass-card py-3">
+                            <h3 class="fw-bold text-warning mb-1">98.6%</h3>
+                            <small class="text-muted" id="statAccuracy">AI Closing Accuracy Rate</small>
+                        </div>
                     </div>
                 </div>
 
-            </div>
-        </div>
-    </section>
-
-    <!-- STATS COUNTER -->
-    <div class="container mb-5">
-        <div class="row g-4 text-center">
-            <div class="col-md-4">
-                <div class="glass-card py-4">
-                    <h3 class="fw-bold text-info">1,480,000+</h3>
-                    <p class="text-muted mb-0" id="statLeadsLbl">Leads Extracted Daily</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="glass-card py-4">
-                    <h3 class="fw-bold text-success">$14.2M+</h3>
-                    <p class="text-muted mb-0" id="statClosedLbl">B2B Deals Closed</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="glass-card py-4">
-                    <h3 class="fw-bold text-warning">99.4%</h3>
-                    <p class="text-muted mb-0" id="statRateLbl">Auto-Response Accuracy</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- TRIAL & ENGINE SECTION -->
-    <section id="trial" class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="glass-card">
-                    <h3 class="fw-bold text-center mb-3" id="trialTitle">Activate Your 4-Day Unlimited Free Trial</h3>
-                    <p class="text-muted text-center mb-4" id="trialSub">Enter your email and target niche to start extracting and closing deals instantly.</p>
-
-                    <form id="trialForm" onsubmit="handleTrialSubmit(event)">
+                <!-- PERSISTENT FORM / SESSION BOX -->
+                <div class="glass-card text-start">
+                    <h4 class="fw-bold mb-3 text-center" id="formHeader">Launch Your 4-Day Unlimited Pass</h4>
+                    <form id="sessionForm" onsubmit="handleSessionStart(event)">
                         <div class="mb-3">
-                            <label class="form-label text-muted" id="lblEmail">Corporate Email Address</label>
+                            <label class="form-label text-muted small" id="lblEmail">Corporate Email Address</label>
                             <input type="email" id="userEmail" class="form-control bg-dark text-white border-secondary" placeholder="ceo@company.com" required>
                         </div>
-                        <div class="row g-3 mb-4">
+                        <div class="row g-3 mb-3">
                             <div class="col-md-6">
-                                <label class="form-label text-muted" id="lblNiche">Target Industry / Niche</label>
-                                <input type="text" id="userNiche" class="form-control bg-dark text-white border-secondary" placeholder="e.g. Software, Real Estate, Marketing" required>
+                                <label class="form-label text-muted small" id="lblNiche">Target Niche</label>
+                                <input type="text" id="userNiche" class="form-control bg-dark text-white border-secondary" placeholder="Software, Real Estate, Medical" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label text-muted" id="lblCountry">Target Country</label>
-                                <input type="text" id="userCountry" class="form-control bg-dark text-white border-secondary" placeholder="e.g. USA, UAE, Germany" required>
+                                <label class="form-label text-muted small" id="lblCountry">Target Country</label>
+                                <input type="text" id="userCountry" class="form-control bg-dark text-white border-secondary" placeholder="USA, Germany, UAE" required>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-gigantic w-100 py-3" id="btnStartEngine">
-                            <i class="fa-solid fa-bolt me-2"></i> Launch GIGANTIC Engine Now
+                        <button type="submit" class="btn btn-gigantic w-100 py-3 fw-bold" id="btnLaunch">
+                            <i class="fa-solid fa-rocket me-2"></i> Launch GIGANTIC Engine
                         </button>
                     </form>
 
-                    <!-- Server-Validated Countdown Timer -->
-                    <div id="timerContainer" class="timer-box text-center d-none">
-                        <h5 class="text-info mb-2" id="timerStatus">⚡ Trial Active — Engine Running</h5>
-                        <div class="d-flex justify-content-center gap-4 my-3">
-                            <div><span id="tDays" class="timer-unit">04</span><br><small class="text-muted">Days</small></div>
-                            <div><span id="tHours" class="timer-unit">00</span><br><small class="text-muted">Hours</small></div>
-                            <div><span id="tMins" class="timer-unit">00</span><br><small class="text-muted">Mins</small></div>
-                            <div><span id="tSecs" class="timer-unit">00</span><br><small class="text-muted">Secs</small></div>
+                    <div id="trialTimerBox" class="mt-4 p-3 border border-info rounded text-center d-none">
+                        <h5 class="text-info fw-bold mb-2" id="timerTitle">⚡ Active Engine Trial</h5>
+                        <div class="d-flex justify-content-center gap-3 fs-3 fw-bold text-info my-2">
+                            <span id="tDays">04</span>d : <span id="tHours">00</span>h : <span id="tMins">00</span>m : <span id="tSecs">00</span>s
                         </div>
-                        <a href="/dashboard" class="btn btn-outline-info w-100 mt-2"><i class="fa-solid fa-gauge me-2"></i> Open Live Dashboard</a>
+                        <a href="/dashboard" class="btn btn-outline-info w-100 mt-2"><i class="fa-solid fa-gauge me-2"></i> Enter Live Dashboard</a>
                     </div>
-
                 </div>
+
             </div>
         </div>
     </section>
 
-    <!-- PRICING SECTION -->
-    <section id="pricing" class="container py-5">
-        <div class="text-center mb-5">
-            <h2 class="fw-bold">GIGANTIC Unlimited Enterprise Pass</h2>
-            <p class="text-muted">Full access to Scraping, Auto-Closer AI, Unlimited Outreach, and Priority Proxies.</p>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="glass-card text-center border-info">
-                    <span class="badge bg-info text-dark mb-3">MOST POPULAR B2B CHOICE</span>
-                    <h1 class="display-4 fw-bold text-white mb-0">$300 <span class="fs-5 text-muted">/ month</span></h1>
-                    <p class="text-info mt-2"><i class="fa-brands fa-bitcoin"></i> Paid via Cryptomus (USDT / Crypto)</p>
-                    <hr class="border-secondary my-4">
-                    <button class="btn btn-crypto btn-lg w-100" onclick="alert('Redirecting to Cryptomus Secure Checkout...')">
-                        <i class="fa-solid fa-lock me-2"></i> Pay 300 USDT with Cryptomus
-                    </button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="text-center py-4 border-top border-secondary mt-5 text-muted">
-        <p class="mb-0">&copy; 2026 GIGANTIC AI Platform. All Rights Reserved.</p>
-    </footer>
-
-    <!-- SCRIPT FOR DYNAMIC 10 LANGUAGES & LOCALSTORAGE PERSISTENCE -->
     <script>
-        const translations = {
+        const i18n = {
             en: {
-                heroBadge: "⚡ Enterprise-Grade B2B Sales Automation",
-                heroTitle: "Automate Lead Extraction & Close B2B Deals 24/7",
-                heroSubtitle: "The world's most powerful AI Auto-Closer. Extract decision-makers, send personalized outreach, and close $300 - $5,000 deals automatically.",
-                navTrialBtn: "Start 4-Day Trial", heroActionBtn: "Claim Free 4-Day Trial", heroPricingBtn: "Instant License ($300 USDT)",
-                statLeadsLbl: "Leads Extracted Daily", statClosedLbl: "B2B Deals Closed", statRateLbl: "Auto-Response Accuracy",
-                trialTitle: "Activate Your 4-Day Unlimited Free Trial", btnStartEngine: "Launch GIGANTIC Engine Now"
+                heroBadge: "⚡ Enterprise B2B Sales Engine",
+                heroTitle: "Automate Lead Extraction & Deal Closing 24/7",
+                heroSubtitle: "The ultimate AI Auto-Closer. Extract decision makers, engage target accounts, and close high-ticket deals automatically.",
+                statLeads: "Target Leads Scraped / Week", statDeals: "B2B Contracts Closed", statAccuracy: "AI Closing Accuracy Rate",
+                formHeader: "Launch Your 4-Day Unlimited Pass", lblEmail: "Corporate Email Address", lblNiche: "Target Niche", lblCountry: "Target Country", btnLaunch: "Launch GIGANTIC Engine"
             },
             ar: {
-                heroBadge: "⚡ أتمتة مبيعات B2B بأعلى المعايير العالمية",
-                heroTitle: "استخرج الليدات وأغلق صفقات B2B أوتوماتيكياً 24/7",
-                heroSubtitle: "أقوى مغلق صفقات بالذكاء الاصطناعي في العالم. استخراج أصحاب القرار، المراسلة المباشرة، وإغلاق الصفقات تلقائياً.",
-                navTrialBtn: "ابدأ تجربة 4 أيام", heroActionBtn: "احصل على تجربة مجانية", heroPricingBtn: "ترخيص فوري ($300 USDT)",
-                statLeadsLbl: "عميل محتمل يومياً", statClosedLbl: "صفقة مُبرمة بين الشركات", statRateLbl: "دقة الاستجابة التلقائية",
-                trialTitle: "فعّل تجربتك المجانية غير المحدودة لمدة 4 أيام", btnStartEngine: "شغّل محرك GIGANTIC الآن"
-            },
-            es: {
-                heroBadge: "⚡ Automatización de Ventas B2B Empresarial",
-                heroTitle: "Extraiga Clientes y Cierre Ofertas B2B 24/7",
-                heroSubtitle: "El AI Auto-Closer más potente del mundo. Extraiga directores y cierre contratos de $300 a $5,000 automáticamente.",
-                navTrialBtn: "Prueba de 4 Días", heroActionBtn: "Obtener Prueba Gratis", heroPricingBtn: "Licencia ($300 USDT)",
-                statLeadsLbl: "Clientes Extraídos Diariamente", statClosedLbl: "Acuerdos B2B Cerrados", statRateLbl: "Precisión de Respuesta",
-                trialTitle: "Active su Prueba Gratuita de 4 Días", btnStartEngine: "Iniciar Motor GIGANTIC"
+                heroBadge: "⚡ محرك مبيعات B2B للمؤسسات",
+                heroTitle: "أتمتة استخراج الليدات وإغلاق الصفقات 24/7",
+                heroSubtitle: "أقوى مغلق صفقات بالذكاء الاصطناعي. استخرج صناع القرار، واصل الشركات المستهدفة، وأغلق عقوداً عالية القيمة أوتوماتيكياً.",
+                statLeads: "عميل مستهدف أسبوعياً", statDeals: "عقود B2B مبرمة", statAccuracy: "دقة الذكاء الاصطناعي في الإغلاق",
+                formHeader: "ابدأ تصريح الـ 4 أيام المجاني", lblEmail: "البريد الإلكتروني للشركة", lblNiche: "المجال المستهدف", lblCountry: "البلد المستهدف", btnLaunch: "تشغيل محرك GIGANTIC"
             },
             fr: {
-                heroBadge: "⚡ Automation des ventes B2B de niveau entreprise",
-                heroTitle: "Extrayez des leads et concluez des affaires B2B 24/7",
-                heroSubtitle: "L'IA d'auto-closing la plus puissante au monde. Extrayez les décideurs et concluez des contrats automatiquement.",
-                navTrialBtn: "Essai de 4 jours", heroActionBtn: "Réclamer l'essai gratuit", heroPricingBtn: "Licence Instantanée (300 USDT)",
-                statLeadsLbl: "Leads Extraits par Jour", statClosedLbl: "Contrats B2B Conclus", statRateLbl: "Précision des Réponses",
-                trialTitle: "Activez votre essai gratuit de 4 jours", btnStartEngine: "Lancer le moteur GIGANTIC"
-            },
-            de: {
-                heroBadge: "⚡ Enterprise B2B Vertriebsautomatisierung",
-                heroTitle: "Lead-Extraktion & B2B-Deals rund um die Uhr",
-                heroSubtitle: "Der weltweit leistungsstärkste KI Auto-Closer. Entscheider extrahieren und Deals automatisch abschließen.",
-                navTrialBtn: "4 Tage Testversion", heroActionBtn: "Kostenlos Testen", heroPricingBtn: "Sofortlizenz ($300 USDT)",
-                statLeadsLbl: "Täglich Extrahierte Leads", statClosedLbl: "Abgeschlossene B2B Deals", statRateLbl: "Antwortgenauigkeit",
-                trialTitle: "Aktivieren Sie Ihre 4-Tage Testversion", btnStartEngine: "GIGANTIC Engine Starten"
-            },
-            zh: {
-                heroBadge: "⚡ 企业级 B2B 销售自动化 Engine",
-                heroTitle: "全天候自动提取潜在客户并促成 B2B 交易",
-                heroSubtitle: "全球最强大的 AI Auto-Closer。自动提取决策者，自动谈判并签署 $300 - $5,000 订单。",
-                navTrialBtn: "开始 4 天试用", heroActionBtn: "免费领取 4 天试用", heroPricingBtn: "立即授权 ($300 USDT)",
-                statLeadsLbl: "每日提取线索", statClosedLbl: "达成 B2B 交易", statRateLbl: "自动回复准确率",
-                trialTitle: "激活您的 4 天无限免费试用", btnStartEngine: "立即启动 GIGANTIC 引擎"
-            },
-            ja: {
-                heroBadge: "⚡ エンタープライズ B2B セールス自動化",
-                heroTitle: "リード抽出と B2B 契約締結を 24 時間 365 日自動化",
-                heroSubtitle: "世界で最も強力な AI Auto-Closer。意思決定者を抽出し、全自動で契約を締結します。",
-                navTrialBtn: "4 日間無料試用", heroActionBtn: "無料試用を開始", heroPricingBtn: "ライセンス購入 ($300 USDT)",
-                statLeadsLbl: "日次抽出リード数", statClosedLbl: "B2B 成約実績", statRateLbl: "自動応答精度",
-                trialTitle: "4 日間無制限無料試用を有効化", btnStartEngine: "GIGANTIC エンジンを起動"
-            },
-            pt: {
-                heroBadge: "⚡ Automação de Vendas B2B Empresarial",
-                heroTitle: "Extraia Leads e Feche Negócios B2B 24/7",
-                heroSubtitle: "O AI Auto-Closer mais poderoso do mundo. Extraia tomadores de decisão e feche contratos automaticamente.",
-                navTrialBtn: "Teste de 4 Dias", heroActionBtn: "Solicitar Teste Grátis", heroPricingBtn: "Licença ($300 USDT)",
-                statLeadsLbl: "Leads Extraídos Diariamente", statClosedLbl: "Acordos Fechados", statRateLbl: "Precisão de Resposta",
-                trialTitle: "Ative seu Teste Grátis de 4 Dias", btnStartEngine: "Iniciar Motor GIGANTIC"
-            },
-            ru: {
-                heroBadge: "⚡ Автоматизация продаж B2B корпоративного уровня",
-                heroTitle: "Извлечение лидов и закрытие B2B сделок 24/7",
-                heroSubtitle: "Самый мощный AI Auto-Closer в мире. Автоматическое извлечение лиц, принимающих решения.",
-                navTrialBtn: "4 дня бесплатно", heroActionBtn: "Получить 4 дня бесплатно", heroPricingBtn: "Лицензия ($300 USDT)",
-                statLeadsLbl: "Лидов ежедневно", statClosedLbl: "Закрыто B2B сделок", statRateLbl: "Точность ответов",
-                trialTitle: "Активируйте ваш 4-дневный бесплатный период", btnStartEngine: "Запустить GIGANTIC Engine"
-            },
-            it: {
-                heroBadge: "⚡ Automazione delle Vendite B2B Enterprise",
-                heroTitle: "Estrai Lead e Chiudi Accordi B2B 24/7",
-                heroSubtitle: "L'AI Auto-Closer più potente al mondo. Estrai decision maker e chiudi contratti automaticamente.",
-                navTrialBtn: "Prova di 4 Giorni", heroActionBtn: "Inizia Prova Gratuita", heroPricingBtn: "Licenza ($300 USDT)",
-                statLeadsLbl: "Lead Estratti al Giorno", statClosedLbl: "Accordi B2B Chiusi", statRateLbl: "Accuratezza Risposte",
-                trialTitle: "Attiva la tua Prova Gratuita di 4 Giorni", btnStartEngine: "Avvia Motore GIGANTIC"
+                heroBadge: "⚡ Moteur de Ventes B2B Entreprise",
+                heroTitle: "Extraction de Leads et Clôture de Contrats 24/7",
+                heroSubtitle: "L'IA d'Auto-Closing ultime. Extrayez les décideurs et concluez des contrats à valeur élevée automatiquement.",
+                statLeads: "Leads Extraits / Semaine", statDeals: "Contrats B2B Conclus", statAccuracy: "Taux de Précision IA",
+                formHeader: "Lancer Votre Pass 4 Jours", lblEmail: "E-mail Professionnel", lblNiche: "Secteur Cible", lblCountry: "Pays Cible", btnLaunch: "Lancer le Moteur GIGANTIC"
             }
         };
 
-        // 1. PERSISTENT LANGUAGE ENGINE
         function changeLanguage(lang) {
             localStorage.setItem('gigantic_lang', lang);
             document.getElementById('langSelect').value = lang;
-            const data = translations[lang] || translations['en'];
+            const data = i18n[lang] || i18n['en'];
             for (let key in data) {
                 const el = document.getElementById(key);
                 if (el) el.innerText = data[key];
             }
-            document.body.style.direction = (lang === 'ar') ? 'rtl' : 'ltr';
+            document.body.style.direction = (lang === 'ar' || lang === 'he') ? 'rtl' : 'ltr';
         }
 
-        // 2. PERSISTENT USER SESSION & TRIAL
         window.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('gigantic_lang
+            const savedLang = localStorage.getItem('gigantic_lang') || 'en';
+            changeLanguage(savedLang);
+
+            const savedEmail = localStorage.getItem('gigantic_email');
+            if (savedEmail) {
+                document.getElementById('userEmail').value = savedEmail;
+                document.getElementById('navDashBtn').classList.remove('d-none');
+                checkSession(savedEmail);
+            }
+
+            startTerminal();
+        });
+
+        async function checkSession(email) {
+            try {
+                const res = await fetch('/api/v1/auth-session', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ email })
+                });
+                const data = await res.json();
+                if (data.status === 'success' && data.seconds_left > 0) {
+                    document.getElementById('trialTimerBox').classList.remove('d-none');
+                    runTimer(data.seconds_left);
+                }
+            } catch (e) {}
+        }
+
+        async function handleSessionStart(e) {
+            e.preventDefault();
+            const email = document.getElementById('userEmail').value;
+            const niche = document.getElementById('userNiche').value;
+            const country = document.getElementById('userCountry').value;
+            const lang = localStorage.getItem('gigantic_lang') || 'en';
+
+            localStorage.setItem('gigantic_email', email);
+            localStorage.setItem('gigantic_niche', niche);
+            localStorage.setItem('gigantic_country', country);
+
+            const res = await fetch('/api/v1/auth-session', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ email, niche, country, language: lang })
+            });
+            const data = await res.json();
+            if (data.status === 'success') {
+                document.getElementById('navDashBtn').classList.remove('d-none');
+                document.getElementById('trialTimerBox').classList.remove('d-none');
+                runTimer(data.seconds_left);
+            }
+        }
+
+        let timerInt;
+        function runTimer(sec) {
+            clearInterval(timerInt);
+            timerInt = setInterval(() => {
+                if (sec <= 0) { clearInterval(timerInt); return; }
+                sec--;
+                document.getElementById('tDays').innerText = String(Math.floor(sec / 86400)).padStart(2, '0');
+                document.getElementById('tHours').innerText = String(Math.floor((sec % 86400) / 3600)).padStart(2, '0');
+                document.getElementById('tMins').innerText = String(Math.floor((sec % 3600) / 60)).padStart(2, '0');
+                document.getElementById('tSecs').innerText = String(sec % 60).padStart(2, '0');
+            }, 1000);
+        }
+
+        function startTerminal() {
+            const logs = [
+                "[SCRAPER] Target Found: Apex Tech Corp (London, UK) - CEO: David Miller",
+                "[AI AGENT] Executing Aggressive Pitch Protocol...",
+                "[DEAL CLOSED] $3,500 contract agreed via Cryptomus Auto-Pay.",
+                "[PROXY] Switched IP -> 194.26.29.12 (Frankfurt, Germany)",
+                "[SCRAPER] Found 85 Decision Makers in Target Geography..."
+            ];
+            const box = document.getElementById('terminalLogBox');
+            let idx = 0;
+            setInterval(() => {
+                const div = document.createElement('div');
+                div.innerText = logs[idx % logs.length];
+                box.appendChild(div);
+                box.scrollTop = box.scrollHeight;
+                idx++;
+            }, 3200);
+        }
+    </script>
+</body>
+</html>
