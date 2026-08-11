@@ -4,6 +4,7 @@ monkey.patch_all()
 import os
 import json
 import time
+import sqlite3
 import asyncio
 from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO, emit
@@ -11,7 +12,7 @@ from flask_socketio import SocketIO, emit
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'GIGANTIC_ALIEN_SWARM_SECRET_2026')
 
-# إعداد SocketIO مع إسناد نمط gevent بدلاً من eventlet لضمان التوافقية
+# إعداد SocketIO مع إسناد نمط gevent الاستقراري
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='gevent')
 
 # ====================================================
@@ -54,23 +55,71 @@ class FinanceAgent:
         }
 
 class MemoryAgent:
-    """وكيل الأرشيف والذاكرة المترابطة (Vector Search CRM)"""
-    def __init__(self):
-        self.vector_db = []
+    """وكيل الأرشيف والذاكرة المترابطة مع تخزين دائم باستخدام SQLite"""
+    def __init__(self, db_path="gigantic_memory.db"):
+        self.db_path = db_path
+        self._init_db()
+
+    def _get_connection(self):
+        conn = sqlite3.connect(self.db_path)
+        conn.row_factory = sqlite3.Row
+        return conn
+
+    def _init_db(self):
+        """إنشاء الجدول والفهارس تلقائياً عند التشغيل"""
+        with self._get_connection() as conn:
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS memory_logs (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    vector_id TEXT UNIQUE NOT NULL,
+                    email TEXT NOT NULL,
+                    interaction_type TEXT NOT NULL,
+                    payload TEXT NOT NULL,
+                    timestamp REAL NOT NULL
+                )
+            """)
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_email ON memory_logs(email)")
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_type ON memory_logs(interaction_type)")
+            conn.commit()
 
     def save_context(self, email, interaction_type, payload):
-        entry = {
-            "vector_id": f"vec_{len(self.vector_db) + 1}",
-            "email": email,
-            "type": interaction_type,
-            "payload": payload,
-            "timestamp": time.time()
-        }
-        self.vector_db.append(entry)
-        return entry["vector_id"]
+        """حفظ السياق داخل SQLite مع تشفير البيانات المعقدة كـ JSON"""
+        timestamp = time.time()
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT COUNT(*) FROM memory_logs")
+            count = cursor.fetchone()[0] + 1
+            vector_id = f"vec_{count}"
 
-    def semantic_query(self, limit=10):
-        return self.vector_db[-limit:]
+            cursor.execute("""
+                INSERT INTO memory_logs (vector_id, email, interaction_type, payload, timestamp)
+                VALUES (?, ?, ?, ?, ?)
+            """, (vector_id, email, interaction_type, json.dumps(payload, ensure_ascii=False), timestamp))
+            conn.commit()
+            return vector_id
+
+    def semantic_query(self, limit=10, email=None):
+        """استرجاع سجلات الذاكرة مع إمكانية التصفية ببريد العميل"""
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            if email:
+                cursor.execute("""
+                    SELECT vector_id, email, interaction_type as type, payload, timestamp
+                    FROM memory_logs WHERE email = ? ORDER BY id DESC LIMIT ?
+                """, (email, limit))
+            else:
+                cursor.execute("""
+                    SELECT vector_id, email, interaction_type as type, payload, timestamp
+                    FROM memory_logs ORDER BY id DESC LIMIT ?
+                """, (limit,))
+            
+            rows = cursor.fetchall()
+            results = []
+            for row in rows:
+                item = dict(row)
+                item["payload"] = json.loads(item["payload"])
+                results.append(item)
+            return results
 
 # تهيئة شبكة الوكلاء
 hunter = HunterAgent()
@@ -120,7 +169,7 @@ def run_full_swarm():
             "hunter": hunt_res,
             "closer": close_res,
             "finance": fin_res,
-            "vector_memory_status": "SYNCHRONIZED"
+            "vector_memory_status": "PERSISTED_SQLITE"
         }), 200
 
     except Exception as e:
@@ -128,11 +177,14 @@ def run_full_swarm():
 
 @app.route('/api/v1/memory/logs', methods=['GET'])
 def get_memory_logs():
-    """استرجاع سجلات الذاكرة المترابطة"""
+    """استرجاع سجلات الذاكرة المترابطة من قاعدة بيانات SQLite"""
+    email = request.args.get('email')
+    logs = memory.semantic_query(limit=10, email=email)
+    
     return jsonify({
         "status": "SUCCESS",
-        "total_records": len(memory.vector_db),
-        "logs": memory.semantic_query(10)
+        "returned_records": len(logs),
+        "logs": logs
     }), 200
 
 # المعالجة الصوتية والرسومية المباشرة (Multimodal Low-Latency Stream)
