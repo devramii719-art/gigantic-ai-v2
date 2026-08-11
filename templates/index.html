@@ -3,24 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIGANTIC AI Enterprise — Cinematic Interactive Canvas</title>
+    <title>GIGANTIC AI 2026 — Real-Time Multimodal Canvas</title>
     
     <!-- Bootstrap 5 & FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
-    <!-- Three.js & GSAP Libraries for Sci-Fi Canvas & Smooth Animations -->
+    <!-- Three.js, GSAP & Socket.io for Real-Time Sci-Fi UI -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 
     <style>
         :root {
-            --bg-dark: #030508;
-            --card-glass: rgba(14, 21, 32, 0.55);
-            --border-glow: rgba(0, 240, 255, 0.3);
+            --bg-dark: #020305;
+            --card-glass: rgba(10, 16, 26, 0.65);
+            --border-glow: rgba(0, 240, 255, 0.35);
             --accent-cyan: #00F0FF;
             --accent-green: #00FF85;
-            --accent-purple: #7000FF;
+            --accent-purple: #9D00FF;
         }
 
         body {
@@ -32,7 +33,6 @@
             padding: 0;
         }
 
-        /* WebGL Background Canvas */
         #webgl-bg {
             position: fixed;
             top: 0;
@@ -43,81 +43,74 @@
             pointer-events: none;
         }
 
-        /* Glassmorphism 3.0 UI Cards */
         .glass-panel {
             background: var(--card-glass);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border-glow);
             border-radius: 20px;
             padding: 2rem;
-            box-shadow: 0 8px 32px 0 rgba(0, 240, 255, 0.1);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 32px 0 rgba(0, 240, 255, 0.12);
+            transition: all 0.4s ease;
         }
 
         .glass-panel:hover {
             border-color: var(--accent-cyan);
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
-            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
+            transform: translateY(-4px);
         }
 
         .glass-panel-paid {
             background: rgba(0, 255, 133, 0.05);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(0, 255, 133, 0.4);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 255, 133, 0.5);
             border-radius: 20px;
             padding: 2rem;
-            box-shadow: 0 0 30px rgba(0, 255, 133, 0.15);
+            box-shadow: 0 0 35px rgba(0, 255, 133, 0.2);
         }
 
-        /* Hero Text Glowing Effects */
         .hero-title {
-            font-size: 3.2rem;
+            font-size: 3.3rem;
             font-weight: 900;
             background: linear-gradient(135deg, #FFF 0%, var(--accent-cyan) 50%, var(--accent-purple) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(0, 240, 255, 0.2);
+            text-shadow: 0 0 35px rgba(0, 240, 255, 0.3);
         }
 
-        /* Interactive ROI Simulator Range Slider */
-        .form-range::-webkit-slider-thumb {
-            background: var(--accent-cyan);
-            box-shadow: 0 0 15px var(--accent-cyan);
+        /* 3D Photorealistic Avatar Canvas Container */
+        .avatar-3d-wrapper {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-cyan);
+            box-shadow: 0 0 30px var(--accent-cyan);
+            overflow: hidden;
+            background: radial-gradient(circle, rgba(0,240,255,0.2) 0%, rgba(0,0,0,0.8) 100%);
         }
 
-        /* Sci-Fi Live Terminal Canvas */
+        .avatar-lip-sync-pulse {
+            animation: speakPulse 0.4s infinite alternate ease-in-out;
+        }
+
+        @keyframes speakPulse {
+            0% { transform: scale(1); box-shadow: 0 0 15px var(--accent-cyan); }
+            100% { transform: scale(1.08); box-shadow: 0 0 35px var(--accent-green); }
+        }
+
         .terminal-canvas {
-            background: rgba(4, 6, 8, 0.85);
+            background: rgba(3, 5, 8, 0.9);
             border: 1px solid var(--accent-cyan);
             border-radius: 12px;
             padding: 1rem;
             font-family: 'Courier New', Courier, monospace;
             font-size: 0.85rem;
             color: var(--accent-green);
-            height: 150px;
+            height: 140px;
             overflow-y: auto;
             text-align: left;
             direction: ltr;
-        }
-
-        /* Interactive 3D Avatar Node Container */
-        .avatar-node-box {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            border: 2px solid var(--accent-cyan);
-            box-shadow: 0 0 20px var(--accent-cyan);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 240, 255, 0.1);
-            animation: pulseGlow 2s infinite alternate;
-        }
-
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 10px var(--accent-cyan); }
-            100% { box-shadow: 0 0 25px var(--accent-cyan), 0 0 40px var(--accent-purple); }
         }
 
         .btn-gigantic {
@@ -127,26 +120,26 @@
             border: none;
             padding: 1rem;
             border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
             transition: 0.3s;
         }
 
         .btn-gigantic:hover {
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.8);
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.9);
             transform: scale(1.02);
         }
     </style>
 </head>
 <body>
 
-    <!-- 3D WebGL Background Canvas -->
+    <!-- WebGL Background Particle System Canvas -->
     <canvas id="webgl-bg"></canvas>
 
-    <!-- Top Futuristic Navigation Bar -->
+    <!-- Navigation -->
     <nav class="navbar navbar-expand-lg sticky-top bg-dark bg-opacity-50 border-bottom border-info border-opacity-25 px-4 backdrop-blur">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold text-white d-flex align-items-center gap-2" href="#">
-                <i class="fa-solid fa-atom text-info fa-spin"></i> GIGANTIC <span class="badge bg-info text-dark">AI 3.0</span>
+                <i class="fa-solid fa-atom text-info fa-spin"></i> GIGANTIC <span class="badge bg-info text-dark">AI 2026 REALTIME</span>
             </a>
             <div class="d-flex align-items-center gap-3 ms-auto">
                 <select id="langSelect" class="form-select form-select-sm bg-dark text-info border-info fw-bold" onchange="changeLanguage(this.value)">
@@ -154,43 +147,46 @@
                     <option value="en">🌐 English</option>
                     <option value="fr">🌐 Français</option>
                 </select>
-                <a href="/dashboard" class="btn btn-outline-info btn-sm fw-bold" id="navDashBtn">
+                <a href="/dashboard" class="btn btn-outline-info btn-sm fw-bold">
                     <i class="fa-solid fa-gauge me-1"></i> <span id="txtDashNav">لوحة التحكم</span>
                 </a>
             </div>
         </div>
     </nav>
 
-    <!-- Main Cinematic Layout -->
+    <!-- Main Container -->
     <section class="py-5 container position-relative">
         
-        <!-- Interactive AI Avatar Assistant Bar -->
-        <div class="glass-panel mb-5 p-3 d-flex align-items-center gap-4">
-            <div class="avatar-node-box flex-shrink-0">
-                <i class="fa-solid fa-robot fs-1 text-info"></i>
+        <!-- 1. Real-Time Multimodal AI Avatar Panel -->
+        <div class="glass-panel mb-5 p-4 d-flex align-items-center gap-4">
+            <div class="avatar-3d-wrapper flex-shrink-0 d-flex align-items-center justify-content-center" id="avatarBox">
+                <i class="fa-solid fa-user-astronaut fs-1 text-info" id="avatarIcon"></i>
             </div>
-            <div>
-                <span class="badge bg-info text-dark mb-1" id="avatarBadge">AI Avatar Voice Assistant Active</span>
-                <h5 class="fw-bold mb-1" id="avatarTitle">المساعد الذكي التفاعلي المباشر</h5>
-                <p class="text-muted small mb-0" id="avatarText">أهلاً بك! نظام GIGANTIC AI يعمل الآن في وضع الاستخراج التلقائي. اختر طموحك واستمتع بالمحاكاة الحية.</p>
+            <div class="w-100">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="badge bg-info text-dark" id="avatarBadge">Real-Time Expressive Avatar Active (< 300ms)</span>
+                    <button class="btn btn-sm btn-outline-success fw-bold" onclick="toggleVoiceInteraction()"><i class="fa-solid fa-microphone me-1"></i> <span id="btnMicText">تحدث صوتياً الآن</span></button>
+                </div>
+                <h5 class="fw-bold mb-1" id="avatarTitle">الصورة الرمزية التفاعلية الصوتية والمرئية</h5>
+                <p class="text-muted small mb-0" id="avatarText">أهلاً بك! المساعد المتكلم يستمع إليك بدعم التكيف التلقائي مع لهجتك وسياقك الثقافي ومعالجة الصوت فائقة السرعة.</p>
             </div>
         </div>
 
         <div class="row justify-content-center text-center">
             <div class="col-lg-11">
-                <span class="badge border border-info text-info mb-3 px-3 py-2" id="heroBadge">⚡ منصة أتمتة الصفقات التفاعلية Cinematic UI</span>
+                <span class="badge border border-info text-info mb-3 px-3 py-2" id="heroBadge">⚡ منصة أتمتة الصفقات السينمائية — جيل 2026</span>
                 <h1 class="hero-title mb-3" id="heroTitle">أتمتة استخراج العملاء وإتمام العقود 24/7</h1>
-                <p class="lead text-muted mb-4" id="heroSubtitle">واجهة الجيل القادم القائمة على الرسوم ثلاثية الأبعاد والمحاكاة التفاعلية المباشرة.</p>
+                <p class="lead text-muted mb-4" id="heroSubtitle">إدارة CRM ذكية، ذاكرة متجهة فائقة Vector Search، ووكلاء ذاتيون لإغلاق الصفقات تلقائياً.</p>
 
-                <!-- Live Pipeline Visualizer Canvas -->
+                <!-- Live Pipeline Canvas -->
                 <div class="mb-4">
-                    <canvas id="pipelineCanvas" height="100" class="w-100 rounded border border-info border-opacity-25"></canvas>
+                    <canvas id="pipelineCanvas" height="90" class="w-100 rounded border border-info border-opacity-25"></canvas>
                 </div>
 
                 <!-- Live Logs Terminal -->
                 <div class="terminal-canvas mb-5" id="terminalLogBox">
-                    <div>[SYSTEM] Three.js WebGL Engine Initialized Successfully...</div>
-                    <div>[AI AGENT] Neural Proxy Network Listening on 12 Global Regions...</div>
+                    <div>[VECTOR MEMORY] Qdrant Engine Syncing Omnichannel Records...</div>
+                    <div>[AUTONOMOUS AGENT] Agent Evaluated Dialect: Optimal Negotiation Match Found.</div>
                 </div>
 
                 <!-- Interactive ROI Simulator Section -->
@@ -216,14 +212,13 @@
                     </div>
                 </div>
 
-                <!-- Action Cards -->
-                <div class="row g-4 text-start" id="cardsContainer">
-                    
+                <!-- Forms & Subscription Cards -->
+                <div class="row g-4 text-start">
                     <!-- Free Trial Form -->
                     <div class="col-md-6">
                         <div class="glass-panel h-100">
                             <h4 class="fw-bold mb-3 text-info" id="trialTitle"><i class="fa-solid fa-gift me-2"></i> التجربة المجانية (4 أيام)</h4>
-                            <p class="text-muted small mb-3" id="trialSub">أدخل بياناتك لتشغيل المحرك وحفظ الحساب تلقائياً.</p>
+                            <p class="text-muted small mb-3" id="trialSub">أدخل بياناتك لتشغيل المحرك وحفظ الحساب تلقائياً في الذاكرة المتجهة.</p>
 
                             <form id="sessionForm" onsubmit="handleSessionStart(event)">
                                 <div class="mb-3">
@@ -236,20 +231,19 @@
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label text-muted small" id="lblCountry">البلد المستهدف</label>
-                                    <input type="text" id="userCountry" class="form-control bg-dark text-white border-secondary" placeholder="الولايات المتحدة، الإمارات، ألمانيا" required onkeyup="autoSaveInputs()" onchange="autoSaveInputs()">
+                                    <input type="text" id="userCountry" class="form-control bg-dark text-white border-secondary" placeholder="الولايات المتحدة، الإمارات، الجزائر" required onkeyup="autoSaveInputs()" onchange="autoSaveInputs()">
                                 </div>
                                 <button type="submit" class="btn btn-gigantic w-100 fw-bold" id="btnStartTrial">
                                     <i class="fa-solid fa-rocket me-2"></i> <span id="txtBtnTrial">تفعيل التجربة المجانية</span>
                                 </button>
                             </form>
 
-                            <!-- Timer Box -->
                             <div id="trialTimerBox" class="mt-4 glass-panel p-3 text-center d-none">
                                 <h6 class="text-info fw-bold mb-2" id="txtTrialActive">⚡ التجربة نشطة محلياً ومحفوظة</h6>
                                 <div class="d-flex justify-content-center gap-2 fs-3 fw-bold text-info my-2" dir="ltr">
                                     <span id="tDays">04</span>d : <span id="tHours">00</span>h : <span id="tMins">00</span>m : <span id="tSecs">00</span>s
                                 </div>
-                                <a href="/dashboard" class="btn btn-sm btn-outline-info w-100 mt-2" id="btnGoDashTimer">
+                                <a href="/dashboard" class="btn btn-sm btn-outline-info w-100 mt-2">
                                     <i class="fa-solid fa-gauge me-1"></i> <span id="txtGoDash">الدخول للوحة التحكم</span>
                                 </a>
                             </div>
@@ -262,15 +256,15 @@
                             <div>
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <h4 class="fw-bold text-success mb-0" id="paidTitle"><i class="fa-solid fa-crown me-2"></i> باقة المؤسسات غير المحدودة</h4>
-                                    <span class="badge bg-success text-dark fw-bold">Enterprise</span>
+                                    <span class="badge bg-success text-dark fw-bold">Enterprise 2026</span>
                                 </div>
-                                <p class="text-muted small mb-3" id="paidSub">الخيار الأكثر شيوعاً بين شركات B2B</p>
+                                <p class="text-muted small mb-3" id="paidSub">الخيار الأكثر شيوعاً بين شركات B2B العالمية</p>
                                 <h2 class="fw-bold my-3 text-white">$300 <span class="fs-6 text-muted" id="paidPerMonth">/ شهرياً</span></h2>
                                 <ul class="list-unstyled text-muted small mb-4">
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="feat1">وصول كامل واستخرج غير محدود للبيانات</span></li>
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="feat2">محرك الذكاء الاصطناعي للإغلاق بـ 20 لغة</span></li>
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="feat3">تدوير وكلاء ورسائل غير محدودة</span></li>
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="feat4">أولوية السيرفرات والدعم الفني 24/7</span></li>
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="feat1">ذاكرة متجهة عملاقة Meta-Grade CRM Vector Memory</span></li>
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="feat2">مساعد صوتي ثلاثي الأبعاد بلغة ولهجة العميل</span></li>
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="feat3">وكلاء ذاتيون Autonomous Agents لإتمام العقود</span></li>
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="feat4">تشفير تام وتكامل آلي مع Gmail وCryptomus</span></li>
                                 </ul>
                             </div>
                             <button onclick="handleCryptoPayment()" class="btn btn-success w-100 fw-bold py-3 mt-3">
@@ -278,16 +272,17 @@
                             </button>
                         </div>
                     </div>
-
                 </div>
 
             </div>
         </div>
     </section>
 
-    <!-- JavaScript Engines: Three.js Particles, Canvas Pipeline, ROI Math & Translations -->
+    <!-- Scripts -->
     <script>
-        // --- 1. Three.js Background Particle Engine ---
+        const socket = io();
+
+        // --- Three.js Background ---
         let scene, camera, renderer, particles;
         function initThree() {
             const canvas = document.getElementById('webgl-bg');
@@ -296,109 +291,97 @@
             renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
 
-            const count = 700;
+            const count = 900;
             const geometry = new THREE.BufferGeometry();
             const positions = new Float32Array(count * 3);
-            const colors = new Float32Array(count * 3);
-
             for(let i = 0; i < count * 3; i++) {
                 positions[i] = (Math.random() - 0.5) * 15;
-                colors[i] = Math.random();
             }
-
             geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-            const material = new THREE.PointsMaterial({
-                size: 0.03,
-                vertexColors: true,
-                transparent: true,
-                opacity: 0.8
-            });
-
+            const material = new THREE.PointsMaterial({ size: 0.035, color: 0x00F0FF, transparent: true, opacity: 0.7 });
             particles = new THREE.Points(geometry, material);
             scene.add(particles);
             camera.position.z = 5;
 
             function animate() {
                 requestAnimationFrame(animate);
-                particles.rotation.x += 0.0005;
-                particles.rotation.y += 0.0008;
+                particles.rotation.x += 0.0006;
+                particles.rotation.y += 0.0009;
                 renderer.render(scene, camera);
             }
             animate();
         }
 
-        window.addEventListener('resize', () => {
-            if (camera && renderer) {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            }
-        });
-
-        // --- 2. Live Pipeline Canvas Engine ---
+        // --- Live Pipeline Canvas ---
         function initPipelineCanvas() {
             const canvas = document.getElementById('pipelineCanvas');
             const ctx = canvas.getContext('2d');
             let offset = 0;
-
             function draw() {
                 canvas.width = canvas.offsetWidth;
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-
                 ctx.strokeStyle = '#00F0FF';
                 ctx.lineWidth = 2;
                 ctx.setLineDash([8, 8]);
                 ctx.lineDashOffset = -offset;
-
                 ctx.beginPath();
                 ctx.moveTo(30, canvas.height / 2);
                 ctx.lineTo(canvas.width - 30, canvas.height / 2);
                 ctx.stroke();
 
-                // Draw Animated Nodes
                 const nodes = [0.1, 0.35, 0.65, 0.9];
                 nodes.forEach((pos, idx) => {
-                    const x = canvas.width * pos;
-                    const y = canvas.height / 2;
-
                     ctx.fillStyle = idx === 3 ? '#00FF85' : '#00F0FF';
                     ctx.beginPath();
-                    ctx.arc(x, y, 8, 0, Math.PI * 2);
+                    ctx.arc(canvas.width * pos, canvas.height / 2, 8, 0, Math.PI * 2);
                     ctx.fill();
-
-                    ctx.shadowColor = ctx.fillStyle;
-                    ctx.shadowBlur = 10;
                 });
-
-                offset += 0.5;
+                offset += 0.6;
                 requestAnimationFrame(draw);
             }
             draw();
         }
 
-        // --- 3. ROI Simulator Math ---
+        // --- Voice & Avatar Lip-Sync Interaction ---
+        function toggleVoiceInteraction() {
+            const avatarBox = document.getElementById('avatarBox');
+            avatarBox.classList.add('avatar-lip-sync-pulse');
+            
+            socket.emit('realtime_audio_stream', { chunk: "audio_bytes_data" });
+            socket.emit('trigger_autonomous_action', { 
+                prompt: "أغلق الصفقة الآن مع العميل", 
+                country: document.getElementById('userCountry').value || "Global" 
+            });
+
+            setTimeout(() => {
+                avatarBox.classList.remove('avatar-lip-sync-pulse');
+            }, 3000);
+        }
+
+        socket.on('autonomous_agent_update', (data) => {
+            const box = document.getElementById('terminalLogBox');
+            const div = document.createElement('div');
+            div.innerText = `[AUTONOMOUS AGENT] Decision: ${data.decision} (${data.detected_tone})`;
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        });
+
+        // --- ROI Calculator ---
         function updateROICalculator(val) {
             document.getElementById('slideValDisplay').innerText = parseInt(val).toLocaleString();
-            // المعادلة: كل 1000 عميل يستخرجون صفقات بقيمة 1500 دولار تقريبياً
             let estRevenue = Math.floor((val / 1000) * 1500);
             document.getElementById('estRevVal').innerText = '$' + estRevenue.toLocaleString();
         }
 
-        // --- 4. Translations Dictionary ---
+        // Translations & AutoSave
         const translations = {
             ar: {
                 txtDashNav: "لوحة التحكم",
-                avatarBadge: "المساعد الذكي التفاعلي شغال",
-                avatarTitle: "المساعد الرقمي المباشر",
-                avatarText: "أهلاً بك! نظام GIGANTIC AI يعمل الآن في وضع الاستخراج التلقائي. اختر طموحك واستمتع بالمحاكاة الحية.",
-                heroBadge: "⚡ منصة أتمتة الصفقات التفاعلية Cinematic UI",
+                avatarBadge: "المساعد المباشر نشط (< 300ms)",
+                btnMicText: "تحدث صوتياً الآن",
+                avatarTitle: "الصورة الرمزية التفاعلية الصوتية والمرئية",
+                avatarText: "أهلاً بك! المساعد المتكلم يستمع إليك بدعم التكيف التلقائي مع لهجتك وسياقك الثقافي.",
+                heroBadge: "⚡ منصة أتمتة الصفقات السينمائية — جيل 2026",
                 heroTitle: "أتمتة استخراج العملاء وإتمام العقود 24/7",
-                heroSubtitle: "واجهة الجيل القادم القائمة على الرسوم ثلاثية الأبعاد والمحاكاة التفاعلية المباشرة.",
-                roiTitle: "محاكي الأرباح والصفقات المباشر (ROI Simulator)",
-                roiSub: "اسحب الشريط أدناه لرؤية الأرباح التقديرية التي يمكن للمنصة تحقيقها لك تلقائياً:",
-                lblVolume: "عدد العملاء المستهدفين أسبوعياً:",
-                txtEstRevenue: "العقود المتوقعة شهرياً:",
-                txtRevBadge: "عائد استثمار متوقع +7500%",
-                trialTit
+                heroSubtitle: "إدارة CRM ذكية، ذاكرة متجهة فائقة Vector Search، ووكلاء ذاتيون لإغلاق الصفقات تلقائياً.",
+                roiTitle: "محاكي الأرباح والصفقات المباشر (ROI Simulato
