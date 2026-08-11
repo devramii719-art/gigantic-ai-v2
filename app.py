@@ -2,7 +2,6 @@ import os
 import sqlite3
 import uuid
 from datetime import datetime, timedelta
-import threading
 from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
@@ -13,7 +12,6 @@ DB_NAME = "gigantic_v2.db"
 def init_db():
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
-    # جدول المستخدمين والحسابات المحفوظة
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -21,13 +19,12 @@ def init_db():
             email TEXT UNIQUE NOT NULL,
             niche TEXT,
             country TEXT,
-            language TEXT DEFAULT 'en',
+            language TEXT DEFAULT 'ar',
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             trial_expiry TIMESTAMP,
             is_paid INTEGER DEFAULT 0
         )
     ''')
-    # جدول حملات المستهدفات والتفاصيل
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS target_companies (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -50,9 +47,6 @@ def apply_security_headers(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
-    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate, max-age=0'
-    response.headers['Pragma'] = 'no-cache'
-    response.headers['Expires'] = '0'
     return response
 
 @app.route('/')
@@ -63,15 +57,14 @@ def home():
 def dashboard():
     return render_template('dashboard.html', v=datetime.utcnow().timestamp())
 
-# API التسجيل وحفظ الحساب والدورة الحية
 @app.route('/api/v1/auth-session', methods=['POST'])
 def auth_session():
     try:
-        data = request.get_json(silent=True) or {}
+        data = request.get_json(force=True, silent=True) or {}
         email = data.get('email', '').strip().lower()
         niche = data.get('niche', 'Software & Tech')
         country = data.get('country', 'USA')
-        lang = data.get('language', 'en')
+        lang = data.get('language', 'ar')
 
         if not email:
             return jsonify({"status": "error", "message": "Email is required"}), 400
@@ -79,7 +72,7 @@ def auth_session():
         conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
 
-        cursor.execute("SELECT user_uuid, trial_expiry, is_paid, language FROM users WHERE email = ?", (email,))
+        cursor.execute("SELECT user_uuid, trial_expiry, is_paid FROM users WHERE email = ?", (email,))
         user = cursor.fetchone()
 
         now = datetime.utcnow()
@@ -90,8 +83,16 @@ def auth_session():
                 "INSERT INTO users (user_uuid, email, niche, country, language, trial_expiry) VALUES (?, ?, ?, ?, ?, ?)",
                 (user_uuid, email, niche, country, lang, str(expiry))
             )
-            # إضافة بيانات توضيحية أولية للعميل
-            seed_mock_targets(email, niche, country, cursor)
+            # إضافة بيانات توضيحية للعميل
+            targets = [
+                (email, f"Apex {niche} Corp", "David Miller (CEO)", "$3,500", "Aggressive Pitch", "Closed"),
+                (email, f"Global {country} Logistics", "Elena Rostova (VP Sales)", "$5,000", "Consultative Negotiation", "In Progress"),
+                (email, f"Vance Capital {niche}", "Marcus Vance (Managing Director)", "$2,800", "Value Proposal", "Closed")
+            ]
+            cursor.executemany(
+                "INSERT INTO target_companies (user_email, company_name, decision_maker, deal_value, strategy, status) VALUES (?, ?, ?, ?, ?, ?)",
+                targets
+            )
             conn.commit()
             trial_expiry = expiry
             is_paid = 0
@@ -99,7 +100,7 @@ def auth_session():
             user_uuid = user[0]
             trial_expiry_str = str(user[1])
             is_paid = user[2]
-            cursor.execute("UPDATE users SET language = ? WHERE email = ?", (lang, email))
+            cursor.execute("UPDATE users SET language = ?, niche = ?, country = ? WHERE email = ?", (lang, niche, country, email))
             conn.commit()
             try:
                 trial_expiry = datetime.strptime(trial_expiry_str.split('.')[0], '%Y-%m-%d %H:%M:%S')
@@ -125,22 +126,10 @@ def auth_session():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
-def seed_mock_targets(email, niche, country, cursor):
-    targets = [
-        (email, f"Apex {niche} Corp", "David Miller (CEO)", "$3,500", "Aggressive Closing Pitch", "Closed"),
-        (email, f"Global {country} Logistics", "Elena Rostova (VP Sales)", "$5,000", "Consultative AI Negotiation", "In Progress"),
-        (email, f"Vance Capital {niche}", "Marcus Vance (Managing Director)", "$2,800", "Value-Driven Proposal", "Closed")
-    ]
-    cursor.executemany(
-        "INSERT INTO target_companies (user_email, company_name, decision_maker, deal_value, strategy, status) VALUES (?, ?, ?, ?, ?, ?)",
-        targets
-    )
-
-# API جلب استهدافات الشركات للوحة التحكم
 @app.route('/api/v1/get-targets', methods=['POST'])
 def get_targets():
     try:
-        data = request.get_json(silent=True) or {}
+        data = request.get_json(force=True, silent=True) or {}
         email = data.get('email', '').strip().lower()
 
         conn = sqlite3.connect(DB_NAME)
