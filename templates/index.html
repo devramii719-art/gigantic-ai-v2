@@ -14,34 +14,93 @@
             --accent-green: #00FF85;
             --border-color: #1E2B3E;
         }
-        body { background-color: var(--bg-dark); color: #FFF; font-family: 'Segoe UI', Tahoma, sans-serif; overflow-x: hidden; }
-        .hero-title { font-size: 2.8rem; font-weight: 800; background: linear-gradient(135deg, #FFF 0%, var(--accent-cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .glass-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
-        .glass-card-paid { background: var(--card-bg); border: 1px solid var(--accent-green); border-radius: 16px; padding: 2rem; box-shadow: 0 10px 30px rgba(0, 255, 133, 0.15); }
-        .btn-gigantic { background: linear-gradient(135deg, #00F0FF 0%, #0072FF 100%); color: #000; font-weight: 700; border: none; padding: 0.9rem; border-radius: 8px; }
-        .btn-crypto { background: linear-gradient(135deg, #00FF85 0%, #00A859 100%); color: #000; font-weight: 700; border: none; padding: 0.9rem; border-radius: 8px; }
-        .terminal-box { background: #040608; border: 1px solid #00F0FF44; border-radius: 10px; padding: 1rem; font-family: monospace; font-size: 0.85rem; color: var(--accent-green); height: 160px; overflow-y: auto; text-align: left; direction: ltr; }
-        .timer-badge { background: rgba(0, 240, 255, 0.1); border: 1px solid var(--accent-cyan); border-radius: 10px; padding: 1rem; }
+        body { 
+            background-color: var(--bg-dark); 
+            color: #FFF; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            overflow-x: hidden; 
+        }
+        .hero-title { 
+            font-size: 2.8rem; 
+            font-weight: 800; 
+            background: linear-gradient(135deg, #FFF 0%, var(--accent-cyan) 100%); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+        }
+        .glass-card { 
+            background: var(--card-bg); 
+            border: 1px solid var(--border-color); 
+            border-radius: 16px; 
+            padding: 2rem; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
+        }
+        .glass-card-paid { 
+            background: var(--card-bg); 
+            border: 1px solid var(--accent-green); 
+            border-radius: 16px; 
+            padding: 2rem; 
+            box-shadow: 0 10px 30px rgba(0, 255, 133, 0.15); 
+        }
+        .btn-gigantic { 
+            background: linear-gradient(135deg, #00F0FF 0%, #0072FF 100%); 
+            color: #000; 
+            font-weight: 700; 
+            border: none; 
+            padding: 0.9rem; 
+            border-radius: 8px; 
+        }
+        .btn-crypto { 
+            background: linear-gradient(135deg, #00FF85 0%, #00A859 100%); 
+            color: #000; 
+            font-weight: 700; 
+            border: none; 
+            padding: 0.9rem; 
+            border-radius: 8px; 
+        }
+        .terminal-box { 
+            background: #040608; 
+            border: 1px solid #00F0FF44; 
+            border-radius: 10px; 
+            padding: 1rem; 
+            font-family: monospace; 
+            font-size: 0.85rem; 
+            color: var(--accent-green); 
+            height: 160px; 
+            overflow-y: auto; 
+            text-align: left; 
+            direction: ltr; 
+        }
+        .timer-badge { 
+            background: rgba(0, 240, 255, 0.1); 
+            border: 1px solid var(--accent-cyan); 
+            border-radius: 10px; 
+            padding: 1rem; 
+        }
     </style>
 </head>
 <body>
 
+    <!-- الشريط العلوي Navigation Bar -->
     <nav class="navbar navbar-expand-lg sticky-top bg-dark border-bottom border-secondary px-4">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold text-white d-flex align-items-center gap-2" href="#">
                 <i class="fa-solid fa-bolt text-info"></i> GIGANTIC <span class="badge bg-info text-dark">AI V2</span>
             </a>
             <div class="d-flex align-items-center gap-3 ms-auto">
-                <select id="langSelect" class="form-select form-select-sm bg-dark text-white border-secondary" onchange="changeLanguage(this.value)">
+                <!-- قائمة تغيير اللغات -->
+                <select id="langSelect" class="form-select form-select-sm bg-dark text-white border-info fw-bold" onchange="changeLanguage(this.value)">
                     <option value="ar">🌐 العربية</option>
                     <option value="en">🌐 English</option>
                     <option value="fr">🌐 Français</option>
                 </select>
-                <a href="/dashboard" class="btn btn-outline-info btn-sm" id="navDashBtn"><i class="fa-solid fa-gauge me-1"></i> <span id="txtDashNav">لوحة التحكم</span></a>
+                <a href="/dashboard" class="btn btn-outline-info btn-sm" id="navDashBtn">
+                    <i class="fa-solid fa-gauge me-1"></i> <span id="txtDashNav">لوحة التحكم</span>
+                </a>
             </div>
         </div>
     </nav>
 
+    <!-- الواجهة الرئيسية Hero Section -->
     <section class="py-5 container">
         <div class="row justify-content-center text-center">
             <div class="col-lg-10">
@@ -49,13 +108,13 @@
                 <h1 class="hero-title mb-3" id="heroTitle">أتمتة استخراج العملاء المحتملين وإتمام الصفقات 24/7</h1>
                 <p class="lead text-muted mb-4" id="heroSubtitle">أقوى نظام إغلاق صفقات آلي يعمل بالذكاء الاصطناعي في العالم. استخرج صناع القرار وأغلق العقود تلقائياً.</p>
 
-                <!-- شاشة البث الحي -->
+                <!-- شاشة البث الحي المباشر -->
                 <div class="terminal-box mb-4" id="terminalLogBox">
                     <div>[SYSTEM] Initializing GIGANTIC Multi-Engine Cluster...</div>
                     <div>[SCRAPER] Residential Proxy Network Connected (10Gbps).</div>
                 </div>
 
-                <!-- الإحصائيات -->
+                <!-- الإحصائيات الحية -->
                 <div class="row g-3 text-center mb-5">
                     <div class="col-md-4">
                         <div class="glass-card py-3">
@@ -78,39 +137,41 @@
                 </div>
 
                 <!-- خيارات التجربة والاشتراك -->
-                <div class="row g-4 text-start">
+                <div class="row g-4 text-start" id="cardsContainer">
                     
-                    <!-- التجربة المجانية -->
+                    <!-- التجربة المجانية (4 أيام) -->
                     <div class="col-md-6">
                         <div class="glass-card h-100">
-                            <h4 class="fw-bold mb-3 text-info"><i class="fa-solid fa-gift me-2"></i> التجربة المجانية (4 أيام)</h4>
-                            <p class="text-muted small mb-3">أدخل بياناتك لتشغيل المحرك وحفظ الحساب تلقائياً.</p>
+                            <h4 class="fw-bold mb-3 text-info" id="trialTitle"><i class="fa-solid fa-gift me-2"></i> التجربة المجانية (4 أيام)</h4>
+                            <p class="text-muted small mb-3" id="trialSub">أدخل بياناتك لتشغيل المحرك وحفظ الحساب تلقائياً.</p>
 
                             <form id="sessionForm" onsubmit="handleSessionStart(event)">
                                 <div class="mb-3">
-                                    <label class="form-label text-muted small">عنوان البريد الإلكتروني للشركة</label>
+                                    <label class="form-label text-muted small" id="lblEmail">عنوان البريد الإلكتروني للشركة</label>
                                     <input type="email" id="userEmail" class="form-control bg-dark text-white border-secondary" placeholder="ceo@company.com" required oninput="autoSaveInputs()">
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label text-muted small">القطاع المستهدف / التخصص</label>
+                                    <label class="form-label text-muted small" id="lblNiche">القطاع المستهدف / التخصص</label>
                                     <input type="text" id="userNiche" class="form-control bg-dark text-white border-secondary" placeholder="البرمجيات، العقارات، التسويق" required oninput="autoSaveInputs()">
                                 </div>
                                 <div class="mb-4">
-                                    <label class="form-label text-muted small">البلد المستهدف</label>
+                                    <label class="form-label text-muted small" id="lblCountry">البلد المستهدف</label>
                                     <input type="text" id="userCountry" class="form-control bg-dark text-white border-secondary" placeholder="الولايات المتحدة، الإمارات، ألمانيا" required oninput="autoSaveInputs()">
                                 </div>
-                                <button type="submit" class="btn btn-gigantic w-100 fw-bold">
-                                    <i class="fa-solid fa-rocket me-2"></i> تفعيل التجربة المجانية
+                                <button type="submit" class="btn btn-gigantic w-100 fw-bold" id="btnStartTrial">
+                                    <i class="fa-solid fa-rocket me-2"></i> <span id="txtBtnTrial">تفعيل التجربة المجانية</span>
                                 </button>
                             </form>
 
                             <!-- العداد التنازلي -->
                             <div id="trialTimerBox" class="mt-4 timer-badge text-center d-none">
-                                <h6 class="text-info fw-bold mb-2">⚡ التجربة نشطة محلياً ومحفوظة</h6>
+                                <h6 class="text-info fw-bold mb-2" id="txtTrialActive">⚡ التجربة نشطة محلياً ومحفوظة</h6>
                                 <div class="d-flex justify-content-center gap-2 fs-3 fw-bold text-info my-2" dir="ltr">
                                     <span id="tDays">04</span>d : <span id="tHours">00</span>h : <span id="tMins">00</span>m : <span id="tSecs">00</span>s
                                 </div>
-                                <a href="/dashboard" class="btn btn-sm btn-outline-info w-100 mt-2"><i class="fa-solid fa-gauge me-1"></i> الدخول للوحة التحكم</a>
+                                <a href="/dashboard" class="btn btn-sm btn-outline-info w-100 mt-2" id="btnGoDashTimer">
+                                    <i class="fa-solid fa-gauge me-1"></i> <span id="txtGoDash">الدخول للوحة التحكم</span>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -120,20 +181,20 @@
                         <div class="glass-card-paid h-100 d-flex flex-column justify-content-between">
                             <div>
                                 <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <h4 class="fw-bold text-success mb-0"><i class="fa-solid fa-crown me-2"></i> باقة المؤسسات غير المحدودة</h4>
+                                    <h4 class="fw-bold text-success mb-0" id="paidTitle"><i class="fa-solid fa-crown me-2"></i> باقة المؤسسات غير المحدودة</h4>
                                     <span class="badge bg-success text-dark fw-bold">Enterprise</span>
                                 </div>
-                                <p class="text-muted small mb-3">الخيار الأكثر شيوعاً بين شركات B2B</p>
-                                <h2 class="fw-bold my-3 text-white">$300 <span class="fs-6 text-muted">/ شهرياً</span></h2>
+                                <p class="text-muted small mb-3" id="paidSub">الخيار الأكثر شيوعاً بين شركات B2B</p>
+                                <h2 class="fw-bold my-3 text-white">$300 <span class="fs-6 text-muted" id="paidPerMonth">/ شهرياً</span></h2>
                                 <ul class="list-unstyled text-muted small mb-4">
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> وصول كامل واستخراج غير محدود للبيانات</li>
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> محرك الذكاء الاصطناعي للإغلاق بـ 20 لغة</li>
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> تدوير وكلاء ورسائل غير محدودة</li>
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> أولوية السيرفرات والدعم الفني 24/7</li>
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="feat1">وصول كامل واستخراج غير محدود للبيانات</span></li>
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="feat2">محرك الذكاء الاصطناعي للإغلاق بـ 20 لغة</span></li>
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="feat3">تدوير وكلاء ورسائل غير محدودة</span></li>
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="feat4">أولوية السيرفرات والدعم الفني 24/7</span></li>
                                 </ul>
                             </div>
-                            <button onclick="alert('سيتم تحويلك لبوابة Cryptomus للدفع التلقائي عبر USDT')" class="btn btn-crypto w-100 fw-bold py-3 mt-3">
-                                <i class="fa-solid fa-wallet me-2"></i> الدفع عبر كريبتوموس ($300 USDT)
+                            <button onclick="handleCryptoPayment()" class="btn btn-crypto w-100 fw-bold py-3 mt-3" id="btnPayCrypto">
+                                <i class="fa-solid fa-wallet me-2"></i> <span id="txtPayCrypto">الدفع عبر كريبتوموس ($300 USDT)</span>
                             </button>
                         </div>
                     </div>
@@ -144,8 +205,141 @@
         </div>
     </section>
 
+    <!-- محرك الترجمة و JavaScript الشامل -->
     <script>
-        // حفظ فوري ومباشر في LocalStorage أثناء الكتابة
+        // قاموس الترجمة الشامل لجميع عناصر الموقع
+        const translations = {
+            ar: {
+                dir: "rtl",
+                txtDashNav: "لوحة التحكم",
+                heroBadge: "⚡ أتمتة مبيعات الشركات (B2B) على مستوى المؤسسات",
+                heroTitle: "أتمتة استخراج العملاء المحتملين وإتمام الصفقات 24/7",
+                heroSubtitle: "أقوى نظام إغلاق صفقات آلي يعمل بالذكاء الاصطناعي في العالم. استخرج صناع القرار وأغلق العقود تلقائياً.",
+                statLeads: "عميل مستهدف أسبوعياً",
+                statDeals: "عقود B2B مبرمة",
+                statAccuracy: "دقة الذكاء الاصطناعي في الإغلاق",
+                trialTitle: "التجربة المجانية (4 أيام)",
+                trialSub: "أدخل بياناتك لتشغيل المحرك وحفظ الحساب تلقائياً.",
+                lblEmail: "عنوان البريد الإلكتروني للشركة",
+                lblNiche: "القطاع المستهدف / التخصص",
+                lblCountry: "البلد المستهدف",
+                txtBtnTrial: "تفعيل التجربة المجانية",
+                txtTrialActive: "⚡ التجربة نشطة محلياً ومحفوظة",
+                txtGoDash: "الدخول للوحة التحكم",
+                paidTitle: "باقة المؤسسات غير المحدودة",
+                paidSub: "الخيار الأكثر شيوعاً بين شركات B2B",
+                paidPerMonth: "/ شهرياً",
+                feat1: "وصول كامل واستخراج غير محدود للبيانات",
+                feat2: "محرك الذكاء الاصطناعي للإغلاق بـ 20 لغة",
+                feat3: "تدوير وكلاء ورسائل غير محدودة",
+                feat4: "أولوية السيرفرات والدعم الفني 24/7",
+                txtPayCrypto: "الدفع عبر كريبتوموس ($300 USDT)",
+                placeEmail: "ceo@company.com",
+                placeNiche: "البرمجيات، العقارات، التسويق",
+                placeCountry: "الولايات المتحدة، الإمارات، ألمانيا",
+                alertPay: "سيتم تحويلك لبوابة Cryptomus للدفع التلقائي عبر USDT"
+            },
+            en: {
+                dir: "ltr",
+                txtDashNav: "Dashboard",
+                heroBadge: "⚡ Enterprise-Grade B2B Sales Automation",
+                heroTitle: "Automated Lead Extraction & Deal Closing 24/7",
+                heroSubtitle: "The world's most powerful AI auto-closing engine. Extract decision-makers and close contracts automatically.",
+                statLeads: "Targeted Leads / Week",
+                statDeals: "B2B Deals Closed",
+                statAccuracy: "AI Closing Accuracy",
+                trialTitle: "4-Day Free Trial",
+                trialSub: "Enter your details to launch the engine & auto-save account.",
+                lblEmail: "Company Email Address",
+                lblNiche: "Target Industry / Niche",
+                lblCountry: "Target Country",
+                txtBtnTrial: "Activate Free Trial",
+                txtTrialActive: "⚡ Trial Active & Saved Locally",
+                txtGoDash: "Go to Dashboard",
+                paidTitle: "Enterprise Unlimited Pass",
+                paidSub: "Most popular choice for B2B growth teams",
+                paidPerMonth: "/ month",
+                feat1: "Full access & unlimited data extraction",
+                feat2: "Multi-language AI closing engine (20+ langs)",
+                feat3: "Unlimited proxy rotation & messaging",
+                feat4: "Priority servers & 24/7 VIP support",
+                txtPayCrypto: "Pay with Cryptomus ($300 USDT)",
+                placeEmail: "ceo@company.com",
+                placeNiche: "Software, Real Estate, Marketing",
+                placeCountry: "USA, UAE, Germany",
+                alertPay: "Redirecting to Cryptomus Gateway for automated $300 USDT payment..."
+            },
+            fr: {
+                dir: "ltr",
+                txtDashNav: "Tableau de bord",
+                heroBadge: "⚡ Automation des Ventes B2B Entreprise",
+                heroTitle: "Extraction de Leads & Clôture de Contrats 24/7",
+                heroSubtitle: "Le moteur de fermeture automatique IA le plus puissant au monde. Extrayez les décisionnaires et concluez automatiquement.",
+                statLeads: "Leads Ciblés / Semaine",
+                statDeals: "Contrats B2B Conclus",
+                statAccuracy: "Précision de Clôture IA",
+                trialTitle: "Essai Gratuit de 4 Jours",
+                trialSub: "Entrez vos coordonnées pour lancer le moteur et sauvegarder votre compte.",
+                lblEmail: "E-mail Professionnel",
+                lblNiche: "Secteur d'Activité / Niche",
+                lblCountry: "Pays Cible",
+                txtBtnTrial: "Activer l'Essai Gratuit",
+                txtTrialActive: "⚡ Essai Actif et Sauvegardé",
+                txtGoDash: "Accéder au Tableau de Bord",
+                paidTitle: "Pass Entreprise Illimité",
+                paidSub: "Le choix le plus populaire pour la croissance B2B",
+                paidPerMonth: "/ mois",
+                feat1: "Accès complet & extraction de données illimitée",
+                feat2: "Moteur IA de clôture multilingue (20+ langues)",
+                feat3: "Rotation de proxys et messages illimités",
+                feat4: "Serveurs prioritaires & support VIP 24/7",
+                txtPayCrypto: "Payer avec Cryptomus ($300 USDT)",
+                placeEmail: "ceo@entreprise.com",
+                placeNiche: "Logiciel, Immobilier, Marketing",
+                placeCountry: "France, Émirats, États-Unis",
+                alertPay: "Redirection vers la passerelle Cryptomus pour le paiement automatique de 300 $ USDT..."
+            }
+        };
+
+        // دالة تغيير اللغة الفورية
+        function changeLanguage(lang) {
+            if (!translations[lang]) lang = 'ar';
+            
+            // حفظ اللغة المختارة محلياً
+            localStorage.setItem('gigantic_lang', lang);
+            document.getElementById('langSelect').value = lang;
+
+            const t = translations[lang];
+
+            // تغيير الاتجاه (RTL / LTR)
+            document.documentElement.setAttribute('dir', t.dir);
+            document.documentElement.setAttribute('lang', lang);
+
+            // تعديل محاذاة البطاقات حسب الاتجاه
+            const cards = document.getElementById('cardsContainer');
+            if (t.dir === 'rtl') {
+                cards.classList.remove('text-end');
+                cards.classList.add('text-start');
+            } else {
+                cards.classList.remove('text-start');
+                cards.classList.add('text-end');
+            }
+
+            // تطبيق الترجمة على كل العناصر النصية
+            for (let id in t) {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.innerText = t[id];
+                }
+            }
+
+            // تغيير الملاحظات داخل الحقول (Placeholders)
+            document.getElementById('userEmail').placeholder = t.placeEmail;
+            document.getElementById('userNiche').placeholder = t.placeNiche;
+            document.getElementById('userCountry').placeholder = t.placeCountry;
+        }
+
+        // الحفظ التلقائي الفوري أثناء الكتابة
         function autoSaveInputs() {
             const email = document.getElementById('userEmail').value;
             const niche = document.getElementById('userNiche').value;
@@ -155,8 +349,13 @@
             if (country) localStorage.setItem('gigantic_country', country);
         }
 
-        // استرجاع البيانات المحفوظة فور فتح الصفحة
+        // عند تحميل الصفحة أول مرة
         window.addEventListener('DOMContentLoaded', () => {
+            // استرجاع اللغة المحفوظة أو استخدام العربية كافتراضية
+            const savedLang = localStorage.getItem('gigantic_lang') || 'ar';
+            changeLanguage(savedLang);
+
+            // استرجاع الحقول المحفوظة
             const savedEmail = localStorage.getItem('gigantic_email');
             const savedNiche = localStorage.getItem('gigantic_niche');
             const savedCountry = localStorage.getItem('gigantic_country');
@@ -176,72 +375,3 @@
                 const res = await fetch('/api/v1/auth-session', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        email: email,
-                        niche: localStorage.getItem('gigantic_niche') || 'Tech',
-                        country: localStorage.getItem('gigantic_country') || 'USA'
-                    })
-                });
-                const data = await res.json();
-                if (data.status === 'success' && data.seconds_left > 0) {
-                    document.getElementById('trialTimerBox').classList.remove('d-none');
-                    runTimer(data.seconds_left);
-                }
-            } catch (e) {
-                console.log("Offline mode/Cache session fallback");
-            }
-        }
-
-        async function handleSessionStart(e) {
-            e.preventDefault();
-            autoSaveInputs();
-            const email = document.getElementById('userEmail').value;
-            const niche = document.getElementById('userNiche').value;
-            const country = document.getElementById('userCountry').value;
-
-            document.getElementById('trialTimerBox').classList.remove('d-none');
-            runTimer(345600); // 4 أيام فورية في المتصفح
-
-            try {
-                await fetch('/api/v1/auth-session', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ email, niche, country })
-                });
-            } catch (err) {}
-        }
-
-        let timerInt;
-        function runTimer(sec) {
-            clearInterval(timerInt);
-            timerInt = setInterval(() => {
-                if (sec <= 0) { clearInterval(timerInt); return; }
-                sec--;
-                document.getElementById('tDays').innerText = String(Math.floor(sec / 86400)).padStart(2, '0');
-                document.getElementById('tHours').innerText = String(Math.floor((sec % 86400) / 3600)).padStart(2, '0');
-                document.getElementById('tMins').innerText = String(Math.floor((sec % 3600) / 60)).padStart(2, '0');
-                document.getElementById('tSecs').innerText = String(sec % 60).padStart(2, '0');
-            }, 1000);
-        }
-
-        function startTerminal() {
-            const logs = [
-                "[SCRAPER] Target Found: Apex Tech Corp (London, UK) - CEO: David Miller",
-                "[AI AGENT] Executing Aggressive Pitch Protocol...",
-                "[DEAL CLOSED] $3,500 contract agreed via Cryptomus Auto-Pay.",
-                "[PROXY] Switched IP -> 194.26.29.12 (Frankfurt, Germany)",
-                "[SCRAPER] Found 85 Decision Makers in Target Geography..."
-            ];
-            const box = document.getElementById('terminalLogBox');
-            let idx = 0;
-            setInterval(() => {
-                const div = document.createElement('div');
-                div.innerText = logs[idx % logs.length];
-                box.appendChild(div);
-                box.scrollTop = box.scrollHeight;
-                idx++;
-            }, 3200);
-        }
-    </script>
-</body>
-</html>
