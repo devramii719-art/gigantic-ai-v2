@@ -135,7 +135,7 @@
                 <i class="fa-solid fa-brain text-info fa-spin"></i> GIGANTIC <span class="badge bg-info text-dark">ALIEN SWARM 2026</span>
             </a>
             <div class="d-flex align-items-center gap-3 ms-auto">
-                <select id="langSelect" class="form-select form-select-sm bg-dark text-info border-info fw-bold" onchange="changeLanguage(this.value)">
+                <select id="langSelect" class="form-select form-select-sm bg-dark text-info border-info fw-bold">
                     <option value="ar">🌐 العربية (الجزائر)</option>
                     <option value="ar-sa">🇸🇦 العربية (السعودية)</option>
                     <option value="ar-ae">🇦🇪 العربية (الإمارات)</option>
@@ -167,7 +167,7 @@
             <div class="w-100">
                 <div class="d-flex justify-content-between align-items-center mb-1">
                     <span class="badge bg-info text-dark" id="avatarStatus">مساعد 3D اللحظي نشط (120ms)</span>
-                    <button class="btn btn-sm btn-outline-success fw-bold" onclick="triggerVoiceTalk()">
+                    <button class="btn btn-sm btn-outline-success fw-bold" id="btnVoiceTalkAction">
                         <i class="fa-solid fa-microphone me-1"></i> <span id="btnTalk">تحدث مع المساعد اللحظي</span>
                     </button>
                 </div>
@@ -195,7 +195,7 @@
                             <div>[CLOSER] Semantic Memory Loaded via Vector DB.</div>
                             <div>[FINANCE] Cryptomus & Stripe Gateway Ready ($300).</div>
                         </div>
-                        <button onclick="runFullSwarmWorkflow()" class="btn btn-alien w-100 mt-3 fw-bold">
+                        <button id="btnRunSwarmAction" class="btn btn-alien w-100 mt-3 fw-bold">
                             <i class="fa-solid fa-bolt me-2"></i> <span id="btnRunSwarm">تشغيل شبكة الوكلاء الآن (Run Swarm)</span>
                         </button>
                     </div>
@@ -209,7 +209,7 @@
                             <p class="text-muted small" id="roiSub">حرك الشريط لرؤية حجم العقود والأرباح المتوقعة التي سيحققها وكلاء النظام لك شهرياً:</p>
                             
                             <label class="form-label text-white fw-bold mb-1" id="lblVolume">عدد العملاء المستهدفين أسبوعياً:</label>
-                            <input type="range" class="form-range mb-3" min="1000" max="200000" step="1000" id="roiSlider" value="25000" oninput="calculateROI(this.value)">
+                            <input type="range" class="form-range mb-3" min="1000" max="200000" step="1000" id="roiSlider" value="25000">
                             <div class="d-flex justify-content-between text-muted small">
                                 <span>1,000</span>
                                 <span class="text-info fw-bold fs-5" id="valDisplay">25,000</span>
@@ -231,7 +231,7 @@
                             <h4 class="fw-bold text-info mb-3" id="trialTitle"><i class="fa-solid fa-gift me-2"></i> فترة تجريبية مجانية (4 أيام)</h4>
                             <p class="text-muted small mb-3" id="trialSub">أدخل بياناتك وسيتم تسجيلك في الذاكرة المترابطة لتشغيل الوكلاء فوراً.</p>
 
-                            <form id="trialForm" onsubmit="submitTrial(event)">
+                            <form id="trialForm">
                                 <div class="mb-3">
                                     <label class="form-label text-muted small" id="lblEmail">البريد الإلكتروني للشركة</label>
                                     <input type="email" id="uEmail" class="form-control bg-dark text-white border-secondary" placeholder="ceo@company.com" required>
@@ -269,10 +269,10 @@
                                 </ul>
                             </div>
                             <div class="d-flex gap-2">
-                                <button onclick="alert('Cryptomus Gateway Active ($300 USDT)')" class="btn btn-success w-100 fw-bold py-3">
+                                <button id="btnPayCrypto" class="btn btn-success w-100 fw-bold py-3">
                                     <i class="fa-solid fa-wallet me-1"></i> Cryptomus (USDT)
                                 </button>
-                                <button onclick="alert('Stripe Gateway Active ($300)')" class="btn btn-outline-info w-100 fw-bold py-3">
+                                <button id="btnPayStripe" class="btn btn-outline-info w-100 fw-bold py-3">
                                     <i class="fa-solid fa-credit-card me-1"></i> Stripe / Card
                                 </button>
                             </div>
@@ -284,109 +284,115 @@
         </div>
     </section>
 
-    <!-- JavaScript Interactive Code -->
+    <!-- JavaScript Execution Engine -->
     <script>
-        const socket = io();
+        document.addEventListener("DOMContentLoaded", function() {
+            // Socket Initialization with Error Catching
+            let socket;
+            try {
+                socket = io();
+            } catch(e) {
+                console.warn("Socket.io fallback active.");
+            }
 
-        window.onload = function() {
+            // Init Graphics
             initBgThree();
             initGlobe();
-        };
 
-        // 1. Background Interactive Particles
-        let scene, camera, renderer, particles;
-        function initBgThree() {
-            const canvas = document.getElementById('bg-canvas');
-            if(!canvas) return;
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-
-            const count = 1200;
-            const geo = new THREE.BufferGeometry();
-            const pos = new Float32Array(count * 3);
-            for(let i=0; i<count*3; i++) pos[i] = (Math.random() - 0.5) * 16;
-            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-
-            const mat = new THREE.PointsMaterial({ size: 0.03, color: 0x00F0FF, transparent: true, opacity: 0.6 });
-            particles = new THREE.Points(geo, mat);
-            scene.add(particles);
-            camera.position.z = 5;
-
-            function animate() {
-                requestAnimationFrame(animate);
-                particles.rotation.x += 0.0005;
-                particles.rotation.y += 0.0008;
-                renderer.render(scene, camera);
-            }
-            animate();
-        }
-
-        // 2. Hologram Wireframe Globe
-        let globeScene, globeCam, globeRenderer, globeSphere;
-        function initGlobe() {
-            const container = document.getElementById('globeBox');
-            if(!container) return;
-            globeScene = new THREE.Scene();
-            globeCam = new THREE.PerspectiveCamera(50, container.offsetWidth / container.offsetHeight, 0.1, 1000);
-            globeRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-            globeRenderer.setSize(container.offsetWidth, container.offsetHeight);
-            container.appendChild(globeRenderer.domElement);
-
-            const geo = new THREE.SphereGeometry(1.8, 32, 32);
-            const mat = new THREE.MeshBasicMaterial({ color: 0x00FF85, wireframe: true, transparent: true, opacity: 0.45 });
-            globeSphere = new THREE.Mesh(geo, mat);
-            globeScene.add(globeSphere);
-            globeCam.position.z = 4.2;
-
-            function animateGlobe() {
-                requestAnimationFrame(animateGlobe);
-                globeSphere.rotation.y += 0.004;
-                globeRenderer.render(globeScene, globeCam);
-            }
-            animateGlobe();
-        }
-
-        // 3. Realtime Voice Speech Engine (المساعد المتكلم الحقيقي)
-        function triggerVoiceTalk() {
-            const box = document.getElementById('avatarContainer');
-            box.classList.add('pulse-speaking');
+            // Direct Event Listeners Setup
+            document.getElementById('btnVoiceTalkAction').addEventListener('click', triggerVoiceTalk);
+            document.getElementById('btnRunSwarmAction').addEventListener('click', runFullSwarmWorkflow);
+            document.getElementById('trialForm').addEventListener('submit', submitTrial);
             
-            socket.emit('realtime_stream_ping', { country: document.getElementById('uCountry').value || 'Global' });
+            document.getElementById('roiSlider').addEventListener('input', function() {
+                calculateROI(this.value);
+            });
 
-            if ('speechSynthesis' in window) {
-                const speech = new SpeechSynthesisUtterance("أهلاً بك يا شريكي، تم تفعيل المساعد الفضائي اللحظي. الذاكرة وشبكة الوكلاء جاهزة للعمل.");
-                speech.lang = 'ar-SA';
-                speech.rate = 0.95;
-                window.speechSynthesis.speak(speech);
+            document.getElementById('langSelect').addEventListener('change', function() {
+                changeLanguage(this.value);
+            });
+
+            document.getElementById('btnPayCrypto').addEventListener('click', function() {
+                alert('Cryptomus Gateway Active ($300 USDT)');
+            });
+
+            document.getElementById('btnPayStripe').addEventListener('click', function() {
+                alert('Stripe Gateway Active ($300)');
+            });
+
+            // 1. Voice Talking Engine
+            function triggerVoiceTalk() {
+                const box = document.getElementById('avatarContainer');
+                box.classList.add('pulse-speaking');
+                
+                if (socket) {
+                    socket.emit('realtime_stream_ping', { country: document.getElementById('uCountry').value || 'Global' });
+                }
+
+                if ('speechSynthesis' in window) {
+                    const speech = new SpeechSynthesisUtterance("أهلاً بك يا شريكي، تم تفعيل المساعد الفضائي اللحظي. الذاكرة وشبكة الوكلاء جاهزة للعمل.");
+                    speech.lang = 'ar-SA';
+                    speech.rate = 0.95;
+                    window.speechSynthesis.speak(speech);
+                }
+
+                setTimeout(() => {
+                    box.classList.remove('pulse-speaking');
+                }, 4000);
             }
 
-            setTimeout(() => {
-                box.classList.remove('pulse-speaking');
-            }, 4000);
-        }
+            if (socket) {
+                socket.on('realtime_stream_pong', (data) => {
+                    const term = document.getElementById('terminalBox');
+                    const d = document.createElement('div');
+                    d.innerText = data.logs;
+                    term.appendChild(d);
+                    term.scrollTop = term.scrollHeight;
+                });
+            }
 
-        socket.on('realtime_stream_pong', (data) => {
-            const term = document.getElementById('terminalBox');
-            const d = document.createElement('div');
-            d.innerText = data.logs;
-            term.appendChild(d);
-            term.scrollTop = term.scrollHeight;
-        });
+            // 2. Swarm Runner
+            async function runFullSwarmWorkflow() {
+                try {
+                    const res = await fetch('/api/v1/swarm/run', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({
+                            email: document.getElementById('uEmail').value || "demo@company.com",
+                            niche: document.getElementById('uNiche').value || "Software",
+                            country: document.getElementById('uCountry').value || "Global"
+                        })
+                    });
+                    const data = await res.json();
+                    const term = document.getElementById('terminalBox');
+                    const d = document.createElement('div');
+                    d.innerHTML = `<span style="color:#00F0FF">[SWARM SUCCESS] Memory logged for ${data.email || 'Lead'}. System Ready.</span>`;
+                    term.appendChild(d);
+                    term.scrollTop = term.scrollHeight;
+                } catch(err) {
+                    console.error(err);
+                }
+            }
 
-        // 4. Run Swarm Direct Button
-        async function runFullSwarmWorkflow() {
-            const res = await fetch('/api/v1/swarm/run', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    email: document.getElementById('uEmail').value || "demo@company.com",
-                    niche: document.getElementById('uNiche').value || "Software",
-                    country: document.getElementById('uCountry').value || "Global"
-                })
-            });
-            const data = await res.json();
-            const term = document.getElementById('terminalBox');
-            const d = document.createElement('div');
-            d.innerHTML = `<span style="color:#00F0FF">[SWARM SUCCESS] Memory logged for ${data.
+            // 3. Form Submit
+            async function submitTrial(e) {
+                e.preventDefault();
+                const alertBox = document.getElementById('trialAlert');
+                const btn = document.getElementById('btnStartTrial');
+                btn.disabled = true;
+
+                const payload = {
+                    email: document.getElementById('uEmail').value,
+                    niche: document.getElementById('uNiche').value,
+                    country: document.getElementById('uCountry').value
+                };
+
+                try {
+                    const res = await fetch('/api/v1/swarm/run', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify(payload)
+                    });
+                    const data = await res.json();
+                    
+                    if(res.ok) {
