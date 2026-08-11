@@ -1,5 +1,5 @@
-import eventlet
-eventlet.monkey_patch()
+from gevent import monkey
+monkey.patch_all()
 
 import os
 import json
@@ -11,8 +11,8 @@ from flask_socketio import SocketIO, emit
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'GIGANTIC_ALIEN_SWARM_SECRET_2026')
 
-# إعداد SocketIO مع إسناد نمط eventlet لبيئة Render اللحظية
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
+# إعداد SocketIO مع إسناد نمط gevent بدلاً من eventlet لضمان التوافقية
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='gevent')
 
 # ====================================================
 # 1. شبكة وكلاء الذكاء الاصطناعي (Multi-Agent Swarm System)
