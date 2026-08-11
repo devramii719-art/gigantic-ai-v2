@@ -3,385 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIGANTIC AI 2026 — Alien Multimodal UI</title>
-    
-    <!-- CSS & Libraries -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
-    <!-- Three.js & Socket.io -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-
+    <title>GIGANTIC ALIEN SWARM 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-alien: #010409;
-            --card-glass: rgba(13, 22, 38, 0.75);
-            --neon-cyan: #00F0FF;
-            --neon-green: #00FF85;
-            --neon-purple: #A000FF;
+            --bg-color: #060913;
+            --card-bg: rgba(18, 26, 43, 0.7);
+            --primary-neon: #00e5ff;
+            --accent-green: #00ff88;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --border-glow: rgba(0, 229, 255, 0.25);
         }
 
-        body {
-            background-color: var(--bg-alien);
-            color: #FFFFFF;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            overflow-x: hidden;
-            margin: 0;
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Tajawal', sans-serif; }
+        body { background: var(--bg-color); color: var(--text-main); padding: 20px; overflow-x: hidden; }
+
+        .glow-bg {
+            position: fixed; top: -10%; left: -10%; width: 120%; height: 120%;
+            background: radial-gradient(circle at 50% 20%, rgba(0,229,255,0.08) 0%, transparent 60%);
+            z-index: -1; pointer-events: none;
         }
 
-        #bg-canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: -1;
-            pointer-events: none;
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            max-width: 1200px; margin: 0 auto 30px auto; padding: 15px 20px;
+            background: var(--card-bg); border: 1px solid var(--border-glow);
+            border-radius: 16px; backdrop-filter: blur(12px);
         }
 
-        .glass-panel {
-            background: var(--card-glass);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            border-radius: 24px;
-            padding: 2rem;
-            box-shadow: 0 10px 40px rgba(0, 240, 255, 0.15);
-            transition: all 0.4s ease;
+        .logo { font-size: 24px; font-weight: 900; letter-spacing: 1px; }
+        .logo span { color: var(--primary-neon); }
+
+        .header-actions { display: flex; align-items: center; gap: 15px; }
+
+        .dashboard-btn {
+            background: rgba(0, 229, 255, 0.1); color: var(--primary-neon);
+            border: 1px solid var(--primary-neon); padding: 10px 18px;
+            border-radius: 10px; font-weight: bold; text-decoration: none;
+            transition: 0.3s; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .dashboard-btn:hover { background: var(--primary-neon); color: #000; box-shadow: 0 0 15px var(--primary-neon); }
+
+        .lang-select {
+            background: #0f172a; color: #fff; border: 1px solid var(--border-glow);
+            padding: 10px 15px; border-radius: 10px; font-weight: bold; cursor: pointer; outline: none;
         }
 
-        .glass-panel:hover {
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 35px rgba(0, 240, 255, 0.4);
-            transform: translateY(-3px);
+        .container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 25px; }
+        @media(min-width: 900px) { .container { grid-template-columns: 1fr 1fr; } }
+
+        .card {
+            background: var(--card-bg); border: 1px solid var(--border-glow);
+            border-radius: 20px; padding: 25px; backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        .hero-title {
-            font-size: 3.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #FFF 0%, var(--neon-cyan) 50%, var(--neon-purple) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 40px rgba(0, 240, 255, 0.4);
+        .full-width { grid-column: 1 / -1; }
+
+        h2, h3 { margin-bottom: 15px; color: #fff; }
+        .badge { display: inline-block; background: rgba(0,255,136,0.15); color: var(--accent-green); padding: 5px 12px; border-radius: 20px; font-size: 13px; font-weight: bold; margin-bottom: 10px; }
+
+        .console-box {
+            background: #020617; border: 1px solid #1e293b; border-radius: 12px;
+            padding: 15px; font-family: monospace; font-size: 13px; color: var(--accent-green);
+            height: 140px; overflow-y: auto; margin-top: 15px;
         }
 
-        .globe-container {
-            width: 100%;
-            height: 280px;
-            position: relative;
-            border-radius: 20px;
-            overflow: hidden;
-            border: 1px solid rgba(0, 255, 133, 0.3);
-            background: rgba(0, 0, 0, 0.5);
-        }
+        .range-slider { width: 100%; margin: 20px 0; accent-color: var(--primary-neon); cursor: pointer; }
 
-        .avatar-glow-ring {
-            width: 110px; height: 110px;
-            border-radius: 50%;
-            border: 2px solid var(--neon-cyan);
-            box-shadow: 0 0 25px var(--neon-cyan);
-            display: flex; align-items: center; justify-content: center;
-            background: radial-gradient(circle, rgba(0,240,255,0.25) 0%, rgba(0,0,0,0.9) 100%);
-        }
+        .roi-display { font-size: 32px; font-weight: 900; color: var(--primary-neon); text-shadow: 0 0 10px rgba(0,229,255,0.5); }
 
-        .pulse-speaking {
-            animation: pulseGlow 0.5s infinite alternate ease-in-out;
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 6px; font-weight: bold; color: var(--text-muted); }
+        .input-group input {
+            width: 100%; padding: 14px; background: #0f172a; border: 1px solid #1e293b;
+            border-radius: 10px; color: #fff; outline: none; transition: 0.3s;
         }
+        .input-group input:focus { border-color: var(--primary-neon); box-shadow: 0 0 10px rgba(0,229,255,0.2); }
 
-        @keyframes pulseGlow {
-            0% { transform: scale(1); box-shadow: 0 0 15px var(--neon-cyan); }
-            100% { transform: scale(1.1); box-shadow: 0 0 35px var(--neon-green); }
+        .btn-submit {
+            width: 100%; padding: 16px; background: linear-gradient(90deg, var(--primary-neon), #0088ff);
+            border: none; border-radius: 12px; color: #000; font-size: 18px; font-weight: 900;
+            cursor: pointer; transition: 0.3s; margin-top: 10px;
         }
+        .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 0 25px rgba(0,229,255,0.6); }
 
-        .terminal-log {
-            background: rgba(2, 6, 12, 0.95);
-            border: 1px solid var(--neon-cyan);
-            border-radius: 14px;
-            padding: 1rem;
-            font-family: monospace;
-            font-size: 0.82rem;
-            color: var(--neon-green);
-            height: 130px;
-            overflow-y: auto;
-            text-align: left;
-            direction: ltr;
-        }
-
-        .btn-alien {
-            background: linear-gradient(135deg, var(--neon-cyan) 0%, #0066FF 100%);
-            color: #000;
-            font-weight: 800;
-            border: none;
-            padding: 1rem;
-            border-radius: 12px;
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
-            transition: 0.3s;
-        }
-
-        .btn-alien:hover {
-            box-shadow: 0 0 45px rgba(0, 240, 255, 1);
-            transform: scale(1.02);
-        }
+        #alertMsg { margin-top: 15px; padding: 12px; border-radius: 10px; display: none; font-weight: bold; text-align: center; }
     </style>
 </head>
 <body>
 
-    <!-- Three.js Background -->
-    <canvas id="bg-canvas"></canvas>
+    <div class="glow-bg"></div>
 
-    <!-- Top Nav -->
-    <nav class="navbar navbar-expand-lg sticky-top bg-dark bg-opacity-50 border-bottom border-info border-opacity-25 px-4 backdrop-blur">
-        <div class="container-fluid">
-            <a class="navbar-brand fw-bold text-white d-flex align-items-center gap-2" href="#">
-                <i class="fa-solid fa-brain text-info fa-spin"></i> GIGANTIC <span class="badge bg-info text-dark">ALIEN SWARM 2026</span>
+    <!-- الشريط العلوي الشامل -->
+    <header class="header">
+        <div class="logo">GIGANTIC <span>ALIEN SWARM 2026</span></div>
+        <div class="header-actions">
+            <!-- زر لوحة التحكم الشغال الشفاف يسار أعلى الصفحة -->
+            <a href="/dashboard" target="_blank" class="dashboard-btn">
+                📊 لوحة التحكم (Dashboard)
             </a>
-            <div class="d-flex align-items-center gap-3 ms-auto">
-                <select id="langSelect" class="form-select form-select-sm bg-dark text-info border-info fw-bold" onchange="changeLanguage(this.value)">
-                    <option value="ar">🌐 العربية</option>
-                    <option value="en">🌐 English</option>
-                    <option value="fr">🌐 Français</option>
-                </select>
-                <a href="/dashboard" class="btn btn-outline-info btn-sm fw-bold">
-                    <i class="fa-solid fa-gauge me-1"></i> <span id="txtNavDash">لوحة التحكم</span>
-                </a>
-            </div>
+            <!-- قائمة الـ 20 لغة -->
+            <select id="languageSelect" class="lang-select">
+                {% for lang in languages %}
+                    <option value="{{ lang.code }}">{{ lang.name }}</option>
+                {% endfor %}
+            </select>
         </div>
-    </nav>
+    </header>
 
-    <!-- Main Section -->
-    <section class="py-5 container">
+    <div class="container">
 
-        <!-- 1. Avatar & Stream Panel -->
-        <div class="glass-panel mb-5 p-4 d-flex align-items-center gap-4">
-            <div class="avatar-glow-ring flex-shrink-0" id="avatarContainer">
-                <i class="fa-solid fa-user-astronaut fs-1 text-info" id="avatarIcon"></i>
-            </div>
-            <div class="w-100">
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                    <span class="badge bg-info text-dark" id="avatarStatus">مساعد 3D اللحظي نشط (120ms)</span>
-                    <button class="btn btn-sm btn-outline-success fw-bold" onclick="triggerVoiceTalk()"><i class="fa-solid fa-microphone me-1"></i> <span id="btnTalk">تحدث مع المساعد اللحظي</span></button>
-                </div>
-                <h5 class="fw-bold mb-1" id="avatarTitle">المساعد المرئي والصوتي اللحظي</h5>
-                <p class="text-muted small mb-0" id="avatarSub">يقوم بتحليل سياق كلامك ولهجتك فوراً ويتخذ القرارات مع شبكة الوكلاء.</p>
-            </div>
-        </div>
-
-        <div class="row justify-content-center text-center">
-            <div class="col-lg-11">
-                <span class="badge border border-info text-info mb-3 px-3 py-2" id="heroBadge">⚡ معمارية الذكاء الاصطناعي الفضائية لعام 2026</span>
-                <h1 class="hero-title mb-3" id="heroTitle">شبكة وكلاء مبيعات ذاتية وإغلاق تلقائي 24/7</h1>
-                <p class="lead text-muted mb-4" id="heroSubtitle">وكلاء Hunter, Closer, Finance, & Memory يعملون بتناغم لإدارة صفقاتك بذكاء متفوق.</p>
-
-                <!-- 2. Hologram Globe & Live Swarm Logs -->
-                <div class="row g-4 mb-5 text-start">
-                    <div class="col-md-7">
-                        <div class="globe-container" id="globeBox"></div>
-                    </div>
-                    <div class="col-md-5 d-flex flex-column justify-content-between">
-                        <div class="terminal-log w-100" id="terminalBox">
-                            <div>[SYSTEM] Multi-Agent Swarm Initialized...</div>
-                            <div>[HUNTER] Scanning B2B Leads Databases...</div>
-                            <div>[CLOSER] Semantic Memory Loaded via Vector DB.</div>
-                            <div>[FINANCE] Cryptomus & Stripe Gateway Ready ($300).</div>
-                        </div>
-                        <button onclick="runFullSwarmWorkflow()" class="btn btn-alien w-100 mt-3 fw-bold">
-                            <i class="fa-solid fa-bolt me-2"></i> <span id="btnRunSwarm">تشغيل شبكة الوكلاء الآن (Run Swarm)</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- 3. Interactive ROI Simulator -->
-                <div class="glass-panel mb-5 text-start">
-                    <div class="row align-items-center">
-                        <div class="col-md-6">
-                            <h4 class="fw-bold text-info mb-2"><i class="fa-solid fa-calculator me-2"></i> <span id="roiTitle">المحاكي التفاعلي للأرباح (ROI Simulator)</span></h4>
-                            <p class="text-muted small" id="roiSub">حرك الشريط لرؤية حجم العقود والأرباح المتوقعة التي سيحققها وكلاء النظام لك شهرياً:</p>
-                            
-                            <label class="form-label text-white fw-bold mb-1" id="lblVolume">عدد العملاء المستهدفين أسبوعياً:</label>
-                            <input type="range" class="form-range mb-3" min="1000" max="200000" step="1000" id="roiSlider" value="25000" oninput="calculateROI(this.value)">
-                            <div class="d-flex justify-content-between text-muted small">
-                                <span>1,000</span>
-                                <span class="text-info fw-bold fs-5" id="valDisplay">25,000</span>
-                                <span>200,000</span>
-                            </div>
-                        </div>
-                        <div class="col-md-6 text-center mt-3 mt-md-0 border-start border-info border-opacity-25">
-                            <small class="text-muted d-block" id="txtRevTitle">تقدير أرباح العقود المغلقة شهرياً:</small>
-                            <h1 class="fw-bold text-success display-3 my-2" id="revVal">$37,500</h1>
-                            <span class="badge bg-success text-dark fw-bold" id="txtRevBadge">عائد استثمار متوقع +12,400%</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 4. Trial & Payment Gateways -->
-                <div class="row g-4 text-start">
-                    <div class="col-md-6">
-                        <div class="glass-panel h-100">
-                            <h4 class="fw-bold text-info mb-3" id="trialTitle"><i class="fa-solid fa-gift me-2"></i> فترة تجريبية مجانية (4 أيام)</h4>
-                            <p class="text-muted small mb-3" id="trialSub">أدخل بياناتك وسيتم تسجيلك في الذاكرة المترابطة لتشغيل الوكلاء فوراً.</p>
-
-                            <form id="trialForm" onsubmit="submitTrial(event)">
-                                <div class="mb-3">
-                                    <label class="form-label text-muted small" id="lblEmail">البريد الإلكتروني للشركة</label>
-                                    <input type="email" id="uEmail" class="form-control bg-dark text-white border-secondary" placeholder="ceo@company.com" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label text-muted small" id="lblNiche">قطاع العمل / المجال</label>
-                                    <input type="text" id="uNiche" class="form-control bg-dark text-white border-secondary" placeholder="التجارة الإلكترونية، العقارات، البرمجيات" required>
-                                </div>
-                                <div class="mb-4">
-                                    <label class="form-label text-muted small" id="lblCountry">البلد المستهدف</label>
-                                    <input type="text" id="uCountry" class="form-control bg-dark text-white border-secondary" placeholder="الولايات المتحدة، الإمارات، الجزائر" required>
-                                </div>
-                                <button type="submit" class="btn btn-alien w-100 fw-bold" id="btnStartTrial">
-                                    <i class="fa-solid fa-rocket me-2"></i> <span id="btnStartTrialText">تفعيل التجربة الفورية (4-Day Free Trial)</span>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="glass-panel border-success h-100 d-flex flex-column justify-content-between">
-                            <div>
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <h4 class="fw-bold text-success mb-0" id="planTitle"><i class="fa-solid fa-crown me-2"></i> باقة المؤسسات العملاقة</h4>
-                                    <span class="badge bg-success text-dark fw-bold">Unlimited 2026</span>
-                                </div>
-                                <p class="text-muted small mb-3" id="planSub">اشتراك شهري شامل لجميع شبكات الوكلاء وبوابات الدفع التلقائية</p>
-                                <h2 class="fw-bold my-3 text-white">$300 <span class="fs-6 text-muted" id="planPer">/ شهرياً</span></h2>
-                                <ul class="list-unstyled text-muted small mb-4">
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="pFeat1">شبكة كاملة من وكلاء الذكاء الاصطناعي (Hunter, Closer, Finance, Memory)</span></li>
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="pFeat2">ذاكرة متجهة عملاقة Qdrant Vector Memory</span></li>
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="pFeat3">مساعد صوتي ثلاثي الأبعاد تفاعلي بلغة العميل</span></li>
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="pFeat4">دفع تلقائي عبر Cryptomus (USDT) وبطاقات Stripe</span></li>
-                                </ul>
-                            </div>
-                            <div class="d-flex gap-2">
-                                <button onclick="payCrypto()" class="btn btn-success w-100 fw-bold py-3">
-                                    <i class="fa-solid fa-wallet me-1"></i> Cryptomus (USDT)
-                                </button>
-                                <button onclick="payStripe()" class="btn btn-outline-info w-100 fw-bold py-3">
-                                    <i class="fa-solid fa-credit-card me-1"></i> Stripe / Card
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- JS Scripts -->
-    <script>
-        const socket = io();
-
-        // 1. Three.js Background Particle System
-        let scene, camera, renderer, particles;
-        function initBgThree() {
-            const canvas = document.getElementById('bg-canvas');
-            scene = new THREE.Scene();
-            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-
-            const count = 1200;
-            const geo = new THREE.BufferGeometry();
-            const pos = new Float32Array(count * 3);
-            for(let i=0; i<count*3; i++) pos[i] = (Math.random() - 0.5) * 16;
-            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-
-            const mat = new THREE.PointsMaterial({ size: 0.03, color: 0x00F0FF, transparent: true, opacity: 0.6 });
-            particles = new THREE.Points(geo, mat);
-            scene.add(particles);
-            camera.position.z = 5;
-
-            function animate() {
-                requestAnimationFrame(animate);
-                particles.rotation.x += 0.0005;
-                particles.rotation.y += 0.0008;
-                renderer.render(scene, camera);
-            }
-            animate();
-        }
-
-        // 2. Hologram Globe
-        let globeScene, globeCam, globeRenderer, globeSphere;
-        function initGlobe() {
-            const container = document.getElementById('globeBox');
-            if(!container) return;
-            globeScene = new THREE.Scene();
-            globeCam = new THREE.PerspectiveCamera(50, container.offsetWidth / container.offsetHeight, 0.1, 1000);
-            globeRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-            globeRenderer.setSize(container.offsetWidth, container.offsetHeight);
-            container.appendChild(globeRenderer.domElement);
-
-            const geo = new THREE.SphereGeometry(1.8, 32, 32);
-            const mat = new THREE.MeshBasicMaterial({ color: 0x00FF85, wireframe: true, transparent: true, opacity: 0.45 });
-            globeSphere = new THREE.Mesh(geo, mat);
-            globeScene.add(globeSphere);
-            globeCam.position.z = 4.2;
-
-            function animateGlobe() {
-                requestAnimationFrame(animateGlobe);
-                globeSphere.rotation.y += 0.004;
-                globeRenderer.render(globeScene, globeCam);
-            }
-            animateGlobe();
-        }
-
-        // 3. Realtime Stream Interaction
-        function triggerVoiceTalk() {
-            const box = document.getElementById('avatarContainer');
-            box.classList.add('pulse-speaking');
+        <!-- بطاقة المساعد 3D والحالة اللحظية -->
+        <div class="card">
+            <span class="badge">🌐 مساعد 3D اللحظي نشط (120ms)</span>
+            <h3>المساعد المرئي والصوتي اللحظي</h3>
+            <p style="color: var(--text-muted);">يقوم بتحليل سياق كلامك ولهجتك فوراً ويتخذ القرارات مع شبكة الوكلاء.</p>
             
-            socket.emit('realtime_stream_ping', { country: document.getElementById('uCountry').value || 'Global' });
+            <div class="console-box" id="consoleLogs">
+                <div>[SYSTEM] Multi-Agent Swarm Initialized...</div>
+                <div>[HUNTER] Scanning B2B Leads Databases...</div>
+                <div>[CLOSER] Semantic Memory Loaded via Vector DB.</div>
+                <div>[FINANCE] Cryptomus & Stripe Gateway Ready ($300).</div>
+            </div>
+        </div>
 
-            setTimeout(() => {
-                box.classList.remove('pulse-speaking');
-            }, 3000);
-        }
+        <!-- بطاقة محاكي الأرباح ROI -->
+        <div class="card">
+            <h3>📈 المحاكي التفاعلي للأرباح (ROI Simulator)</h3>
+            <p style="color: var(--text-muted);">حرك الشريط لرؤية حجم العقود والأرباح المتوقعة التي سيحققها وكلاء النظام لك شهرياً:</p>
+            
+            <input type="range" id="roiRange" class="range-slider" min="1000" max="200000" step="1000" value="25000">
+            
+            <div style="display:flex; justify-content:space-between; margin-top: 10px;">
+                <span>العملاء المستهدفين أسبوعياً: <strong id="clientsVal" style="color:var(--primary-neon)">25,000</strong></span>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <p style="color: var(--text-muted);">تقدير أرباح العقود المغلقة شهرياً:</p>
+                <div class="roi-display" id="profitVal">$37,500</div>
+                <div style="color: var(--accent-green); font-weight: bold; margin-top: 5px;">عائد استثمار متوقع +12,400%</div>
+            </div>
+        </div>
 
-        socket.on('realtime_stream_pong', (data) => {
-            const term = document.getElementById('terminalBox');
-            const d = document.createElement('div');
-            d.innerText = data.logs;
-            term.appendChild(d);
-            term.scrollTop = term.scrollHeight;
+        <!-- بطاقة التسجيل والفترة التجريبية الشغالة 100% -->
+        <div class="card full-width">
+            <span class="badge">⚡ فترة تجريبية مجانية (4 أيام)</span>
+            <h3>أدخل بياناتك وسيتم تسجيلك في الذاكرة المترابطة لتشغيل الوكلاء فوراً</h3>
+
+            <form id="swarmForm">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+                    <div class="input-group">
+                        <label>البريد الإلكتروني للشركة</label>
+                        <input type="email" id="emailInput" placeholder="ceo@company.com" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>قطاع العمل / المجال</label>
+                        <input type="text" id="nicheInput" placeholder="التجارة الإلكترونية، العقارات، البرمجيات" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label>البلد المستهدف</label>
+                        <input type="text" id="countryInput" placeholder="الولايات المتحدة، الإمارات، الجزائر" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submitBtn">🔥 تفعيل شبكة الوكلاء وحفظ البيانات</button>
+            </form>
+
+            <div id="alertMsg"></div>
+        </div>
+
+    </div>
+
+    <script>
+        // محاكي ROI التفاعلي
+        const roiRange = document.getElementById('roiRange');
+        const clientsVal = document.getElementById('clientsVal');
+        const profitVal = document.getElementById('profitVal');
+
+        roiRange.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            clientsVal.innerText = val.toLocaleString();
+            const calculatedProfit = Math.round((val / 1000) * 1500);
+            profitVal.innerText = '$' + calculatedProfit.toLocaleString();
         });
 
-        // 4. Run Swarm Workflow
-        async function runFullSwarmWorkflow() {
-            const res = await fetch('/api/v1/swarm/run', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    email: document.getElementById('uEmail').value || "demo@company.com",
-                    niche: document.getElementById('uNiche').value || "Software",
-                    country: document.getElementById('uCountry').value || "Global"
-                })
-            });
-            const data = await res.json();
-            const term = document.getElementById('terminalBox');
-            const d = document.createElement('div');
-            d.innerHTML = `<span style="color:#00F0FF">[SWARM SUCCESS] Hunter found ${data.hunter.leads_found} leads. Closer closed deal. Invoice generated: ${data.finance.invoice_id}</span>`;
-            term.appendChild(d);
-            term.scrollTop = term.scrollHeight;
-        }
+        // ربط الاستمارة وحفظ الإيميل في قاعدة البيانات
+        const swarmForm = document.getElementById('swarmForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const alertMsg = document.getElementById('alertMsg');
+        const consoleLogs = document.getElementById('consoleLogs');
 
-        // 5. ROI Calculator
-        function calculateROI(val) {
-            document.getElementById('valDisplay').innerText = parseInt(val).toLocaleString();
-            let est = Math.floor((val / 1000) * 1500);
-            document.getElementById('revVal').innerText = '$' + est.toLocaleString();
-        }
+        swarmForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-        // 6. Complete Dictionary & Zero Reload Language Switcher
-        const dict = {
-            ar: {
-                txtNavDash: "لوحة التحكم", avatarStatus: "مساعد 3D اللحظي نشط (120ms)", btnTalk: "تحدث مع المساعد اللحظي",
-                avatarTitle: "المساعد المرئي والصوتي اللحظي", avatarSub: "يقوم بتحليل سياق كلامك ولهجتك فوراً ويتخذ القرارات مع شبكة الوكلاء.",
-                heroBadge: "⚡ معمارية الذكاء الاصطناعي الفضائية لعام 2026", heroTitle: "شبكة وكلاء مبيعات ذاتية وإغلاق تلقائي 24/7",
-                heroSubtitle: "وكلاء Hunter, Closer, Finance, & Memory يعملون بتناغم لإدارة صفقاتك بذكاء متفوق.",
-                btnRunSwarm: "تشغيل شبكة الوكلاء الآن (Run Swarm)", roiTitle: "المحاكي التفاعلي للأرباح (ROI Simulator)",
-                roiSub: "حرك الشريط لرؤية حجم العقود والأرباح المتوقعة التي سيحققها وكلاء النظام لك شهرياً:",
-                lblVolume: "عدد العملاء المستهدفين أسبوعياً:", txtRevTitle: "تقد
+            submitBtn.innerText = "⚡ جاري الحفظ وتفعيل الوكلاء...";
+            submitBtn.disabled = true;
+
+            const payload = {
+                email: document.getElementById('emailInput').value,
+                niche: document.getElementById('nicheInput').value,
+                country: document.getElementById('countryInput').value,
+                lang: document.getElementById('languageSelect').value
+            };
+
+            try {
+                const res = await fetch('/api/v1/swarm/run', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    alertMsg.style.display = 'block';
+                    alertMsg.style.background = 'rgba(0, 255, 136, 0.2)';
+                    alertMsg.style.color = '#00ff88';
+                    alertMsg.style.border = '1px solid #00ff88';
+                    alertMsg.innerText = "✅ " + data.message;
+
+                    // إدراج سجل جديد في الكونسول التفاعلي
+                    const newLog = document.createElement('div');
+                    newLog.innerText = `[MEMORY] Saved Lead: ${payload.email} | Country: ${payload.country}`;
+                    consoleLogs.appendChild(newLog);
+                    consoleLogs.scrollTop = consoleLogs.scrollHeight;
+                } else {
+                    throw new Error(data.message || "حدث خطأ أثناء الحفظ");
+                }
+            } catch (err) {
+                alertMsg.style.display = 'block';
+                alertMsg.style.background = 'rgba(255, 68, 68, 0.2)';
+                alertMsg.style.color = '#ff4444';
+                alertMsg.style.border = '1px solid #ff4444';
+                alertMsg.innerText = "❌ " + err.message;
+            } finally {
+                submitBtn.innerText = "🔥 تفعيل شبكة الوكلاء وحفظ البيانات";
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
