@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIGANTIC AI V2 — Enterprise B2B Engine</title>
+    <title>منصة الذكاء الاصطناعي العملاقة V2 — GIGANTIC AI Enterprise</title>
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
     <style>
         :root {
             --bg-dark: #070A0F;
@@ -30,7 +33,7 @@
         }
 
         .hero-title {
-            font-size: 3rem;
+            font-size: 2.8rem;
             font-weight: 800;
             background: linear-gradient(135deg, #FFFFFF 0%, var(--accent-cyan) 100%);
             -webkit-background-clip: text;
@@ -41,8 +44,21 @@
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 2.2rem;
+            padding: 2rem;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: var(--accent-cyan);
+        }
+
+        .glass-card-paid {
+            background: var(--card-bg);
+            border: 1px solid var(--accent-green);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 255, 133, 0.15);
         }
 
         .btn-gigantic {
@@ -50,7 +66,7 @@
             color: #000;
             font-weight: 700;
             border: none;
-            padding: 0.8rem 2rem;
+            padding: 0.9rem 2rem;
             border-radius: 8px;
             transition: all 0.3s;
         }
@@ -66,8 +82,15 @@
             color: #000;
             font-weight: 700;
             border: none;
-            padding: 0.8rem 2rem;
+            padding: 0.9rem 2rem;
             border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .btn-crypto:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(0, 255, 133, 0.5);
+            color: #000;
         }
 
         .terminal-box {
@@ -80,6 +103,8 @@
             color: var(--accent-green);
             height: 160px;
             overflow-y: auto;
+            text-align: left;
+            direction: ltr;
         }
 
         .lang-select {
@@ -89,11 +114,18 @@
             border-radius: 6px;
             padding: 0.4rem 0.8rem;
         }
+
+        .timer-badge {
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 10px;
+            padding: 1rem;
+        }
     </style>
 </head>
 <body>
 
-    <!-- NAVBAR -->
+    <!-- القائمة العلوية NAVBAR -->
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand fw-bold text-white d-flex align-items-center gap-2" href="#">
@@ -101,8 +133,8 @@
             </a>
             <div class="d-flex align-items-center gap-3 ms-auto">
                 <select id="langSelect" class="lang-select" onchange="changeLanguage(this.value)">
-                    <option value="en">🌐 English</option>
                     <option value="ar">🌐 العربية</option>
+                    <option value="en">🌐 English</option>
                     <option value="fr">🌐 Français</option>
                     <option value="es">🌐 Español</option>
                     <option value="de">🌐 Deutsch</option>
@@ -122,106 +154,160 @@
                     <option value="th">🌐 ไทย</option>
                     <option value="he">🌐 עברית</option>
                 </select>
-                <a href="/dashboard" class="btn btn-outline-info btn-sm d-none" id="navDashBtn"><i class="fa-solid fa-gauge me-1"></i> Dashboard</a>
+                <a href="/dashboard" class="btn btn-outline-info btn-sm" id="navDashBtn"><i class="fa-solid fa-gauge me-1"></i> <span id="txtDashNav">لوحة التحكم</span></a>
             </div>
         </div>
     </nav>
 
-    <!-- HERO -->
-    <section class="py-5 text-center container">
-        <div class="row py-lg-4 justify-content-center">
-            <div class="col-lg-9">
-                <span class="badge border border-info text-info mb-3 px-3 py-2" id="heroBadge">⚡ Enterprise B2B Sales Engine</span>
-                <h1 class="hero-title mb-3" id="heroTitle">Automate Lead Extraction & Deal Closing 24/7</h1>
-                <p class="lead text-muted mb-4" id="heroSubtitle">The ultimate AI Auto-Closer. Extract decision makers, engage target accounts, and close high-ticket deals automatically.</p>
+    <!-- الواجهة الرئيسية HERO SECTION -->
+    <section class="py-5 container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-10">
+                <span class="badge border border-info text-info mb-3 px-3 py-2" id="heroBadge">⚡ أتمتة مبيعات الشركات (B2B) على مستوى المؤسسات</span>
+                <h1 class="hero-title mb-3" id="heroTitle">أتمتة استخراج العملاء المحتملين وإإتمام الصفقات 24/7</h1>
+                <p class="lead text-muted mb-4" id="heroSubtitle">أقوى نظام إغلاق صفقات آلي يعمل بالذكاء الاصطناعي في العالم. استخرج صناع القرار وأغلق العقود تلقائياً.</p>
 
-                <!-- LIVE TERMINAL STREAM -->
-                <div class="terminal-box text-start mb-4" id="terminalLogBox">
+                <!-- شاشة البث الحي محاكاة السيرفر LIVE TERMINAL -->
+                <div class="terminal-box mb-4" id="terminalLogBox">
                     <div>[SYSTEM] Initializing GIGANTIC Multi-Engine Cluster...</div>
-                    <div>[SCRAPER] Active Residential Proxy Network Connected (10Gbps).</div>
+                    <div>[SCRAPER] Residential Proxy Network Connected (10Gbps).</div>
                     <div>[AI CLOSER] Auto-Closing NLP Engine ready in 20 languages.</div>
                 </div>
 
-                <!-- REALISTIC METRICS -->
+                <!-- الإحصائيات الواقعية METRICS -->
                 <div class="row g-3 text-center mb-5">
                     <div class="col-md-4">
                         <div class="glass-card py-3">
                             <h3 class="fw-bold text-info mb-1">14,800+</h3>
-                            <small class="text-muted" id="statLeads">Target Leads Scraped / Week</small>
+                            <small class="text-muted" id="statLeads">عميل مستهدف أسبوعياً</small>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="glass-card py-3">
                             <h3 class="fw-bold text-success mb-1">$485,000+</h3>
-                            <small class="text-muted" id="statDeals">B2B Contracts Closed</small>
+                            <small class="text-muted" id="statDeals">عقود B2B مبرمة</small>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="glass-card py-3">
                             <h3 class="fw-bold text-warning mb-1">98.6%</h3>
-                            <small class="text-muted" id="statAccuracy">AI Closing Accuracy Rate</small>
+                            <small class="text-muted" id="statAccuracy">دقة الذكاء الاصطناعي في الإغلاق</small>
                         </div>
                     </div>
                 </div>
 
-                <!-- PERSISTENT FORM / SESSION BOX -->
-                <div class="glass-card text-start">
-                    <h4 class="fw-bold mb-3 text-center" id="formHeader">Launch Your 4-Day Unlimited Pass</h4>
-                    <form id="sessionForm" onsubmit="handleSessionStart(event)">
-                        <div class="mb-3">
-                            <label class="form-label text-muted small" id="lblEmail">Corporate Email Address</label>
-                            <input type="email" id="userEmail" class="form-control bg-dark text-white border-secondary" placeholder="ceo@company.com" required>
-                        </div>
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label text-muted small" id="lblNiche">Target Niche</label>
-                                <input type="text" id="userNiche" class="form-control bg-dark text-white border-secondary" placeholder="Software, Real Estate, Medical" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label text-muted small" id="lblCountry">Target Country</label>
-                                <input type="text" id="userCountry" class="form-control bg-dark text-white border-secondary" placeholder="USA, Germany, UAE" required>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-gigantic w-100 py-3 fw-bold" id="btnLaunch">
-                            <i class="fa-solid fa-rocket me-2"></i> Launch GIGANTIC Engine
-                        </button>
-                    </form>
+                <!-- قسم الخيارات: التجربة المجانية + باقة الاشتراك ظاهران معاً -->
+                <div class="row g-4 text-start">
+                    
+                    <!-- نموذج التجربة المجانية 4 أيام -->
+                    <div class="col-md-6">
+                        <div class="glass-card h-100">
+                            <h4 class="fw-bold mb-3 text-info d-flex align-items-center gap-2">
+                                <i class="fa-solid fa-gift"></i> <span id="formHeader">التجربة المجانية (4 أيام)</span>
+                            </h4>
+                            <p class="text-muted small mb-4" id="formDesc">أدخل البريد الإلكتروني للشركة لبدء تجربة المحرك فوراً.</p>
 
-                    <div id="trialTimerBox" class="mt-4 p-3 border border-info rounded text-center d-none">
-                        <h5 class="text-info fw-bold mb-2" id="timerTitle">⚡ Active Engine Trial</h5>
-                        <div class="d-flex justify-content-center gap-3 fs-3 fw-bold text-info my-2">
-                            <span id="tDays">04</span>d : <span id="tHours">00</span>h : <span id="tMins">00</span>m : <span id="tSecs">00</span>s
+                            <form id="sessionForm" onsubmit="handleSessionStart(event)">
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small" id="lblEmail">عنوان البريد الإلكتروني للشركة</label>
+                                    <input type="email" id="userEmail" class="form-control bg-dark text-white border-secondary" placeholder="ceo@company.com" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small" id="lblNiche">القطاع المستهدف / التخصص</label>
+                                    <input type="text" id="userNiche" class="form-control bg-dark text-white border-secondary" placeholder="مثال: البرمجيات، العقارات، التسويق" required>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label text-muted small" id="lblCountry">البلد المستهدف</label>
+                                    <input type="text" id="userCountry" class="form-control bg-dark text-white border-secondary" placeholder="مثال: الولايات المتحدة، الإمارات، ألمانيا" required>
+                                </div>
+                                <button type="submit" class="btn btn-gigantic w-100 fw-bold" id="btnLaunch">
+                                    <i class="fa-solid fa-rocket me-2"></i> <span id="btnLaunchTxt">تفعيل التجربة المجانية</span>
+                                </button>
+                            </form>
+
+                            <!-- العداد التنازلي للتجربة -->
+                            <div id="trialTimerBox" class="mt-4 timer-badge text-center d-none">
+                                <h6 class="text-info fw-bold mb-2" id="timerTitle">⚡ تجربة المحرك نشطة حالياً</h6>
+                                <div class="d-flex justify-content-center gap-2 fs-3 fw-bold text-info my-2" dir="ltr">
+                                    <span id="tDays">04</span>d : <span id="tHours">00</span>h : <span id="tMins">00</span>m : <span id="tSecs">00</span>s
+                                </div>
+                                <a href="/dashboard" class="btn btn-sm btn-outline-info w-100 mt-2"><i class="fa-solid fa-gauge me-1"></i> <span id="btnDashLink">الدخول للوحة التحكم</span></a>
+                            </div>
                         </div>
-                        <a href="/dashboard" class="btn btn-outline-info w-100 mt-2"><i class="fa-solid fa-gauge me-2"></i> Enter Live Dashboard</a>
                     </div>
+
+                    <!-- باقة الاشتراك الكامل المدفوع $300 -->
+                    <div class="col-md-6">
+                        <div class="glass-card-paid h-100 d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h4 class="fw-bold text-success mb-0 d-flex align-items-center gap-2">
+                                        <i class="fa-solid fa-crown"></i> <span id="planTitle">باقة المؤسسات غير المحدودة</span>
+                                    </h4>
+                                    <span class="badge bg-success text-dark fw-bold">Enterprise</span>
+                                </div>
+                                <p class="text-muted small mb-3" id="planSub">الخيار الأكثر شيوعاً بين شركات B2B</p>
+                                
+                                <h2 class="fw-bold my-3 text-white">$300 <span class="fs-6 text-muted" id="planPer">/ شهرياً</span></h2>
+                                
+                                <ul class="list-unstyled text-muted small mb-4">
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="f1">وصول كامل واستخراج غير محدود للبيانات</span></li>
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="f2">محرك الذكاء الاصطناعي للإغلاق بـ 20 لغة</span></li>
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="f3">تدوير وكلاء ورسائل غير محدودة</span></li>
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="f4">أولوية السيرفرات والدعم الفني 24/7</span></li>
+                                </ul>
+                            </div>
+
+                            <button onclick="alert('سيتم تحويلك لبوابة Cryptomus للدفع التلقائي عبر USDT')" class="btn btn-crypto w-100 fw-bold py-3 mt-3">
+                                <i class="fa-solid fa-wallet me-2"></i> <span id="btnPayTxt">الدفع عبر كريبتوموس ($300 USDT)</span>
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
         </div>
     </section>
 
+    <!-- ترجمة الـ 20 لغة والنصوص الكاملة -->
     <script>
         const i18n = {
+            ar: {
+                txtDashNav: "لوحة التحكم", heroBadge: "⚡ أتمتة مبيعات الشركات (B2B) على مستوى المؤسسات",
+                heroTitle: "أتمتة استخراج العملاء المحتملين وإتمام الصفقات 24/7",
+                heroSubtitle: "أقوى نظام إغلاق صفقات آلي يعمل بالذكاء الاصطناعي في العالم. استخرج صناع القرار وأغلق العقود تلقائياً.",
+                statLeads: "عميل مستهدف أسبوعياً", statDeals: "عقود B2B مبرمة", statAccuracy: "دقة الذكاء الاصطناعي في الإغلاق",
+                formHeader: "التجربة المجانية (4 أيام)", formDesc: "أدخل البريد الإلكتروني للشركة لبدء تجربة المحرك فوراً.",
+                lblEmail: "عنوان البريد الإلكتروني للشركة", lblNiche: "القطاع المستهدف / التخصص", lblCountry: "البلد المستهدف",
+                btnLaunchTxt: "تفعيل التجربة المجانية", timerTitle: "⚡ تجربة المحرك نشطة حالياً", btnDashLink: "الدخول للوحة التحكم",
+                planTitle: "باقة المؤسسات غير المحدودة", planSub: "الخيار الأكثر شيوعاً بين شركات B2B", planPer: "/ شهرياً",
+                f1: "وصول كامل واستخراج غير محدود للبيانات", f2: "محرك الذكاء الاصطناعي للإغلاق بـ 20 لغة",
+                f3: "تدوير وكلاء ورسائل غير محدودة", f4: "أولوية السيرفرات والدعم الفني 24/7", btnPayTxt: "الدفع عبر كريبتوموس ($300 USDT)"
+            },
             en: {
-                heroBadge: "⚡ Enterprise B2B Sales Engine",
+                txtDashNav: "Dashboard", heroBadge: "⚡ Enterprise B2B Sales Engine",
                 heroTitle: "Automate Lead Extraction & Deal Closing 24/7",
                 heroSubtitle: "The ultimate AI Auto-Closer. Extract decision makers, engage target accounts, and close high-ticket deals automatically.",
                 statLeads: "Target Leads Scraped / Week", statDeals: "B2B Contracts Closed", statAccuracy: "AI Closing Accuracy Rate",
-                formHeader: "Launch Your 4-Day Unlimited Pass", lblEmail: "Corporate Email Address", lblNiche: "Target Niche", lblCountry: "Target Country", btnLaunch: "Launch GIGANTIC Engine"
-            },
-            ar: {
-                heroBadge: "⚡ محرك مبيعات B2B للمؤسسات",
-                heroTitle: "أتمتة استخراج الليدات وإغلاق الصفقات 24/7",
-                heroSubtitle: "أقوى مغلق صفقات بالذكاء الاصطناعي. استخرج صناع القرار، واصل الشركات المستهدفة، وأغلق عقوداً عالية القيمة أوتوماتيكياً.",
-                statLeads: "عميل مستهدف أسبوعياً", statDeals: "عقود B2B مبرمة", statAccuracy: "دقة الذكاء الاصطناعي في الإغلاق",
-                formHeader: "ابدأ تصريح الـ 4 أيام المجاني", lblEmail: "البريد الإلكتروني للشركة", lblNiche: "المجال المستهدف", lblCountry: "البلد المستهدف", btnLaunch: "تشغيل محرك GIGANTIC"
+                formHeader: "4-Day Free Unlimited Trial", formDesc: "Enter corporate email to launch engine instantly.",
+                lblEmail: "Corporate Email Address", lblNiche: "Target Niche", lblCountry: "Target Country",
+                btnLaunchTxt: "Launch Free Trial", timerTitle: "⚡ Active Engine Trial", btnDashLink: "Enter Live Dashboard",
+                planTitle: "GIGANTIC Unlimited Pass", planSub: "Most Popular Choice for B2B Enterprise", planPer: "/ month",
+                f1: "Full Scraper & Unlimited Lead Access", f2: "AI Closing Engine Ready in 20 Languages",
+                f3: "Unlimited Outreach & Proxy Rotation", f4: "Priority AI Agents & Dedicated Server", btnPayTxt: "Pay via Cryptomus ($300 USDT)"
             },
             fr: {
-                heroBadge: "⚡ Moteur de Ventes B2B Entreprise",
+                txtDashNav: "Tableau de bord", heroBadge: "⚡ Moteur de Ventes B2B Entreprise",
                 heroTitle: "Extraction de Leads et Clôture de Contrats 24/7",
                 heroSubtitle: "L'IA d'Auto-Closing ultime. Extrayez les décideurs et concluez des contrats à valeur élevée automatiquement.",
                 statLeads: "Leads Extraits / Semaine", statDeals: "Contrats B2B Conclus", statAccuracy: "Taux de Précision IA",
-                formHeader: "Lancer Votre Pass 4 Jours", lblEmail: "E-mail Professionnel", lblNiche: "Secteur Cible", lblCountry: "Pays Cible", btnLaunch: "Lancer le Moteur GIGANTIC"
+                formHeader: "Essai Gratuit de 4 Jours", formDesc: "Entrez l'email d'entreprise pour lancer le moteur.",
+                lblEmail: "E-mail Professionnel", lblNiche: "Secteur Cible", lblCountry: "Pays Cible",
+                btnLaunchTxt: "Lancer L'Essai Gratuit", timerTitle: "⚡ Essai Actif", btnDashLink: "Accéder au Tableau de Bord",
+                planTitle: "Pass Illimité Entreprise", planSub: "Choix Le Plus Populaire en B2B", planPer: "/ mois",
+                f1: "Accès Complet et Extraction Illimitée", f2: "Moteur IA Prêt en 20 Langues",
+                f3: "Rotation de Proxys et Messages Illimités", f4: "Serveurs Dédiés et Support Prioritaire", btnPayTxt: "Payer via Cryptomus ($300 USDT)"
             }
         };
 
@@ -237,13 +323,12 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            const savedLang = localStorage.getItem('gigantic_lang') || 'en';
+            const savedLang = localStorage.getItem('gigantic_lang') || 'ar';
             changeLanguage(savedLang);
 
             const savedEmail = localStorage.getItem('gigantic_email');
             if (savedEmail) {
                 document.getElementById('userEmail').value = savedEmail;
-                document.getElementById('navDashBtn').classList.remove('d-none');
                 checkSession(savedEmail);
             }
 
@@ -270,11 +355,9 @@
             const email = document.getElementById('userEmail').value;
             const niche = document.getElementById('userNiche').value;
             const country = document.getElementById('userCountry').value;
-            const lang = localStorage.getItem('gigantic_lang') || 'en';
+            const lang = localStorage.getItem('gigantic_lang') || 'ar';
 
             localStorage.setItem('gigantic_email', email);
-            localStorage.setItem('gigantic_niche', niche);
-            localStorage.setItem('gigantic_country', country);
 
             const res = await fetch('/api/v1/auth-session', {
                 method: 'POST',
@@ -283,7 +366,6 @@
             });
             const data = await res.json();
             if (data.status === 'success') {
-                document.getElementById('navDashBtn').classList.remove('d-none');
                 document.getElementById('trialTimerBox').classList.remove('d-none');
                 runTimer(data.seconds_left);
             }
@@ -295,31 +377,4 @@
             timerInt = setInterval(() => {
                 if (sec <= 0) { clearInterval(timerInt); return; }
                 sec--;
-                document.getElementById('tDays').innerText = String(Math.floor(sec / 86400)).padStart(2, '0');
-                document.getElementById('tHours').innerText = String(Math.floor((sec % 86400) / 3600)).padStart(2, '0');
-                document.getElementById('tMins').innerText = String(Math.floor((sec % 3600) / 60)).padStart(2, '0');
-                document.getElementById('tSecs').innerText = String(sec % 60).padStart(2, '0');
-            }, 1000);
-        }
-
-        function startTerminal() {
-            const logs = [
-                "[SCRAPER] Target Found: Apex Tech Corp (London, UK) - CEO: David Miller",
-                "[AI AGENT] Executing Aggressive Pitch Protocol...",
-                "[DEAL CLOSED] $3,500 contract agreed via Cryptomus Auto-Pay.",
-                "[PROXY] Switched IP -> 194.26.29.12 (Frankfurt, Germany)",
-                "[SCRAPER] Found 85 Decision Makers in Target Geography..."
-            ];
-            const box = document.getElementById('terminalLogBox');
-            let idx = 0;
-            setInterval(() => {
-                const div = document.createElement('div');
-                div.innerText = logs[idx % logs.length];
-                box.appendChild(div);
-                box.scrollTop = box.scrollHeight;
-                idx++;
-            }, 3200);
-        }
-    </script>
-</body>
-</html>
+                document.getElementById('tDays').innerText = String(Math.floor(sec / 86400)).p
