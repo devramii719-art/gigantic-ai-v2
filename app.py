@@ -13,30 +13,6 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'GIGANTIC_ALIEN_SWARM_SE
 
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='gevent')
 
-# قائمة الـ 20 لغة
-LANGUAGES = [
-    {"code": "ar-DZ", "name": "🇩🇿 العربية (الجزائر)"},
-    {"code": "ar-SA", "name": "🇸🇦 العربية (السعودية)"},
-    {"code": "ar-AE", "name": "🇦🇪 العربية (الإمارات)"},
-    {"code": "ar-EG", "name": "🇪🇬 العربية (مصر)"},
-    {"code": "en-US", "name": "🇺🇸 English (US)"},
-    {"code": "en-GB", "name": "🇬🇧 English (UK)"},
-    {"code": "fr-FR", "name": "🇫🇷 Français"},
-    {"code": "es-ES", "name": "🇪🇸 Español"},
-    {"code": "de-DE", "name": "🇩🇪 Deutsch"},
-    {"code": "zh-CN", "name": "🇨🇳 中文 (Mandarin)"},
-    {"code": "ru-RU", "name": "🇷🇺 Русский"},
-    {"code": "tr-TR", "name": "🇹🇷 Türkçe"},
-    {"code": "pt-BR", "name": "🇧🇷 Português"},
-    {"code": "it-IT", "name": "🇮🇹 Italiano"},
-    {"code": "ja-JP", "name": "🇯🇵 日本語"},
-    {"code": "ko-KR", "name": "🇰🇷 한국어"},
-    {"code": "hi-IN", "name": "🇮🇳 हिन्दी"},
-    {"code": "ur-PK", "name": "🇵🇰 اردو"},
-    {"code": "id-ID", "name": "🇮🇩 Bahasa Indonesia"},
-    {"code": "nl-NL", "name": "🇳🇱 Nederlands"}
-]
-
 class MemoryAgent:
     def __init__(self, db_path="gigantic_memory.db"):
         self.db_path = db_path
@@ -61,7 +37,6 @@ class MemoryAgent:
                     timestamp REAL NOT NULL
                 )
             """)
-            conn.execute("CREATE INDEX IF NOT EXISTS idx_email ON memory_logs(email)")
             conn.commit()
 
     def save_context(self, email, interaction_type, payload, niche="", country=""):
@@ -95,11 +70,10 @@ memory = MemoryAgent()
 
 @app.route('/')
 def index():
-    return render_template('index.html', languages=LANGUAGES)
+    return render_template('index.html')
 
 @app.route('/dashboard')
 def dashboard():
-    """مسار لوحة التحكم لعرض السجلات وتفادي خطأ 404"""
     logs = memory.semantic_query(limit=50)
     return jsonify({
         "status": "DASHBOARD_ACTIVE",
@@ -108,35 +82,24 @@ def dashboard():
         "recent_memory_logs": logs
     }), 200
 
-@app.route('/healthz', methods=['GET'])
-def health_check():
-    return jsonify({"status": "healthy", "service": "GIGANTIC AI Swarm 2026"}), 200
-
 @app.route('/api/v1/swarm/run', methods=['POST'])
 def run_full_swarm():
     try:
         data = request.get_json(force=True) or {}
-        email = data.get('email')
+        email = data.get('email', 'demo@company.com')
         niche = data.get('niche', 'General')
         country = data.get('country', 'Global')
-        lang = data.get('lang', 'ar-DZ')
 
-        if not email:
-            return jsonify({"status": "ERROR", "message": "يرجى إدخال البريد الإلكتروني"}), 400
-
-        # حفظ البيانات فوراً في قاعدة SQLite
-        memory.save_context(email, "TRIAL_REGISTRATION", {
+        memory.save_context(email, "SWARM_RUN", {
             "email": email,
             "niche": niche,
             "country": country,
-            "language": lang,
-            "swarm_status": "ACTIVATED",
-            "trial_period": "4_DAYS_FREE"
+            "status": "ACTIVATED"
         }, niche=niche, country=country)
 
         return jsonify({
             "status": "SUCCESS",
-            "message": "تم حفظ بيانات شركتك في الذاكرة وتفعيل شبكة الوكلاء بنجاح!",
+            "message": "تم حفظ بياناتك في الذاكرة وتفعيل شبكة الوكلاء بنجاح!",
             "email": email
         }), 200
 
@@ -148,8 +111,6 @@ def handle_realtime_ping(data):
     country = data.get('country', 'Global') if isinstance(data, dict) else 'Global'
     emit('realtime_stream_pong', {
         "avatar_status": "SPEAKING_LIP_SYNC",
-        "globe_pulse": True,
-        "latency_ms": 120,
         "logs": f"[SWARM] Agent Hunter active for target country: {country}"
     })
 
