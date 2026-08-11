@@ -3,143 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIGANTIC AI 2026 — Real-Time Multimodal Canvas</title>
+    <title>GIGANTIC AI 2026 — Alien Multimodal UI</title>
     
-    <!-- Bootstrap 5 & FontAwesome -->
+    <!-- CSS & Libraries -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
-    <!-- Three.js, GSAP & Socket.io for Real-Time Sci-Fi UI -->
+    <!-- Three.js & Socket.io -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 
     <style>
         :root {
-            --bg-dark: #020305;
-            --card-glass: rgba(10, 16, 26, 0.65);
-            --border-glow: rgba(0, 240, 255, 0.35);
-            --accent-cyan: #00F0FF;
-            --accent-green: #00FF85;
-            --accent-purple: #9D00FF;
+            --bg-alien: #010409;
+            --card-glass: rgba(13, 22, 38, 0.75);
+            --neon-cyan: #00F0FF;
+            --neon-green: #00FF85;
+            --neon-purple: #A000FF;
         }
 
         body {
-            background-color: var(--bg-dark);
+            background-color: var(--bg-alien);
             color: #FFFFFF;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             overflow-x: hidden;
             margin: 0;
-            padding: 0;
         }
 
-        #webgl-bg {
+        #bg-canvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             z-index: -1;
             pointer-events: none;
         }
 
         .glass-panel {
             background: var(--card-glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-glow);
-            border-radius: 20px;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 24px;
             padding: 2rem;
-            box-shadow: 0 8px 32px 0 rgba(0, 240, 255, 0.12);
+            box-shadow: 0 10px 40px rgba(0, 240, 255, 0.15);
             transition: all 0.4s ease;
         }
 
         .glass-panel:hover {
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
-            transform: translateY(-4px);
-        }
-
-        .glass-panel-paid {
-            background: rgba(0, 255, 133, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(0, 255, 133, 0.5);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 0 35px rgba(0, 255, 133, 0.2);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.4);
+            transform: translateY(-3px);
         }
 
         .hero-title {
-            font-size: 3.3rem;
+            font-size: 3.5rem;
             font-weight: 900;
-            background: linear-gradient(135deg, #FFF 0%, var(--accent-cyan) 50%, var(--accent-purple) 100%);
+            background: linear-gradient(135deg, #FFF 0%, var(--neon-cyan) 50%, var(--neon-purple) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 35px rgba(0, 240, 255, 0.3);
+            text-shadow: 0 0 40px rgba(0, 240, 255, 0.4);
         }
 
-        /* 3D Photorealistic Avatar Canvas Container */
-        .avatar-3d-wrapper {
+        .globe-container {
+            width: 100%;
+            height: 280px;
             position: relative;
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            border: 2px solid var(--accent-cyan);
-            box-shadow: 0 0 30px var(--accent-cyan);
+            border-radius: 20px;
             overflow: hidden;
-            background: radial-gradient(circle, rgba(0,240,255,0.2) 0%, rgba(0,0,0,0.8) 100%);
+            border: 1px solid rgba(0, 255, 133, 0.3);
+            background: rgba(0, 0, 0, 0.5);
         }
 
-        .avatar-lip-sync-pulse {
-            animation: speakPulse 0.4s infinite alternate ease-in-out;
+        .avatar-glow-ring {
+            width: 110px; height: 110px;
+            border-radius: 50%;
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 25px var(--neon-cyan);
+            display: flex; align-items: center; justify-content: center;
+            background: radial-gradient(circle, rgba(0,240,255,0.25) 0%, rgba(0,0,0,0.9) 100%);
         }
 
-        @keyframes speakPulse {
-            0% { transform: scale(1); box-shadow: 0 0 15px var(--accent-cyan); }
-            100% { transform: scale(1.08); box-shadow: 0 0 35px var(--accent-green); }
+        .pulse-speaking {
+            animation: pulseGlow 0.5s infinite alternate ease-in-out;
         }
 
-        .terminal-canvas {
-            background: rgba(3, 5, 8, 0.9);
-            border: 1px solid var(--accent-cyan);
-            border-radius: 12px;
+        @keyframes pulseGlow {
+            0% { transform: scale(1); box-shadow: 0 0 15px var(--neon-cyan); }
+            100% { transform: scale(1.1); box-shadow: 0 0 35px var(--neon-green); }
+        }
+
+        .terminal-log {
+            background: rgba(2, 6, 12, 0.95);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 14px;
             padding: 1rem;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 0.85rem;
-            color: var(--accent-green);
-            height: 140px;
+            font-family: monospace;
+            font-size: 0.82rem;
+            color: var(--neon-green);
+            height: 130px;
             overflow-y: auto;
             text-align: left;
             direction: ltr;
         }
 
-        .btn-gigantic {
-            background: linear-gradient(135deg, var(--accent-cyan) 0%, #0072FF 100%);
+        .btn-alien {
+            background: linear-gradient(135deg, var(--neon-cyan) 0%, #0066FF 100%);
             color: #000;
             font-weight: 800;
             border: none;
             padding: 1rem;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
             transition: 0.3s;
         }
 
-        .btn-gigantic:hover {
-            box-shadow: 0 0 35px rgba(0, 240, 255, 0.9);
+        .btn-alien:hover {
+            box-shadow: 0 0 45px rgba(0, 240, 255, 1);
             transform: scale(1.02);
         }
     </style>
 </head>
 <body>
 
-    <!-- WebGL Background Particle System Canvas -->
-    <canvas id="webgl-bg"></canvas>
+    <!-- Three.js Background -->
+    <canvas id="bg-canvas"></canvas>
 
-    <!-- Navigation -->
+    <!-- Top Nav -->
     <nav class="navbar navbar-expand-lg sticky-top bg-dark bg-opacity-50 border-bottom border-info border-opacity-25 px-4 backdrop-blur">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold text-white d-flex align-items-center gap-2" href="#">
-                <i class="fa-solid fa-atom text-info fa-spin"></i> GIGANTIC <span class="badge bg-info text-dark">AI 2026 REALTIME</span>
+                <i class="fa-solid fa-brain text-info fa-spin"></i> GIGANTIC <span class="badge bg-info text-dark">ALIEN SWARM 2026</span>
             </a>
             <div class="d-flex align-items-center gap-3 ms-auto">
                 <select id="langSelect" class="form-select form-select-sm bg-dark text-info border-info fw-bold" onchange="changeLanguage(this.value)">
@@ -148,128 +141,128 @@
                     <option value="fr">🌐 Français</option>
                 </select>
                 <a href="/dashboard" class="btn btn-outline-info btn-sm fw-bold">
-                    <i class="fa-solid fa-gauge me-1"></i> <span id="txtDashNav">لوحة التحكم</span>
+                    <i class="fa-solid fa-gauge me-1"></i> <span id="txtNavDash">لوحة التحكم</span>
                 </a>
             </div>
         </div>
     </nav>
 
-    <!-- Main Container -->
-    <section class="py-5 container position-relative">
-        
-        <!-- 1. Real-Time Multimodal AI Avatar Panel -->
+    <!-- Main Section -->
+    <section class="py-5 container">
+
+        <!-- 1. Avatar & Stream Panel -->
         <div class="glass-panel mb-5 p-4 d-flex align-items-center gap-4">
-            <div class="avatar-3d-wrapper flex-shrink-0 d-flex align-items-center justify-content-center" id="avatarBox">
+            <div class="avatar-glow-ring flex-shrink-0" id="avatarContainer">
                 <i class="fa-solid fa-user-astronaut fs-1 text-info" id="avatarIcon"></i>
             </div>
             <div class="w-100">
                 <div class="d-flex justify-content-between align-items-center mb-1">
-                    <span class="badge bg-info text-dark" id="avatarBadge">Real-Time Expressive Avatar Active (< 300ms)</span>
-                    <button class="btn btn-sm btn-outline-success fw-bold" onclick="toggleVoiceInteraction()"><i class="fa-solid fa-microphone me-1"></i> <span id="btnMicText">تحدث صوتياً الآن</span></button>
+                    <span class="badge bg-info text-dark" id="avatarStatus">مساعد 3D اللحظي نشط (120ms)</span>
+                    <button class="btn btn-sm btn-outline-success fw-bold" onclick="triggerVoiceTalk()"><i class="fa-solid fa-microphone me-1"></i> <span id="btnTalk">تحدث مع المساعد اللحظي</span></button>
                 </div>
-                <h5 class="fw-bold mb-1" id="avatarTitle">الصورة الرمزية التفاعلية الصوتية والمرئية</h5>
-                <p class="text-muted small mb-0" id="avatarText">أهلاً بك! المساعد المتكلم يستمع إليك بدعم التكيف التلقائي مع لهجتك وسياقك الثقافي ومعالجة الصوت فائقة السرعة.</p>
+                <h5 class="fw-bold mb-1" id="avatarTitle">المساعد المرئي والصوتي اللحظي</h5>
+                <p class="text-muted small mb-0" id="avatarSub">يقوم بتحليل سياق كلامك ولهجتك فوراً ويتخذ القرارات مع شبكة الوكلاء.</p>
             </div>
         </div>
 
         <div class="row justify-content-center text-center">
             <div class="col-lg-11">
-                <span class="badge border border-info text-info mb-3 px-3 py-2" id="heroBadge">⚡ منصة أتمتة الصفقات السينمائية — جيل 2026</span>
-                <h1 class="hero-title mb-3" id="heroTitle">أتمتة استخراج العملاء وإتمام العقود 24/7</h1>
-                <p class="lead text-muted mb-4" id="heroSubtitle">إدارة CRM ذكية، ذاكرة متجهة فائقة Vector Search، ووكلاء ذاتيون لإغلاق الصفقات تلقائياً.</p>
+                <span class="badge border border-info text-info mb-3 px-3 py-2" id="heroBadge">⚡ معمارية الذكاء الاصطناعي الفضائية لعام 2026</span>
+                <h1 class="hero-title mb-3" id="heroTitle">شبكة وكلاء مبيعات ذاتية وإغلاق تلقائي 24/7</h1>
+                <p class="lead text-muted mb-4" id="heroSubtitle">وكلاء Hunter, Closer, Finance, & Memory يعملون بتناغم لإدارة صفقاتك بذكاء متفوق.</p>
 
-                <!-- Live Pipeline Canvas -->
-                <div class="mb-4">
-                    <canvas id="pipelineCanvas" height="90" class="w-100 rounded border border-info border-opacity-25"></canvas>
+                <!-- 2. Hologram Globe & Live Swarm Logs -->
+                <div class="row g-4 mb-5 text-start">
+                    <div class="col-md-7">
+                        <div class="globe-container" id="globeBox"></div>
+                    </div>
+                    <div class="col-md-5 d-flex flex-column justify-content-between">
+                        <div class="terminal-log w-100" id="terminalBox">
+                            <div>[SYSTEM] Multi-Agent Swarm Initialized...</div>
+                            <div>[HUNTER] Scanning B2B Leads Databases...</div>
+                            <div>[CLOSER] Semantic Memory Loaded via Vector DB.</div>
+                            <div>[FINANCE] Cryptomus & Stripe Gateway Ready ($300).</div>
+                        </div>
+                        <button onclick="runFullSwarmWorkflow()" class="btn btn-alien w-100 mt-3 fw-bold">
+                            <i class="fa-solid fa-bolt me-2"></i> <span id="btnRunSwarm">تشغيل شبكة الوكلاء الآن (Run Swarm)</span>
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Live Logs Terminal -->
-                <div class="terminal-canvas mb-5" id="terminalLogBox">
-                    <div>[VECTOR MEMORY] Qdrant Engine Syncing Omnichannel Records...</div>
-                    <div>[AUTONOMOUS AGENT] Agent Evaluated Dialect: Optimal Negotiation Match Found.</div>
-                </div>
-
-                <!-- Interactive ROI Simulator Section -->
+                <!-- 3. Interactive ROI Simulator -->
                 <div class="glass-panel mb-5 text-start">
                     <div class="row align-items-center">
                         <div class="col-md-6">
-                            <h4 class="fw-bold text-info mb-2"><i class="fa-solid fa-calculator me-2"></i> <span id="roiTitle">محاكي الأرباح والصفقات المباشر (ROI Simulator)</span></h4>
-                            <p class="text-muted small" id="roiSub">اسحب الشريط أدناه لرؤية الأرباح التقديرية التي يمكن للمنصة تحقيقها لك تلقائياً:</p>
+                            <h4 class="fw-bold text-info mb-2"><i class="fa-solid fa-calculator me-2"></i> <span id="roiTitle">المحاكي التفاعلي للأرباح (ROI Simulator)</span></h4>
+                            <p class="text-muted small" id="roiSub">حرك الشريط لرؤية حجم العقود والأرباح المتوقعة التي سيحققها وكلاء النظام لك شهرياً:</p>
                             
                             <label class="form-label text-white fw-bold mb-1" id="lblVolume">عدد العملاء المستهدفين أسبوعياً:</label>
-                            <input type="range" class="form-range mb-3" min="500" max="100000" step="500" id="roiSlider" value="15000" oninput="updateROICalculator(this.value)">
+                            <input type="range" class="form-range mb-3" min="1000" max="200000" step="1000" id="roiSlider" value="25000" oninput="calculateROI(this.value)">
                             <div class="d-flex justify-content-between text-muted small">
-                                <span>500</span>
-                                <span class="text-info fw-bold fs-5" id="slideValDisplay">15,000</span>
-                                <span>100,000</span>
+                                <span>1,000</span>
+                                <span class="text-info fw-bold fs-5" id="valDisplay">25,000</span>
+                                <span>200,000</span>
                             </div>
                         </div>
                         <div class="col-md-6 text-center mt-3 mt-md-0 border-start border-info border-opacity-25">
-                            <small class="text-muted d-block" id="txtEstRevenue">العقود المتوقعة شهرياً:</small>
-                            <h1 class="fw-bold text-success display-4 my-2" id="estRevVal">$22,500</h1>
-                            <span class="badge bg-success text-dark fw-bold" id="txtRevBadge">عائد استثمار متوقع +7500%</span>
+                            <small class="text-muted d-block" id="txtRevTitle">تقدير أرباح العقود المغلقة شهرياً:</small>
+                            <h1 class="fw-bold text-success display-3 my-2" id="revVal">$37,500</h1>
+                            <span class="badge bg-success text-dark fw-bold" id="txtRevBadge">عائد استثمار متوقع +12,400%</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Forms & Subscription Cards -->
+                <!-- 4. Trial & Payment Gateways -->
                 <div class="row g-4 text-start">
-                    <!-- Free Trial Form -->
                     <div class="col-md-6">
                         <div class="glass-panel h-100">
-                            <h4 class="fw-bold mb-3 text-info" id="trialTitle"><i class="fa-solid fa-gift me-2"></i> التجربة المجانية (4 أيام)</h4>
-                            <p class="text-muted small mb-3" id="trialSub">أدخل بياناتك لتشغيل المحرك وحفظ الحساب تلقائياً في الذاكرة المتجهة.</p>
+                            <h4 class="fw-bold text-info mb-3" id="trialTitle"><i class="fa-solid fa-gift me-2"></i> فترة تجريبية مجانية (4 أيام)</h4>
+                            <p class="text-muted small mb-3" id="trialSub">أدخل بياناتك وسيتم تسجيلك في الذاكرة المترابطة لتشغيل الوكلاء فوراً.</p>
 
-                            <form id="sessionForm" onsubmit="handleSessionStart(event)">
+                            <form id="trialForm" onsubmit="submitTrial(event)">
                                 <div class="mb-3">
-                                    <label class="form-label text-muted small" id="lblEmail">عنوان البريد الإلكتروني للشركة</label>
-                                    <input type="email" id="userEmail" class="form-control bg-dark text-white border-secondary" placeholder="ceo@company.com" required onkeyup="autoSaveInputs()" onchange="autoSaveInputs()">
+                                    <label class="form-label text-muted small" id="lblEmail">البريد الإلكتروني للشركة</label>
+                                    <input type="email" id="uEmail" class="form-control bg-dark text-white border-secondary" placeholder="ceo@company.com" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label text-muted small" id="lblNiche">القطاع المستهدف / التخصص</label>
-                                    <input type="text" id="userNiche" class="form-control bg-dark text-white border-secondary" placeholder="البرمجيات، العقارات، التسويق" required onkeyup="autoSaveInputs()" onchange="autoSaveInputs()">
+                                    <label class="form-label text-muted small" id="lblNiche">قطاع العمل / المجال</label>
+                                    <input type="text" id="uNiche" class="form-control bg-dark text-white border-secondary" placeholder="التجارة الإلكترونية، العقارات، البرمجيات" required>
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label text-muted small" id="lblCountry">البلد المستهدف</label>
-                                    <input type="text" id="userCountry" class="form-control bg-dark text-white border-secondary" placeholder="الولايات المتحدة، الإمارات، الجزائر" required onkeyup="autoSaveInputs()" onchange="autoSaveInputs()">
+                                    <input type="text" id="uCountry" class="form-control bg-dark text-white border-secondary" placeholder="الولايات المتحدة، الإمارات، الجزائر" required>
                                 </div>
-                                <button type="submit" class="btn btn-gigantic w-100 fw-bold" id="btnStartTrial">
-                                    <i class="fa-solid fa-rocket me-2"></i> <span id="txtBtnTrial">تفعيل التجربة المجانية</span>
+                                <button type="submit" class="btn btn-alien w-100 fw-bold" id="btnStartTrial">
+                                    <i class="fa-solid fa-rocket me-2"></i> <span id="btnStartTrialText">تفعيل التجربة الفورية (4-Day Free Trial)</span>
                                 </button>
                             </form>
-
-                            <div id="trialTimerBox" class="mt-4 glass-panel p-3 text-center d-none">
-                                <h6 class="text-info fw-bold mb-2" id="txtTrialActive">⚡ التجربة نشطة محلياً ومحفوظة</h6>
-                                <div class="d-flex justify-content-center gap-2 fs-3 fw-bold text-info my-2" dir="ltr">
-                                    <span id="tDays">04</span>d : <span id="tHours">00</span>h : <span id="tMins">00</span>m : <span id="tSecs">00</span>s
-                                </div>
-                                <a href="/dashboard" class="btn btn-sm btn-outline-info w-100 mt-2">
-                                    <i class="fa-solid fa-gauge me-1"></i> <span id="txtGoDash">الدخول للوحة التحكم</span>
-                                </a>
-                            </div>
                         </div>
                     </div>
 
-                    <!-- Enterprise Plan $300 -->
                     <div class="col-md-6">
-                        <div class="glass-panel-paid h-100 d-flex flex-column justify-content-between">
+                        <div class="glass-panel border-success h-100 d-flex flex-column justify-content-between">
                             <div>
                                 <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <h4 class="fw-bold text-success mb-0" id="paidTitle"><i class="fa-solid fa-crown me-2"></i> باقة المؤسسات غير المحدودة</h4>
-                                    <span class="badge bg-success text-dark fw-bold">Enterprise 2026</span>
+                                    <h4 class="fw-bold text-success mb-0" id="planTitle"><i class="fa-solid fa-crown me-2"></i> باقة المؤسسات العملاقة</h4>
+                                    <span class="badge bg-success text-dark fw-bold">Unlimited 2026</span>
                                 </div>
-                                <p class="text-muted small mb-3" id="paidSub">الخيار الأكثر شيوعاً بين شركات B2B العالمية</p>
-                                <h2 class="fw-bold my-3 text-white">$300 <span class="fs-6 text-muted" id="paidPerMonth">/ شهرياً</span></h2>
+                                <p class="text-muted small mb-3" id="planSub">اشتراك شهري شامل لجميع شبكات الوكلاء وبوابات الدفع التلقائية</p>
+                                <h2 class="fw-bold my-3 text-white">$300 <span class="fs-6 text-muted" id="planPer">/ شهرياً</span></h2>
                                 <ul class="list-unstyled text-muted small mb-4">
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="feat1">ذاكرة متجهة عملاقة Meta-Grade CRM Vector Memory</span></li>
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="feat2">مساعد صوتي ثلاثي الأبعاد بلغة ولهجة العميل</span></li>
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="feat3">وكلاء ذاتيون Autonomous Agents لإتمام العقود</span></li>
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="feat4">تشفير تام وتكامل آلي مع Gmail وCryptomus</span></li>
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="pFeat1">شبكة كاملة من وكلاء الذكاء الاصطناعي (Hunter, Closer, Finance, Memory)</span></li>
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="pFeat2">ذاكرة متجهة عملاقة Qdrant Vector Memory</span></li>
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="pFeat3">مساعد صوتي ثلاثي الأبعاد تفاعلي بلغة العميل</span></li>
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="pFeat4">دفع تلقائي عبر Cryptomus (USDT) وبطاقات Stripe</span></li>
                                 </ul>
                             </div>
-                            <button onclick="handleCryptoPayment()" class="btn btn-success w-100 fw-bold py-3 mt-3">
-                                <i class="fa-solid fa-wallet me-2"></i> <span id="txtPayCrypto">الدفع عبر كريبتوموس ($300 USDT)</span>
-                            </button>
+                            <div class="d-flex gap-2">
+                                <button onclick="payCrypto()" class="btn btn-success w-100 fw-bold py-3">
+                                    <i class="fa-solid fa-wallet me-1"></i> Cryptomus (USDT)
+                                </button>
+                                <button onclick="payStripe()" class="btn btn-outline-info w-100 fw-bold py-3">
+                                    <i class="fa-solid fa-credit-card me-1"></i> Stripe / Card
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -278,110 +271,117 @@
         </div>
     </section>
 
-    <!-- Scripts -->
+    <!-- JS Scripts -->
     <script>
         const socket = io();
 
-        // --- Three.js Background ---
+        // 1. Three.js Background Particle System
         let scene, camera, renderer, particles;
-        function initThree() {
-            const canvas = document.getElementById('webgl-bg');
+        function initBgThree() {
+            const canvas = document.getElementById('bg-canvas');
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
             renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
 
-            const count = 900;
-            const geometry = new THREE.BufferGeometry();
-            const positions = new Float32Array(count * 3);
-            for(let i = 0; i < count * 3; i++) {
-                positions[i] = (Math.random() - 0.5) * 15;
-            }
-            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            const material = new THREE.PointsMaterial({ size: 0.035, color: 0x00F0FF, transparent: true, opacity: 0.7 });
-            particles = new THREE.Points(geometry, material);
+            const count = 1200;
+            const geo = new THREE.BufferGeometry();
+            const pos = new Float32Array(count * 3);
+            for(let i=0; i<count*3; i++) pos[i] = (Math.random() - 0.5) * 16;
+            geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+
+            const mat = new THREE.PointsMaterial({ size: 0.03, color: 0x00F0FF, transparent: true, opacity: 0.6 });
+            particles = new THREE.Points(geo, mat);
             scene.add(particles);
             camera.position.z = 5;
 
             function animate() {
                 requestAnimationFrame(animate);
-                particles.rotation.x += 0.0006;
-                particles.rotation.y += 0.0009;
+                particles.rotation.x += 0.0005;
+                particles.rotation.y += 0.0008;
                 renderer.render(scene, camera);
             }
             animate();
         }
 
-        // --- Live Pipeline Canvas ---
-        function initPipelineCanvas() {
-            const canvas = document.getElementById('pipelineCanvas');
-            const ctx = canvas.getContext('2d');
-            let offset = 0;
-            function draw() {
-                canvas.width = canvas.offsetWidth;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.strokeStyle = '#00F0FF';
-                ctx.lineWidth = 2;
-                ctx.setLineDash([8, 8]);
-                ctx.lineDashOffset = -offset;
-                ctx.beginPath();
-                ctx.moveTo(30, canvas.height / 2);
-                ctx.lineTo(canvas.width - 30, canvas.height / 2);
-                ctx.stroke();
+        // 2. Hologram Globe
+        let globeScene, globeCam, globeRenderer, globeSphere;
+        function initGlobe() {
+            const container = document.getElementById('globeBox');
+            if(!container) return;
+            globeScene = new THREE.Scene();
+            globeCam = new THREE.PerspectiveCamera(50, container.offsetWidth / container.offsetHeight, 0.1, 1000);
+            globeRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            globeRenderer.setSize(container.offsetWidth, container.offsetHeight);
+            container.appendChild(globeRenderer.domElement);
 
-                const nodes = [0.1, 0.35, 0.65, 0.9];
-                nodes.forEach((pos, idx) => {
-                    ctx.fillStyle = idx === 3 ? '#00FF85' : '#00F0FF';
-                    ctx.beginPath();
-                    ctx.arc(canvas.width * pos, canvas.height / 2, 8, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-                offset += 0.6;
-                requestAnimationFrame(draw);
+            const geo = new THREE.SphereGeometry(1.8, 32, 32);
+            const mat = new THREE.MeshBasicMaterial({ color: 0x00FF85, wireframe: true, transparent: true, opacity: 0.45 });
+            globeSphere = new THREE.Mesh(geo, mat);
+            globeScene.add(globeSphere);
+            globeCam.position.z = 4.2;
+
+            function animateGlobe() {
+                requestAnimationFrame(animateGlobe);
+                globeSphere.rotation.y += 0.004;
+                globeRenderer.render(globeScene, globeCam);
             }
-            draw();
+            animateGlobe();
         }
 
-        // --- Voice & Avatar Lip-Sync Interaction ---
-        function toggleVoiceInteraction() {
-            const avatarBox = document.getElementById('avatarBox');
-            avatarBox.classList.add('avatar-lip-sync-pulse');
+        // 3. Realtime Stream Interaction
+        function triggerVoiceTalk() {
+            const box = document.getElementById('avatarContainer');
+            box.classList.add('pulse-speaking');
             
-            socket.emit('realtime_audio_stream', { chunk: "audio_bytes_data" });
-            socket.emit('trigger_autonomous_action', { 
-                prompt: "أغلق الصفقة الآن مع العميل", 
-                country: document.getElementById('userCountry').value || "Global" 
-            });
+            socket.emit('realtime_stream_ping', { country: document.getElementById('uCountry').value || 'Global' });
 
             setTimeout(() => {
-                avatarBox.classList.remove('avatar-lip-sync-pulse');
+                box.classList.remove('pulse-speaking');
             }, 3000);
         }
 
-        socket.on('autonomous_agent_update', (data) => {
-            const box = document.getElementById('terminalLogBox');
-            const div = document.createElement('div');
-            div.innerText = `[AUTONOMOUS AGENT] Decision: ${data.decision} (${data.detected_tone})`;
-            box.appendChild(div);
-            box.scrollTop = box.scrollHeight;
+        socket.on('realtime_stream_pong', (data) => {
+            const term = document.getElementById('terminalBox');
+            const d = document.createElement('div');
+            d.innerText = data.logs;
+            term.appendChild(d);
+            term.scrollTop = term.scrollHeight;
         });
 
-        // --- ROI Calculator ---
-        function updateROICalculator(val) {
-            document.getElementById('slideValDisplay').innerText = parseInt(val).toLocaleString();
-            let estRevenue = Math.floor((val / 1000) * 1500);
-            document.getElementById('estRevVal').innerText = '$' + estRevenue.toLocaleString();
+        // 4. Run Swarm Workflow
+        async function runFullSwarmWorkflow() {
+            const res = await fetch('/api/v1/swarm/run', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    email: document.getElementById('uEmail').value || "demo@company.com",
+                    niche: document.getElementById('uNiche').value || "Software",
+                    country: document.getElementById('uCountry').value || "Global"
+                })
+            });
+            const data = await res.json();
+            const term = document.getElementById('terminalBox');
+            const d = document.createElement('div');
+            d.innerHTML = `<span style="color:#00F0FF">[SWARM SUCCESS] Hunter found ${data.hunter.leads_found} leads. Closer closed deal. Invoice generated: ${data.finance.invoice_id}</span>`;
+            term.appendChild(d);
+            term.scrollTop = term.scrollHeight;
         }
 
-        // Translations & AutoSave
-        const translations = {
+        // 5. ROI Calculator
+        function calculateROI(val) {
+            document.getElementById('valDisplay').innerText = parseInt(val).toLocaleString();
+            let est = Math.floor((val / 1000) * 1500);
+            document.getElementById('revVal').innerText = '$' + est.toLocaleString();
+        }
+
+        // 6. Complete Dictionary & Zero Reload Language Switcher
+        const dict = {
             ar: {
-                txtDashNav: "لوحة التحكم",
-                avatarBadge: "المساعد المباشر نشط (< 300ms)",
-                btnMicText: "تحدث صوتياً الآن",
-                avatarTitle: "الصورة الرمزية التفاعلية الصوتية والمرئية",
-                avatarText: "أهلاً بك! المساعد المتكلم يستمع إليك بدعم التكيف التلقائي مع لهجتك وسياقك الثقافي.",
-                heroBadge: "⚡ منصة أتمتة الصفقات السينمائية — جيل 2026",
-                heroTitle: "أتمتة استخراج العملاء وإتمام العقود 24/7",
-                heroSubtitle: "إدارة CRM ذكية، ذاكرة متجهة فائقة Vector Search، ووكلاء ذاتيون لإغلاق الصفقات تلقائياً.",
-                roiTitle: "محاكي الأرباح والصفقات المباشر (ROI Simulato
+                txtNavDash: "لوحة التحكم", avatarStatus: "مساعد 3D اللحظي نشط (120ms)", btnTalk: "تحدث مع المساعد اللحظي",
+                avatarTitle: "المساعد المرئي والصوتي اللحظي", avatarSub: "يقوم بتحليل سياق كلامك ولهجتك فوراً ويتخذ القرارات مع شبكة الوكلاء.",
+                heroBadge: "⚡ معمارية الذكاء الاصطناعي الفضائية لعام 2026", heroTitle: "شبكة وكلاء مبيعات ذاتية وإغلاق تلقائي 24/7",
+                heroSubtitle: "وكلاء Hunter, Closer, Finance, & Memory يعملون بتناغم لإدارة صفقاتك بذكاء متفوق.",
+                btnRunSwarm: "تشغيل شبكة الوكلاء الآن (Run Swarm)", roiTitle: "المحاكي التفاعلي للأرباح (ROI Simulator)",
+                roiSub: "حرك الشريط لرؤية حجم العقود والأرباح المتوقعة التي سيحققها وكلاء النظام لك شهرياً:",
+                lblVolume: "عدد العملاء المستهدفين أسبوعياً:", txtRevTitle: "تقد
