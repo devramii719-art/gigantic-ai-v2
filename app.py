@@ -54,7 +54,7 @@ class MemoryAgent:
             conn.commit()
             return vector_id
 
-    def semantic_query(self, limit=50):
+    def semantic_query(self, limit=100):
         with self._get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute("SELECT * FROM memory_logs ORDER BY id DESC LIMIT ?", (limit,))
@@ -74,7 +74,7 @@ def index():
 
 @app.route('/dashboard')
 def dashboard():
-    logs = memory.semantic_query(limit=50)
+    logs = memory.semantic_query(limit=100)
     return jsonify({
         "status": "DASHBOARD_ACTIVE",
         "system": "GIGANTIC AI SWARM 2026",
@@ -86,11 +86,14 @@ def dashboard():
 def run_full_swarm():
     try:
         data = request.get_json(force=True) or {}
-        email = data.get('email', 'demo@company.com')
+        email = data.get('email')
         niche = data.get('niche', 'General')
         country = data.get('country', 'Global')
 
-        memory.save_context(email, "SWARM_RUN", {
+        if not email or '@' not in email:
+            return jsonify({"status": "ERROR", "message": "يرجى إدخال بريد إلكتروني صحيح"}), 400
+
+        vec_id = memory.save_context(email, "REGISTERED_LEAD", {
             "email": email,
             "niche": niche,
             "country": country,
@@ -99,8 +102,9 @@ def run_full_swarm():
 
         return jsonify({
             "status": "SUCCESS",
-            "message": "تم حفظ بياناتك في الذاكرة وتفعيل شبكة الوكلاء بنجاح!",
-            "email": email
+            "message": f"تم حفظ بريدك ({email}) بنجاح في الذاكرة المترابطة (Vector ID: {vec_id})!",
+            "email": email,
+            "vector_id": vec_id
         }), 200
 
     except Exception as e:
@@ -111,7 +115,7 @@ def handle_realtime_ping(data):
     country = data.get('country', 'Global') if isinstance(data, dict) else 'Global'
     emit('realtime_stream_pong', {
         "avatar_status": "SPEAKING_LIP_SYNC",
-        "logs": f"[SWARM] Agent Hunter active for target country: {country}"
+        "logs": f"[SWARM Voice Agent] Live Voice Analysis Active for: {country}"
     })
 
 if __name__ == '__main__':

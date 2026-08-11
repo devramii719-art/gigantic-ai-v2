@@ -125,10 +125,10 @@
 </head>
 <body>
 
-    <!-- Three.js Background -->
+    <!-- Three.js Background Canvas -->
     <canvas id="bg-canvas"></canvas>
 
-    <!-- Top Nav -->
+    <!-- Top Navigation Bar -->
     <nav class="navbar navbar-expand-lg sticky-top bg-dark bg-opacity-50 border-bottom border-info border-opacity-25 px-4 backdrop-blur">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold text-white d-flex align-items-center gap-2" href="#">
@@ -148,14 +148,6 @@
                     <option value="zh">🇨🇳 中文</option>
                     <option value="ru">🇷🇺 Русский</option>
                     <option value="tr">🇹🇷 Türkçe</option>
-                    <option value="pt">🇧🇷 Português</option>
-                    <option value="it">🇮🇹 Italiano</option>
-                    <option value="ja">🇯🇵 日本語</option>
-                    <option value="ko">🇰🇷 한국어</option>
-                    <option value="hi">🇮🇳 हिन्दी</option>
-                    <option value="ur">🇵🇰 اردو</option>
-                    <option value="id">🇮🇩 Bahasa Indonesia</option>
-                    <option value="nl">🇳🇱 Nederlands</option>
                 </select>
                 <a href="/dashboard" target="_blank" class="btn btn-outline-info btn-sm fw-bold">
                     <i class="fa-solid fa-gauge me-1"></i> <span id="txtNavDash">لوحة التحكم</span>
@@ -164,10 +156,10 @@
         </div>
     </nav>
 
-    <!-- Main Section -->
+    <!-- Main Container -->
     <section class="py-5 container">
 
-        <!-- 1. Avatar & Stream Panel -->
+        <!-- 1. Realtime Avatar & AI Voice Stream Panel -->
         <div class="glass-panel mb-5 p-4 d-flex align-items-center gap-4">
             <div class="avatar-glow-ring flex-shrink-0" id="avatarContainer">
                 <i class="fa-solid fa-user-astronaut fs-1 text-info" id="avatarIcon"></i>
@@ -175,20 +167,23 @@
             <div class="w-100">
                 <div class="d-flex justify-content-between align-items-center mb-1">
                     <span class="badge bg-info text-dark" id="avatarStatus">مساعد 3D اللحظي نشط (120ms)</span>
-                    <button class="btn btn-sm btn-outline-success fw-bold" onclick="triggerVoiceTalk()"><i class="fa-solid fa-microphone me-1"></i> <span id="btnTalk">تحدث مع المساعد اللحظي</span></button>
+                    <button class="btn btn-sm btn-outline-success fw-bold" onclick="triggerVoiceTalk()">
+                        <i class="fa-solid fa-microphone me-1"></i> <span id="btnTalk">تحدث مع المساعد اللحظي</span>
+                    </button>
                 </div>
                 <h5 class="fw-bold mb-1" id="avatarTitle">المساعد المرئي والصوتي اللحظي</h5>
                 <p class="text-muted small mb-0" id="avatarSub">يقوم بتحليل سياق كلامك ولهجتك فوراً ويتخذ القرارات مع شبكة الوكلاء.</p>
             </div>
         </div>
 
+        <!-- Hero Section Header -->
         <div class="row justify-content-center text-center">
             <div class="col-lg-11">
                 <span class="badge border border-info text-info mb-3 px-3 py-2" id="heroBadge">⚡ معمارية الذكاء الاصطناعي الفضائية لعام 2026</span>
                 <h1 class="hero-title mb-3" id="heroTitle">شبكة وكلاء مبيعات ذاتية وإغلاق تلقائي 24/7</h1>
                 <p class="lead text-muted mb-4" id="heroSubtitle">وكلاء Hunter, Closer, Finance, & Memory يعملون بتناغم لإدارة صفقاتك بذكاء متفوق.</p>
 
-                <!-- 2. Hologram Globe & Live Swarm Logs -->
+                <!-- 2. Hologram Globe & Live Swarm Terminal -->
                 <div class="row g-4 mb-5 text-start">
                     <div class="col-md-7">
                         <div class="globe-container" id="globeBox"></div>
@@ -206,7 +201,7 @@
                     </div>
                 </div>
 
-                <!-- 3. Interactive ROI Simulator -->
+                <!-- 3. Interactive ROI Calculator Simulator -->
                 <div class="glass-panel mb-5 text-start">
                     <div class="row align-items-center">
                         <div class="col-md-6">
@@ -229,7 +224,7 @@
                     </div>
                 </div>
 
-                <!-- 4. Trial & Payment Gateways -->
+                <!-- 4. Trial Registration Form & Pricing Cards -->
                 <div class="row g-4 text-start">
                     <div class="col-md-6">
                         <div class="glass-panel h-100">
@@ -253,7 +248,7 @@
                                     <i class="fa-solid fa-rocket me-2"></i> <span id="btnStartTrialText">تفعيل التجربة الفورية (4-Day Free Trial)</span>
                                 </button>
                             </form>
-                            <div id="trialAlert" class="mt-3"></div>
+                            <div id="trialAlert" class="mt-2"></div>
                         </div>
                     </div>
 
@@ -274,10 +269,10 @@
                                 </ul>
                             </div>
                             <div class="d-flex gap-2">
-                                <button onclick="alert('Cryptomus Payment Gateway Activated ($300 USDT)')" class="btn btn-success w-100 fw-bold py-3">
+                                <button onclick="alert('Cryptomus Gateway Active ($300 USDT)')" class="btn btn-success w-100 fw-bold py-3">
                                     <i class="fa-solid fa-wallet me-1"></i> Cryptomus (USDT)
                                 </button>
-                                <button onclick="alert('Stripe Gateway Activated ($300)')" class="btn btn-outline-info w-100 fw-bold py-3">
+                                <button onclick="alert('Stripe Gateway Active ($300)')" class="btn btn-outline-info w-100 fw-bold py-3">
                                     <i class="fa-solid fa-credit-card me-1"></i> Stripe / Card
                                 </button>
                             </div>
@@ -289,7 +284,7 @@
         </div>
     </section>
 
-    <!-- JS Scripts -->
+    <!-- JavaScript Interactive Code -->
     <script>
         const socket = io();
 
@@ -298,10 +293,11 @@
             initGlobe();
         };
 
-        // 1. Three.js Background Particle System
+        // 1. Background Interactive Particles
         let scene, camera, renderer, particles;
         function initBgThree() {
             const canvas = document.getElementById('bg-canvas');
+            if(!canvas) return;
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
             renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
@@ -327,7 +323,7 @@
             animate();
         }
 
-        // 2. Hologram Globe
+        // 2. Hologram Wireframe Globe
         let globeScene, globeCam, globeRenderer, globeSphere;
         function initGlobe() {
             const container = document.getElementById('globeBox');
@@ -352,16 +348,23 @@
             animateGlobe();
         }
 
-        // 3. Realtime Voice/Stream Interaction
+        // 3. Realtime Voice Speech Engine (المساعد المتكلم الحقيقي)
         function triggerVoiceTalk() {
             const box = document.getElementById('avatarContainer');
             box.classList.add('pulse-speaking');
             
             socket.emit('realtime_stream_ping', { country: document.getElementById('uCountry').value || 'Global' });
 
+            if ('speechSynthesis' in window) {
+                const speech = new SpeechSynthesisUtterance("أهلاً بك يا شريكي، تم تفعيل المساعد الفضائي اللحظي. الذاكرة وشبكة الوكلاء جاهزة للعمل.");
+                speech.lang = 'ar-SA';
+                speech.rate = 0.95;
+                window.speechSynthesis.speak(speech);
+            }
+
             setTimeout(() => {
                 box.classList.remove('pulse-speaking');
-            }, 3000);
+            }, 4000);
         }
 
         socket.on('realtime_stream_pong', (data) => {
@@ -372,7 +375,7 @@
             term.scrollTop = term.scrollHeight;
         });
 
-        // 4. Run Swarm Workflow
+        // 4. Run Swarm Direct Button
         async function runFullSwarmWorkflow() {
             const res = await fetch('/api/v1/swarm/run', {
                 method: 'POST',
@@ -386,5 +389,4 @@
             const data = await res.json();
             const term = document.getElementById('terminalBox');
             const d = document.createElement('div');
-            d.innerHTML = `<span style="color:#00F0FF">[SWARM SUCCESS] Memory logged for ${data.email || 'Lead'}. System Ready.</span>`;
-            term.appendChild(
+            d.innerHTML = `<span style="color:#00F0FF">[SWARM SUCCESS] Memory logged for ${data.
