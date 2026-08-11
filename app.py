@@ -56,13 +56,13 @@ def init_db():
 
 init_db()
 
-# 2. رأس حماية السيرفر وإلغاء الكاش لضمان تحديث الواجهة فوراً
+# 2. رأس حماية السيرفر وإلغاء الكاش نهائياً لضمان تحديث الواجهة فوراً
 @app.after_request
 def apply_security_headers(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
-    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate, max-age=0'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '0'
     return response
@@ -70,13 +70,13 @@ def apply_security_headers(response):
 # 3. مسارات الصفحات الرئيسية
 @app.route('/')
 def home():
-    return render_template('index.html', v=datetime.now().timestamp())
+    return render_template('index.html', v=datetime.utcnow().timestamp())
 
 @app.route('/dashboard')
 def dashboard():
-    return render_template('dashboard.html', v=datetime.now().timestamp())
+    return render_template('dashboard.html', v=datetime.utcnow().timestamp())
 
-# 4. API تسليم التجربة المجانية (4 أيام حقيقية من وقت السيرفر)
+# 4. API تسليم التجربة المجانية (4 أيام حقيقية مضبوطة بالتوقيت الموحد)
 @app.route('/api/v1/register-trial', methods=['POST'])
 def register_trial():
     try:
@@ -91,10 +91,10 @@ def register_trial():
         conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
 
-        cursor.execute("SELECT created_at, trial_expiry, is_paid FROM users WHERE email = ?", (email,))
+        cursor.execute("SELECT trial_expiry, is_paid FROM users WHERE email = ?", (email,))
         user = cursor.fetchone()
 
-        now = datetime.now()
+        now = datetime.utcnow()
         if not user:
             expiry = now + timedelta(days=4)
             cursor.execute(
@@ -105,27 +105,33 @@ def register_trial():
             trial_expiry = expiry
             is_paid = 0
         else:
-            trial_expiry_str = str(user[1])
-            is_paid = user[2]
+            trial_expiry_str = str(user[0])
+            is_paid = user[1]
             try:
                 if '.' in trial_expiry_str:
                     trial_expiry = datetime.strptime(trial_expiry_str, '%Y-%m-%d %H:%M:%S.%f')
                 else:
                     trial_expiry = datetime.strptime(trial_expiry_str, '%Y-%m-%d %H:%M:%S')
             except Exception:
-                trial_expiry = now
+                trial_expiry = now + timedelta(days=4)
 
         conn.close()
 
         remaining = trial_expiry - now
-        seconds_left = max(0, int(remaining.total_seconds()))
+        seconds_left = int(remaining.total_seconds())
+
+        if seconds_left <= 0:
+            is_expired = True
+            seconds_left = 0
+        else:
+            is_expired = False
 
         return jsonify({
             "status": "success",
             "email": email,
             "seconds_left": seconds_left,
             "days_left": seconds_left // 86400,
-            "is_expired": seconds_left <= 0,
+            "is_expired": is_expired,
             "is_paid": bool(is_paid),
             "redirect_url": "/dashboard"
         }), 200
@@ -177,7 +183,7 @@ def health():
         "status": "healthy",
         "platform": "GIGANTIC AI V2 Enterprise",
         "engine_version": "2.0.0",
-        "timestamp": datetime.now().isoformat()
+        "timestamp": datetime.utcnow().isoformat()
     }), 200
 
 if __name__ == '__main__':
