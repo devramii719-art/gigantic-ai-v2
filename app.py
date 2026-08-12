@@ -8,7 +8,7 @@ import sqlite3
 from flask import Flask, render_template, request, jsonify
 from flask_socketio import SocketIO, emit
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'GIGANTIC_ALIEN_SWARM_SECRET_2026')
 
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='gevent')
@@ -62,7 +62,10 @@ class MemoryAgent:
             results = []
             for row in rows:
                 item = dict(row)
-                item["payload"] = json.loads(item["payload"])
+                try:
+                    item["payload"] = json.loads(item["payload"])
+                except Exception:
+                    pass
                 results.append(item)
             return results
 
