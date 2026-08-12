@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GIGANTIC AI 2026 — Alien Swarm UI</title>
     
-    <!-- CSS Standard -->
+    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    
-    <!-- Socket.IO Client -->
+    <!-- Socket.IO Client Library -->
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 
     <style>
@@ -20,79 +20,40 @@
             --neon-green: #00FF85;
             --neon-purple: #A000FF;
         }
-
         body {
             background-color: var(--bg-alien);
             background-image: radial-gradient(circle at 50% 10%, rgba(0, 240, 255, 0.15), transparent 50%);
             color: #FFFFFF;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            overflow-x: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
+            padding-bottom: 50px;
         }
-
         .glass-panel {
             background: var(--card-glass);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(0, 240, 255, 0.3);
             border-radius: 20px;
             padding: 2rem;
-            box-shadow: 0 10px 30px rgba(0, 240, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
         }
-
         .hero-title {
-            font-size: 3.2rem;
+            font-size: 3rem;
             font-weight: 900;
             background: linear-gradient(135deg, #FFF 0%, var(--neon-cyan) 50%, var(--neon-purple) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
         }
-
-        .globe-container {
-            width: 100%;
-            height: 220px;
-            border-radius: 16px;
-            border: 1px solid rgba(0, 255, 133, 0.4);
-            background: radial-gradient(circle, rgba(0,240,255,0.1) 0%, rgba(0,0,0,0.9) 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .avatar-glow-ring {
-            width: 85px; height: 85px;
-            border-radius: 50%;
-            border: 2px solid var(--neon-cyan);
-            box-shadow: 0 0 20px var(--neon-cyan);
-            display: flex; align-items: center; justify-content: center;
-            background: rgba(0,240,255,0.15);
-        }
-
-        .pulse-speaking {
-            animation: pulseGlow 0.4s infinite alternate ease-in-out;
-        }
-
-        @keyframes pulseGlow {
-            0% { transform: scale(1); box-shadow: 0 0 10px var(--neon-cyan); }
-            100% { transform: scale(1.15); box-shadow: 0 0 35px var(--neon-green); }
-        }
-
         .terminal-log {
             background: #010812;
             border: 1px solid var(--neon-cyan);
             border-radius: 12px;
             padding: 1rem;
             font-family: monospace;
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             color: var(--neon-green);
-            height: 150px;
+            height: 180px;
             overflow-y: auto;
-            text-align: left;
-            direction: ltr;
         }
-
         .btn-alien {
             background: linear-gradient(135deg, var(--neon-cyan) 0%, #0066FF 100%);
             color: #000;
@@ -100,241 +61,153 @@
             border: none;
             padding: 0.9rem;
             border-radius: 12px;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
-            transition: 0.2s;
-            cursor: pointer;
+            transition: all 0.3s ease;
         }
-
         .btn-alien:hover {
-            box-shadow: 0 0 35px rgba(0, 240, 255, 0.8);
+            opacity: 0.9;
             transform: translateY(-2px);
+            box-shadow: 0 0 15px var(--neon-cyan);
         }
-
-        .dashboard-stat-card {
-            background: rgba(0, 240, 255, 0.05);
+        .form-control {
             border: 1px solid rgba(0, 240, 255, 0.2);
-            border-radius: 8px;
-            padding: 8px 12px;
-            margin-bottom: 8px;
+        }
+        .form-control:focus {
+            background-color: #0d1626;
+            color: #fff;
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
         }
     </style>
 </head>
 <body>
 
-    <!-- Top Navbar -->
-    <nav class="navbar navbar-expand-lg sticky-top bg-dark bg-opacity-75 border-bottom border-info border-opacity-25 px-4">
-        <div class="container-fluid">
-            <a class="navbar-brand fw-bold text-white d-flex align-items-center gap-2" href="#">
-                <i class="fa-solid fa-brain text-info fa-spin"></i> GIGANTIC <span class="badge bg-info text-dark">ALIEN SWARM 2026</span>
-            </a>
-            <div class="d-flex align-items-center gap-3 ms-auto">
-                <select id="langSelect" class="form-select form-select-sm bg-dark text-info border-info fw-bold">
-                    <option value="ar">🌐 العربية (الجزائر)</option>
-                    <option value="en">🇺🇸 English</option>
-                    <option value="fr">🇫🇷 Français</option>
-                </select>
-                <button type="button" class="btn btn-outline-warning btn-sm fw-bold" id="btnExportData">
-                    <i class="fa-solid fa-download me-1"></i> تصدير البيانات (CSV)
-                </button>
-            </div>
-        </div>
+    <nav class="navbar bg-dark border-bottom border-info px-4 mb-4">
+        <a class="navbar-brand text-white fw-bold" href="#">
+            <i class="fa-solid fa-brain text-info me-2"></i> GIGANTIC AI 2026
+        </a>
     </nav>
 
-    <section class="py-4 container">
-
-        <!-- Voice Assistant Avatar Header -->
-        <div class="glass-panel mb-4 p-3 d-flex align-items-center gap-4">
-            <div class="avatar-glow-ring flex-shrink-0" id="avatarContainer">
-                <i class="fa-solid fa-user-astronaut fs-2 text-info"></i>
-            </div>
-            <div class="w-100">
-                <div class="d-flex justify-content-between align-items-center mb-1">
-                    <span class="badge bg-info text-dark" id="avatarStatus">المساعد الصوتي نشط جاهز</span>
-                    <div class="d-flex gap-2">
-                        <button type="button" class="btn btn-sm btn-outline-success fw-bold" id="btnTalk">
-                            <i class="fa-solid fa-microphone me-1"></i> <span id="btnTalkTxt">تحدث مع المساعد الصوتي</span>
-                        </button>
-                        <button type="button" class="btn btn-sm btn-outline-danger fw-bold" id="btnStopVoice">
-                            <i class="fa-solid fa-volume-xmark"></i> إيقاف الصوت
-                        </button>
+    <div class="container text-center">
+        <h1 class="hero-title mb-3">GIGANTIC ALIEN SWARM</h1>
+        <p class="text-secondary mb-4">منصة الأتمتة وإدارة الحسابات المباشرة</p>
+        
+        <div class="row g-4 text-start">
+            <!-- كارت الإحصائيات وسجل النظام -->
+            <div class="col-lg-6">
+                <div class="glass-panel h-100">
+                    <h4 class="mb-3 text-info"><i class="fa-solid fa-database me-2"></i> إحصائيات SQLite</h4>
+                    <h5 class="mb-3">إجمالي الحسابات: <span id="leadCount" class="text-warning fs-3 fw-bold">0</span></h5>
+                    
+                    <label class="form-label text-secondary">سجل التحديثات اللحظية (SocketIO Log):</label>
+                    <div class="terminal-log" id="logsContainer">
+                        <div>[SYSTEM] جاري الاتصال بالسيرفر...</div>
                     </div>
                 </div>
-                <h5 class="fw-bold mb-1" id="avatarTitle">المساعد المرئي والصوتي اللحظي</h5>
-                <p class="text-muted small mb-0" id="avatarSub">انقر على الزر للتحدث مباشرة مع المساعد الذكي وسماع الرد الصوتي.</p>
+            </div>
+
+            <!-- كارت نموذج التسجيل -->
+            <div class="col-lg-6">
+                <div class="glass-panel h-100">
+                    <h4 class="mb-3 text-info"><i class="fa-solid fa-user-plus me-2"></i> إضافة حساب جديد</h4>
+                    <form id="trialForm">
+                        <div class="mb-3">
+                            <label for="uEmail" class="form-label">البريد الإلكتروني</label>
+                            <input type="email" id="uEmail" class="form-control bg-dark text-white" placeholder="name@domain.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="uNiche" class="form-label">المجال (Niche)</label>
+                            <input type="text" id="uNiche" class="form-control bg-dark text-white" placeholder="مثال: SaaS / E-commerce" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="uCountry" class="form-label">البلد</label>
+                            <input type="text" id="uCountry" class="form-control bg-dark text-white" placeholder="مثال: Algeria / USA" required>
+                        </div>
+                        <button type="submit" id="btnSubmit" class="btn btn-alien w-100 mt-2">
+                            <i class="fa-solid fa-paper-plane me-2"></i> حفظ في الداتابيز
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
+    </div>
 
-        <!-- Hero Title -->
-        <div class="row justify-content-center text-center">
-            <div class="col-lg-11">
-                <span class="badge border border-info text-info mb-3 px-3 py-2" id="heroBadge">⚡ معمارية الذكاء الاصطناعي الفضائية لعام 2026</span>
-                <h1 class="hero-title mb-3" id="heroTitle">شبكة وكلاء مبيعات ذاتية وإغلاق تلقائي 24/7</h1>
-                <p class="lead text-muted mb-4" id="heroSubtitle">وكلاء Hunter, Closer, Finance, & Memory يعملون بتناغم لإدارة صفقاتك بذكاء متفوق.</p>
-
-                <!-- Status & Live Screen -->
-                <div class="row g-4 mb-4 text-start">
-                    <div class="col-md-6">
-                        <div class="globe-container p-3 text-center">
-                            <i class="fa-solid fa-earth-americas text-info display-4 mb-2 fa-spin" style="animation-duration: 15s;"></i>
-                            <h6 class="text-info fw-bold mb-1">شبكة الاتصال والوكلاء نشطة 24/7</h6>
-                            <small class="text-muted">الاستجابة الحالية: <span class="text-success fw-bold">120ms (Low Latency)</span></small>
-                        </div>
-                    </div>
-                    <div class="col-md-6 d-flex flex-column justify-content-between">
-                        <div class="terminal-log w-100" id="terminalBox">
-                            <div class="dashboard-stat-card d-flex justify-content-between align-items-center">
-                                <div><strong>النظام:</strong> <span class="text-info" id="sysName">GIGANTIC SWARM</span></div>
-                                <div><span class="badge bg-success" id="sysStatus">ACTIVE</span></div>
-                            </div>
-                            <div class="dashboard-stat-card d-flex justify-content-between align-items-center">
-                                <div><strong>الحسابات المحفوظة في الداتابيز:</strong></div>
-                                <div><span class="text-warning fw-bold fs-5" id="leadCount">0</span></div>
-                            </div>
-                            <div id="logsContainer">
-                                <div class="text-muted">[SYSTEM] النظام جاهز وحاضر لتسجيل البيانات...</div>
-                            </div>
-                        </div>
-                        <div class="d-flex gap-2 mt-2">
-                            <button type="button" id="btnRunSwarm" class="btn btn-alien w-100 fw-bold">
-                                <i class="fa-solid fa-bolt me-2"></i> <span id="btnRunSwarmTxt">تشغيل شبكة الوكلاء الان</span>
-                            </button>
-                            <button type="button" id="btnClearLogs" class="btn btn-outline-secondary fw-bold">
-                                مسح
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ROI Simulator -->
-                <div class="glass-panel mb-4 text-start">
-                    <div class="row align-items-center">
-                        <div class="col-md-6">
-                            <h5 class="fw-bold text-info mb-2"><i class="fa-solid fa-calculator me-2"></i> <span id="roiTitle">المحاكي التفاعلي للأرباح (ROI Simulator)</span></h5>
-                            <p class="text-muted small mb-2" id="roiSub">حرك الشريط لرؤية حجم العقود والأرباح المتوقعة شهرياً:</p>
-                            
-                            <label class="form-label text-white fw-bold mb-1" id="lblVolume">عدد العملاء المستهدفين أسبوعياً:</label>
-                            <input type="range" class="form-range mb-2" min="1000" max="200000" step="1000" id="roiSlider" value="25000">
-                            <div class="d-flex justify-content-between text-muted small">
-                                <span>1,000</span>
-                                <span class="text-info fw-bold fs-5" id="valDisplay">25,000</span>
-                                <span>200,000</span>
-                            </div>
-                        </div>
-                        <div class="col-md-6 text-center mt-3 mt-md-0 border-start border-info border-opacity-25">
-                            <small class="text-muted d-block" id="txtRevTitle">تقدير أرباح العقود المغلقة شهرياً:</small>
-                            <h2 class="fw-bold text-success display-4 my-1" id="revVal">$37,500</h2>
-                            <span class="badge bg-success text-dark fw-bold" id="txtRevBadge">عائد استثمار متوقع +12,400%</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Form & Pricing Cards -->
-                <div class="row g-4 text-start">
-                    <div class="col-md-6">
-                        <div class="glass-panel h-100">
-                            <h5 class="fw-bold text-info mb-2" id="trialTitle"><i class="fa-solid fa-gift me-2"></i> فترة تجريبية مجانية (4 أيام)</h5>
-                            <p class="text-muted small mb-3" id="trialSub">أدخل بياناتك وسيتم تسجيلك وحفظ حسابك مثل فيسبوك فوراً.</p>
-
-                            <form id="trialForm">
-                                <div class="mb-3">
-                                    <label class="form-label text-muted small" id="lblEmail">البريد الإلكتروني للشركة</label>
-                                    <input type="email" id="uEmail" class="form-control bg-dark text-white border-secondary" placeholder="ceo@company.com" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label text-muted small" id="lblNiche">قطاع العمل / المجال</label>
-                                    <input type="text" id="uNiche" class="form-control bg-dark text-white border-secondary" placeholder="التجارة الإلكترونية، العقارات" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label text-muted small" id="lblCountry">البلد المستهدف</label>
-                                    <input type="text" id="uCountry" class="form-control bg-dark text-white border-secondary" placeholder="الجزائر، الإمارات، فرنسا" required>
-                                </div>
-                                <button type="submit" class="btn btn-alien w-100 fw-bold" id="btnStartTrial">
-                                    <i class="fa-solid fa-rocket me-2"></i> <span id="btnStartTrialText">تفعيل وحفظ الحساب فوراً</span>
-                                </button>
-                            </form>
-                            <div id="trialAlert" class="mt-2"></div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="glass-panel border-success h-100 d-flex flex-column justify-content-between">
-                            <div>
-                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <h5 class="fw-bold text-success mb-0" id="planTitle"><i class="fa-solid fa-crown me-2"></i> باقة المؤسسات العملاقة</h5>
-                                    <span class="badge bg-success text-dark fw-bold">2026 Unlimited</span>
-                                </div>
-                                <p class="text-muted small mb-2" id="planSub">اشتراك شهري شامل لجميع شبكات الوكلاء وبوابات الدفع التلقائية</p>
-                                <h3 class="fw-bold my-2 text-white">$300 <span class="fs-6 text-muted" id="planPer">/ شهرياً</span></h3>
-                                <ul class="list-unstyled text-muted small mb-3">
-                                    <li class="mb-1"><i class="fa-solid fa-check text-success me-2"></i> <span>وكلاء Hunter, Closer, Finance, Memory</span></li>
-                                    <li class="mb-1"><i class="fa-solid fa-check text-success me-2"></i> <span>ذاكرة SQLite & Qdrant DB دائمية</span></li>
-                                    <li class="mb-1"><i class="fa-solid fa-check text-success me-2"></i> <span>دفع تلقائي عبر Cryptomus (USDT) و Stripe</span></li>
-                                </ul>
-                            </div>
-                            <div class="d-flex gap-2">
-                                <button type="button" id="btnPayCrypto" class="btn btn-success w-100 fw-bold py-2">
-                                    <i class="fa-solid fa-wallet me-1"></i> Cryptomus (USDT)
-                                </button>
-                                <button type="button" id="btnPayStripe" class="btn btn-outline-info w-100 fw-bold py-2">
-                                    <i class="fa-solid fa-credit-card me-1"></i> Stripe / Card
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- JS Logic System -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // الاتصال مع SocketIO
             const socket = io();
 
-            // 1. Translations Dictionary
-            const dict = {
-                ar: {
-                    txtNavDash: "لوحة التحكم", avatarStatus: "المساعد الصوتي نشط جاهز",
-                    avatarTitle: "المساعد المرئي والصوتي اللحظي", avatarSub: "انقر على الزر للتحدث مباشرة مع المساعد الذكي وسماع الرد الصوتي.",
-                    btnTalkTxt: "تحدث مع المساعد الصوتي", heroBadge: "⚡ معمارية الذكاء الاصطناعي الفضائية لعام 2026",
-                    heroTitle: "شبكة وكلاء مبيعات ذاتية وإغلاق تلقائي 24/7", heroSubtitle: "وكلاء Hunter, Closer, Finance, & Memory يعملون بتناغم لإدارة صفقاتك بذكاء متفوق.",
-                    btnRunSwarmTxt: "تشغيل شبكة الوكلاء الآن (Run Swarm)", roiTitle: "المحاكي التفاعلي للأرباح (ROI Simulator)",
-                    roiSub: "حرك الشريط لرؤية حجم العقود والأرباح المتوقعة شهرياً:",
-                    lblVolume: "عدد العملاء المستهدفين أسبوعياً:", txtRevTitle: "تقدير أرباح العقود المغلقة شهرياً:",
-                    txtRevBadge: "عائد استثمار متوقع +12,400%", trialTitle: "فترة تجريبية مجانية (4 أيام)",
-                    trialSub: "أدخل بياناتك وسيتم تسجيلك وحفظ حسابك مثل فيسبوك فوراً.", lblEmail: "البريد الإلكتروني للشركة",
-                    lblNiche: "قطاع العمل / المجال", lblCountry: "البلد المستهدف", btnStartTrialText: "تفعيل وحفظ الحساب فوراً",
-                    planTitle: "باقة المؤسسات العملاقة", planSub: "اشتراك شهري شامل لجميع شبكات الوكلاء وبوابات الدفع التلقائية", planPer: "/ شهرياً"
-                },
-                en: {
-                    txtNavDash: "Dashboard", avatarStatus: "Voice Assistant Active",
-                    avatarTitle: "Real-Time Visual & Voice Assistant", avatarSub: "Click the button to speak directly with the AI assistant.",
-                    btnTalkTxt: "Speak with AI Assistant", heroBadge: "⚡ Alien AI Architecture 2026",
-                    heroTitle: "Autonomous Sales Agents & 24/7 Auto-Closing", heroSubtitle: "Hunter, Closer, Finance, & Memory agents working in synergy.",
-                    btnRunSwarmTxt: "Execute Agent Swarm Now", roiTitle: "Interactive Revenue Simulator",
-                    roiSub: "Move slider to project estimated monthly closed deal revenues:",
-                    lblVolume: "Target Leads Per Week:", txtRevTitle: "Projected Monthly Closed Deals:",
-                    txtRevBadge: "Expected ROI +12,400%", trialTitle: "Free Trial (4 Days)",
-                    trialSub: "Enter your details to persist account state instantly.", lblEmail: "Company Email",
-                    lblNiche: "Industry / Niche", lblCountry: "Target Country", btnStartTrialText: "Activate Account Instantly",
-                    planTitle: "Enterprise Gigantic Plan", planSub: "Unlimited monthly access to agents and payment gateways", planPer: "/ Month"
-                },
-                fr: {
-                    txtNavDash: "Tableau de bord", avatarStatus: "Assistant Vocal Actif",
-                    avatarTitle: "Assistant Visuel & Vocal en Temps Réel", avatarSub: "Cliquez sur le bouton pour parler directement à l'assistant IA.",
-                    btnTalkTxt: "Parler à l'Assistant Vocal", heroBadge: "⚡ Architecture IA Spatiale 2026",
-                    heroTitle: "Réseau d'Agents de Vente Autonomes 24/7", heroSubtitle: "Les agents Hunter, Closer, Finance & Memory travaillent en synergie.",
-                    btnRunSwarmTxt: "Lancer le Réseau d'Agents", roiTitle: "Simulateur De Revenus Interactif",
-                    roiSub: "Déplacez le curseur pour voir les prévisions de revenus mensuels:",
-                    lblVolume: "Clients Cibles Par Semaine:", txtRevTitle: "Revenus Mensuels Estimés:",
-                    txtRevBadge: "ROI Attendu +12 400%", trialTitle: "Essai Gratuit (4 Jours)",
-                    trialSub: "Entrez vos données pour sauvegarder votre compte immédiatement.", lblEmail: "E-mail de l'entreprise",
-                    lblNiche: "Secteur d'activité", lblCountry: "Pays ciblé", btnStartTrialText: "Activer le compte maintenant",
-                    planTitle: "Offre Entreprise Gigantic", planSub: "Abonnement mensuel complet avec passerelles de paiement", planPer: "/ Mois"
-                }
-            };
+            const logsContainer = document.getElementById('logsContainer');
+            const leadCount = document.getElementById('leadCount');
 
-            document.getElementById('langSelect').addEventListener('change', function(e) {
-                const lang = e.target.value;
-                document.documentElem
+            function addLog(msg, colorClass = 'text-success') {
+                const time = new Date().toLocaleTimeString();
+                logsContainer.innerHTML += `<div class="${colorClass}">[${time}] ${msg}</div>`;
+                logsContainer.scrollTop = logsContainer.scrollHeight;
+            }
+
+            // عند نجاح الاتصال
+            socket.on('connect', function() {
+                addLog('تم الاتصال بالسيرفر بنجاح عبر SocketIO!', 'text-info');
+            });
+
+            // استقبال رد السيرفر الأولي
+            socket.on('system_response', function(data) {
+                addLog(data.data, 'text-warning');
+            });
+
+            // استقبال التحديثات الفورية عند إضافة مستخدم جديد
+            socket.on('lead_updated', function(data) {
+                leadCount.innerText = data.total;
+                addLog(`تسجيل جديد: ${data.latest_email} (${data.niche} - ${data.country})`, 'text-success');
+            });
+
+            // إرسال البيانات من النموذج
+            document.getElementById('trialForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const btn = document.getElementById('btnSubmit');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> جاري الحفظ...';
+
+                const email = document.getElementById('uEmail').value;
+                const niche = document.getElementById('uNiche').value;
+                const country = document.getElementById('uCountry').value;
+
+                try {
+                    const response = await fetch('/api/v1/auth/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, niche, country })
+                    });
+
+                    const resData = await response.json();
+
+                    if (response.ok) {
+                        document.getElementById('uEmail').value = '';
+                        document.getElementById('uNiche').value = '';
+                        document.getElementById('uCountry').value = '';
+                    } else {
+                        addLog(`خطأ: ${resData.message}`, 'text-danger');
+                    }
+                } catch (err) {
+                    addLog(`خطأ في الاتصال: ${err.message}`, 'text-danger');
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-paper-plane me-2"></i> حفظ في الداتابيز';
+                }
+            });
+
+            // جلب الإحصائيات عند تحميل الصفحة أول مرة
+            fetch('/api/v1/auth/stats')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.total !== undefined) {
+                        leadCount.innerText = data.total;
+                        addLog(`تم تحميل البيانات: الإجمالي الحالي ${data.total}`, 'text-secondary');
+                    }
+                })
+                .catch(err => console.error(err));
+        });
+    </script>
+</body>
+</html>
