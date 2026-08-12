@@ -60,6 +60,14 @@
             border: none;
         }
         .btn-glow:hover { opacity: 0.9; color: #000; }
+        
+        .btn-trial {
+            background: linear-gradient(135deg, #ff9900, #ff5500);
+            color: #fff;
+            font-weight: 700;
+            border: none;
+        }
+        .btn-trial:hover { opacity: 0.9; color: #fff; }
     </style>
 </head>
 <body>
@@ -127,7 +135,7 @@
                 </div>
             </div>
 
-            <!-- ب: بوابات الدفع والمعاملات -->
+            <!-- ب: بوابات الدفع والمعاملات والتجربة المجانية -->
             <div class="col-lg-6">
                 <div class="card-custom h-100">
                     <h4 class="text-success mb-3"><i class="fa-solid fa-wallet me-2"></i> <span id="t-secPay">بوابات الدفع والمعاملات</span></h4>
@@ -137,6 +145,13 @@
                             <span class="fw-bold" id="t-planName">اشتراك المؤسسات العملاقة</span>
                             <span class="badge bg-success fs-6">$300 / شهرياً</span>
                         </div>
+                    </div>
+
+                    <!-- زر التجربة المجانية لمدة 4 أيام -->
+                    <div class="mb-3">
+                        <button class="btn btn-trial w-100 py-2 fw-bold" onclick="startFreeTrial()">
+                            <i class="fa-solid fa-gift me-2"></i> <span id="btn-trial">بدء التجربة المجانية (4 أيام)</span>
+                        </button>
                     </div>
 
                     <div class="d-grid gap-2 mb-3">
@@ -154,7 +169,7 @@
                 </div>
             </div>
 
-            <!-- ج: المساعد النصي الفوري (بديل الصوتي) -->
+            <!-- ج: المساعد النصي الفوري -->
             <div class="col-12">
                 <div class="card-custom">
                     <h4 class="text-info mb-2"><i class="fa-solid fa-comments me-2"></i> <span id="t-secChat">المساعد النصي الذكي التفاعلي</span></h4>
@@ -181,7 +196,7 @@
                         <span class="badge bg-warning text-dark fs-6" id="dbCountBadge">الحسابات المسجلة: 0</span>
                     </div>
 
-                    <form id="regForm" class="row g-3">
+                    <form id="regForm" class="row g-3" onsubmit="saveUser(event)">
                         <div class="col-md-4">
                             <input type="email" id="uEmail" class="form-control bg-dark text-white border-secondary" placeholder="البريد الإلكتروني" required>
                         </div>
@@ -225,31 +240,31 @@
             ar: {
                 dir: "rtl", mainTitle: "منصة أتمتة المبيعات وإدارة شبكة الوكلاء الذكية", subTitle: "نظام متكامل لتجميع الحسابات، التنفيذ المباشر، وإدارة الفواتير التلقائية",
                 secOps: "التحكم بالنظام والعمليات", btnRun: "تشغيل الوكلاء (Run)", btnPause: "إيقاف مؤقت", btnClear: "مسح السجل", btnExport: "تصدير CSV / JSON",
-                logsLabel: "سجل العمليات اللحظي:", secPay: "بوابات الدفع والمعاملات", planName: "اشتراك المؤسسات العملاقة", btnInvoices: "سجل الفواتير والاشتراكات",
+                logsLabel: "سجل العمليات اللحظي:", secPay: "بوابات الدفع والمعاملات", planName: "اشتراك المؤسسات العملاقة", btnTrial: "بدء التجربة المجانية (4 أيام)", btnInvoices: "سجل الفواتير والاشتراكات",
                 secChat: "المساعد النصي الذكي التفاعلي", chatSub: "اكتب أوامرك واستفساراتك للحصول على رد فوري وتحديث أوتوماتيكي للوحة التحكم.", btnSend: "إرسال",
                 secReg: "التسجيل وتخزين الحسابات الدائم", btnSave: "حفظ وتثبيت الحساب في الداتابيز"
             },
             en: {
                 dir: "ltr", mainTitle: "Autonomous Sales & Swarm Agent Platform", subTitle: "Integrated system for lead storage, live execution, and auto-billing",
                 secOps: "System Operations & Control", btnRun: "Run Swarm", btnPause: "Pause System", btnClear: "Clear Logs", btnExport: "Export CSV / JSON",
-                logsLabel: "Live Operational Logs:", secPay: "Payment Gateways & Transactions", planName: "Enterprise Giant Plan", btnInvoices: "Invoices & Subscriptions History",
+                logsLabel: "Live Operational Logs:", secPay: "Payment Gateways & Transactions", planName: "Enterprise Giant Plan", btnTrial: "Start Free Trial (4 Days)", btnInvoices: "Invoices & Subscriptions History",
                 secChat: "Interactive Text AI Assistant", chatSub: "Type your commands to receive instant responses and live dashboard updates.", btnSend: "Send",
                 secReg: "Permanent Lead Registration & Persistence", btnSave: "Save Account to Database"
             },
             fr: {
                 dir: "ltr", mainTitle: "Plateforme d'Automations de Ventes & Agents", subTitle: "Système intégré pour la sauvegarde des comptes et facturation",
                 secOps: "Opérations du Système", btnRun: "Lancer Swarm", btnPause: "Mettre en Pause", btnClear: "Effacer les Logs", btnExport: "Exporter CSV / JSON",
-                logsLabel: "Journaux d'opérations en direct:", secPay: "Passerelles de Paiement", planName: "Abonnement Enterprise", btnInvoices: "Historique des Factures",
+                logsLabel: "Journaux d'opérations en direct:", secPay: "Passerelles de Paiement", planName: "Abonnement Enterprise", btnTrial: "Essai Gratuit (4 Jours)", btnInvoices: "Historique des Factures",
                 secChat: "Assistant Textuel Interactif", chatSub: "Saisissez vos commandes pour recevoir des réponses instantanées.", btnSend: "Envoyer",
                 secReg: "Enregistrement & Stockage Permanent", btnSave: "Sauvegarder dans la Base"
             },
-            es: { dir: "ltr", mainTitle: "Plataforma de Automatización de Ventas", subTitle: "Sistema integrado para registro de cuentas y facturación", secOps: "Operaciones del Sistema", btnRun: "Ejecutar Swarm", btnPause: "Pausar", btnClear: "Limpiar Registros", btnExport: "Exportar CSV", logsLabel: "Registros en vivo:", secPay: "Pasarelas de Pago", planName: "Plan Empresarial", btnInvoices: "Historial de Facturas", secChat: "Asistente de Texto IA", chatSub: "Escriba sus comandos para respuestas instantáneas.", btnSend: "Enviar", secReg: "Registro Permanente de Cuentas", btnSave: "Guardar en Base de Datos" },
-            de: { dir: "ltr", mainTitle: "Verkaufsautomatisierungs-Plattform", subTitle: "Integriertes System zur Speicherung von Konten und Abrechnung", secOps: "Systembetrieb", btnRun: "Swarm Starten", btnPause: "Pausieren", btnClear: "Protokolle Löschen", btnExport: "CSV Exportieren", logsLabel: "Live-Betriebsprotokoll:", secPay: "Zahlungs-Gateways", planName: "Enterprise-Plan", btnInvoices: "Rechnungsverlauf", secChat: "Interaktiver Text-Assistent", chatSub: "Geben Sie Ihre Befehle für sofortige Antworten ein.", btnSend: "Senden", secReg: "Dauerhafte Kontoregistrierung", btnSave: "In Datenbank Speichern" },
-            zh: { dir: "ltr", mainTitle: "销售自动化与智能代理平台", subTitle: "用于数据持久化存储和自动账单的集成系统", secOps: "系统操作与控制", btnRun: "运行代理网络", btnPause: "暂停", btnClear: "清除日志", btnExport: "导出 CSV/JSON", logsLabel: "实时操作日志:", secPay: "支付网关与交易", planName: "企业巨型计划", btnInvoices: "发票与订阅历史", secChat: "文本智能助手", chatSub: "输入您的指令以获取即时响应。", btnSend: "发送", secReg: "永久数据存储", btnSave: "保存到数据库" },
-            ru: { dir: "ltr", mainTitle: "Платформа Автоматизации Продаж", subTitle: "Интегрированная система хранения аккаунтов и биллинга", secOps: "Операции Системы", btnRun: "Запустить Сеть", btnPause: "Пауза", btnClear: "Очистить Логи", btnExport: "Экспорт CSV", logsLabel: "Журнал операций:", secPay: "Платежные Шлюзы", planName: "План Enterprise", btnInvoices: "История Счетов", secChat: "Текстовый ИИ-Помощник", chatSub: "Вводите команды для мгновенного ответа.", btnSend: "Отправить", secReg: "Постоянная Регистрация", btnSave: "Сохранить в Базу" },
-            tr: { dir: "ltr", mainTitle: "Satış Otomasyonu ve Ajan Platformu", subTitle: "Kalıcı veri depolama ve otomatik faturalandırma sistemi", secOps: "Sistem Operasyonları", btnRun: "Ağ Çalıştır", btnPause: "Duraklat", btnClear: "Günlükleri Temizle", btnExport: "CSV Dışa Aktar", logsLabel: "Canlı Günlükler:", secPay: "Ödeme Ağ Geçitleri", planName: "Kurumsal Plan", btnInvoices: "Fatura Geçmişi", secChat: "Metin Tabanlı Yapay Zeka", chatSub: "Anında yanıt almak için komutlarınızı yazın.", btnSend: "Gönder", secReg: "Kalıcı Hesap Kaydı", btnSave: "Veritabanına Kaydet" },
-            it: { dir: "ltr", mainTitle: "Piattaforma di Automazione Vendite", subTitle: "Sistema integrato per archiviazione permanente e fatturazione", secOps: "Operazioni di Sistema", btnRun: "Esegui Swarm", btnPause: "Pausa", btnClear: "Cancella Log", btnExport: "Esporta CSV", logsLabel: "Log in tempo reale:", secPay: "Gateway di Pagamento", planName: "Piano Enterprise", btnInvoices: "Storico Fatture", secChat: "Assistente Testuale IA", chatSub: "Scrivi i tuoi comandi per risposte immediate.", btnSend: "Invia", secReg: "Registrazione Permanente", btnSave: "Salva nel Database" },
-            pt: { dir: "ltr", mainTitle: "Plataforma de Automação de Vendas", subTitle: "Sistema integrado para armazenamento permanente e faturação", secOps: "Operações do Sistema", btnRun: "Executar Swarm", btnPause: "Pausar", btnClear: "Limpar Logs", btnExport: "Exportar CSV", logsLabel: "Registos em tempo real:", secPay: "Gateways de Pagamento", planName: "Plano Empresarial", btnInvoices: "Histórico de Faturas", secChat: "Assistente de Texto IA", chatSub: "Digite seus comandos para respostas imediatas.", btnSend: "Enviar", secReg: "Registo Permanente de Contas", btnSave: "Guardar na Base de Dados" }
+            es: { dir: "ltr", mainTitle: "Plataforma de Automatización de Ventas", subTitle: "Sistema integrado para registro de cuentas y facturación", secOps: "Operaciones del Sistema", btnRun: "Ejecutar Swarm", btnPause: "Pausar", btnClear: "Limpiar Registros", btnExport: "Exportar CSV", logsLabel: "Registros en vivo:", secPay: "Pasarelas de Pago", planName: "Plan Empresarial", btnTrial: "Prueba Gratuita (4 Días)", btnInvoices: "Historial de Facturas", secChat: "Asistente de Texto IA", chatSub: "Escriba sus comandos para respuestas instantáneas.", btnSend: "Enviar", secReg: "Registro Permanente de Cuentas", btnSave: "Guardar en Base de Datos" },
+            de: { dir: "ltr", mainTitle: "Verkaufsautomatisierungs-Plattform", subTitle: "Integriertes System zur Speicherung von Konten und Abrechnung", secOps: "Systembetrieb", btnRun: "Swarm Starten", btnPause: "Pausieren", btnClear: "Protokolle Löschen", btnExport: "CSV Exportieren", logsLabel: "Live-Betriebsprotokoll:", secPay: "Zahlungs-Gateways", planName: "Enterprise-Plan", btnTrial: "Kostenlose Testversion (4 Tage)", btnInvoices: "Rechnungsverlauf", secChat: "Interaktiver Text-Assistent", chatSub: "Geben Sie Ihre Befehle für sofortige Antworten ein.", btnSend: "Senden", secReg: "Dauerhafte Kontoregistrierung", btnSave: "In Datenbank Speichern" },
+            zh: { dir: "ltr", mainTitle: "销售自动化与智能代理平台", subTitle: "用于数据持久化存储和自动账单的集成系统", secOps: "系统操作与控制", btnRun: "运行代理网络", btnPause: "暂停", btnClear: "清除日志", btnExport: "导出 CSV/JSON", logsLabel: "实时操作日志:", secPay: "支付网关与交易", planName: "企业巨型计划", btnTrial: "免费试用 (4 天)", btnInvoices: "发票与订阅历史", secChat: "文本智能助手", chatSub: "输入您的指令以获取即时响应。", btnSend: "发送", secReg: "永久数据存储", btnSave: "保存到数据库" },
+            ru: { dir: "ltr", mainTitle: "Платформа Автоматизации Продаж", subTitle: "Интегрированная система хранения аккаунтов и биллинга", secOps: "Операции Системы", btnRun: "Запустить Сеть", btnPause: "Пауза", btnClear: "Очистить Логи", btnExport: "Экспорт CSV", logsLabel: "Журнал операций:", secPay: "Платежные Шлюзы", planName: "План Enterprise", btnTrial: "Бесплатная Проба (4 Дня)", btnInvoices: "История Счетов", secChat: "Текстовый ИИ-Помощник", chatSub: "Вводите команды для мгновенного ответа.", btnSend: "Отправить", secReg: "Постоянная Регистрация", btnSave: "Сохранить в Базу" },
+            tr: { dir: "ltr", mainTitle: "Satış Otomasyonu ve Ajan Platformu", subTitle: "Kalıcı veri depolama ve otomatik faturalandırma sistemi", secOps: "Sistem Operasyonları", btnRun: "Ağ Çalıştır", btnPause: "Duraklat", btnClear: "Günlükleri Temizle", btnExport: "CSV Dışa Aktar", logsLabel: "Canlı Günlükler:", secPay: "Ödeme Ağ Geçitleri", planName: "Kurumsal Plan", btnTrial: "Ücretsiz Deneme (4 Gün)", btnInvoices: "Fatura Geçmişi", secChat: "Metin Tabanlı Yapay Zeka", chatSub: "Anında yanıt almak için komutlarınızı yazın.", btnSend: "Gönder", secReg: "Kalıcı Hesap Kaydı", btnSave: "Veritabanına Kaydet" },
+            it: { dir: "ltr", mainTitle: "Piattaforma di Automazione Vendite", subTitle: "Sistema integrato per archiviazione permanente e fatturazione", secOps: "Operazioni di Sistema", btnRun: "Esegui Swarm", btnPause: "Pausa", btnClear: "Cancella Log", btnExport: "Esporta CSV", logsLabel: "Log in tempo reale:", secPay: "Gateway di Pagamento", planName: "Piano Enterprise", btnTrial: "Prova Gratuita (4 Giorni)", btnInvoices: "Storico Fatture", secChat: "Assistente Testuale IA", chatSub: "Scrivi i tuoi comandi per risposte immediate.", btnSend: "Invia", secReg: "Registrazione Permanente", btnSave: "Salva nel Database" },
+            pt: { dir: "ltr", mainTitle: "Plataforma de Automação de Vendas", subTitle: "Sistema integrado para armazenamento permanente e faturação", secOps: "Operações do Sistema", btnRun: "Executar Swarm", btnPause: "Pausar", btnClear: "Limpar Logs", btnExport: "Exportar CSV", logsLabel: "Registos em tempo real:", secPay: "Gateways de Pagamento", planName: "Plano Empresarial", btnTrial: "Teste Gratuito (4 Dias)", btnInvoices: "Histórico de Faturas", secChat: "Assistente de Texto IA", chatSub: "Digite seus comandos para respostas imediatas.", btnSend: "Enviar", secReg: "Registo Permanente de Contas", btnSave: "Guardar na Base de Dados" }
         };
 
         function changeLanguage() {
@@ -267,6 +282,7 @@
             document.getElementById('t-logsLabel').innerText = t.logsLabel;
             document.getElementById('t-secPay').innerText = t.secPay;
             document.getElementById('t-planName').innerText = t.planName;
+            document.getElementById('btn-trial').innerText = t.btnTrial;
             document.getElementById('btn-invoices').innerText = t.btnInvoices;
             document.getElementById('t-secChat').innerText = t.secChat;
             document.getElementById('t-chatSub').innerText = t.chatSub;
@@ -277,39 +293,9 @@
             localStorage.setItem('gigantic_lang', lang);
         }
 
-        // 2. تسجيل وسجل العمليات
+        // 2. سجل العمليات
         function addSysLog(msg, isError = false) {
             const box = document.getElementById('sysLogs');
             const time = new Date().toLocaleTimeString();
             const color = isError ? 'text-danger' : 'text-success';
             box.innerHTML += `<div class="${color}">[${time}] ${msg}</div>`;
-            box.scrollTop = box.scrollHeight;
-        }
-
-        function clearLogs() {
-            document.getElementById('sysLogs').innerHTML = '<div>[SYSTEM] تم مسح السجلات الشاشية. البيانات ثابتة بالداتابيز.</div>';
-        }
-
-        // 3. أزرار التشغيل والإيقاف Swarm
-        async function controlSwarm(action) {
-            addSysLog(`جاري إرسال أمر ${action}...`);
-            try {
-                const res = await fetch('/api/v1/swarm/control', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ action })
-                });
-                const data = await res.json();
-                addSysLog(data.message);
-            } catch (err) {
-                addSysLog(`خطأ: ${err.message}`, true);
-            }
-        }
-
-        // 4. تصدير البيانات CSV
-        async function exportDataCSV() {
-            try {
-                const res = await fetch('/api/v1/data/all');
-                const data = await res.json();
-                if (!data.users || data.users.length === 0) {
-                    a
