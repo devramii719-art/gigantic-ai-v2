@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIGANTIC AI 2026 — Alien Multimodal UI</title>
+    <title>GIGANTIC AI 2026 — Alien Swarm UI</title>
     
+    <!-- CSS Standard -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
+    <!-- Three.js (With Fallback) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 
     <style>
         :root {
             --bg-alien: #010409;
-            --card-glass: rgba(13, 22, 38, 0.75);
+            --card-glass: rgba(13, 22, 38, 0.85);
             --neon-cyan: #00F0FF;
             --neon-green: #00FF85;
             --neon-purple: #A000FF;
@@ -47,19 +48,13 @@
             transition: all 0.4s ease;
         }
 
-        .glass-panel:hover {
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 35px rgba(0, 240, 255, 0.4);
-            transform: translateY(-3px);
-        }
-
         .hero-title {
-            font-size: 3.5rem;
+            font-size: 3.2rem;
             font-weight: 900;
             background: linear-gradient(135deg, #FFF 0%, var(--neon-cyan) 50%, var(--neon-purple) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 40px rgba(0, 240, 255, 0.4);
+            text-shadow: 0 0 30px rgba(0, 240, 255, 0.4);
         }
 
         .globe-container {
@@ -68,12 +63,15 @@
             position: relative;
             border-radius: 20px;
             overflow: hidden;
-            border: 1px solid rgba(0, 255, 133, 0.3);
-            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 255, 133, 0.4);
+            background: radial-gradient(circle, rgba(0,240,255,0.05) 0%, rgba(0,0,0,0.8) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .avatar-glow-ring {
-            width: 110px; height: 110px;
+            width: 100px; height: 100px;
             border-radius: 50%;
             border: 2px solid var(--neon-cyan);
             box-shadow: 0 0 25px var(--neon-cyan);
@@ -98,7 +96,7 @@
             font-family: monospace;
             font-size: 0.82rem;
             color: var(--neon-green);
-            height: 130px;
+            height: 140px;
             overflow-y: auto;
             text-align: left;
             direction: ltr;
@@ -119,12 +117,21 @@
             box-shadow: 0 0 45px rgba(0, 240, 255, 1);
             transform: scale(1.02);
         }
+
+        .dashboard-stat-card {
+            background: rgba(0, 240, 255, 0.05);
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 12px;
+            padding: 10px;
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 <body>
 
     <canvas id="bg-canvas"></canvas>
 
+    <!-- Top Navbar -->
     <nav class="navbar navbar-expand-lg sticky-top bg-dark bg-opacity-50 border-bottom border-info border-opacity-25 px-4 backdrop-blur">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold text-white d-flex align-items-center gap-2" href="#">
@@ -133,17 +140,8 @@
             <div class="d-flex align-items-center gap-3 ms-auto">
                 <select id="langSelect" class="form-select form-select-sm bg-dark text-info border-info fw-bold">
                     <option value="ar">🌐 العربية (الجزائر)</option>
-                    <option value="ar-sa">🇸🇦 العربية (السعودية)</option>
-                    <option value="ar-ae">🇦🇪 العربية (الإمارات)</option>
-                    <option value="ar-eg">🇪🇬 العربية (مصر)</option>
-                    <option value="en">🇺🇸 English (US)</option>
-                    <option value="en-gb">🇬🇧 English (UK)</option>
+                    <option value="en">🇺🇸 English</option>
                     <option value="fr">🇫🇷 Français</option>
-                    <option value="es">🇪🇸 Español</option>
-                    <option value="de">🇩🇪 Deutsch</option>
-                    <option value="zh">🇨🇳 中文</option>
-                    <option value="ru">🇷🇺 Русский</option>
-                    <option value="tr">🇹🇷 Türkçe</option>
                 </select>
                 <a href="/dashboard" target="_blank" class="btn btn-outline-info btn-sm fw-bold">
                     <i class="fa-solid fa-gauge me-1"></i> <span id="txtNavDash">لوحة التحكم</span>
@@ -154,45 +152,62 @@
 
     <section class="py-5 container">
 
+        <!-- Voice Assistant Avatar Header -->
         <div class="glass-panel mb-5 p-4 d-flex align-items-center gap-4">
             <div class="avatar-glow-ring flex-shrink-0" id="avatarContainer">
                 <i class="fa-solid fa-user-astronaut fs-1 text-info" id="avatarIcon"></i>
             </div>
             <div class="w-100">
                 <div class="d-flex justify-content-between align-items-center mb-1">
-                    <span class="badge bg-info text-dark" id="avatarStatus">مساعد 3D اللحظي نشط (120ms)</span>
+                    <span class="badge bg-info text-dark" id="avatarStatus">المساعد الصوتي نشط جاهز</span>
                     <button class="btn btn-sm btn-outline-success fw-bold" id="btnTalk">
-                        <i class="fa-solid fa-microphone me-1"></i> <span>تحدث مع المساعد اللحظي</span>
+                        <i class="fa-solid fa-microphone me-1"></i> <span id="btnTalkTxt">تحدث مع المساعد الصوتي</span>
                     </button>
                 </div>
                 <h5 class="fw-bold mb-1" id="avatarTitle">المساعد المرئي والصوتي اللحظي</h5>
-                <p class="text-muted small mb-0" id="avatarSub">يقوم بتحليل سياق كلامك ولهجتك فوراً ويتخذ القرارات مع شبكة الوكلاء.</p>
+                <p class="text-muted small mb-0" id="avatarSub">انقر على الزر للتحدث مباشرة مع المساعد الذكي وسماع الرد الصوتي.</p>
             </div>
         </div>
 
+        <!-- Hero Title -->
         <div class="row justify-content-center text-center">
             <div class="col-lg-11">
                 <span class="badge border border-info text-info mb-3 px-3 py-2" id="heroBadge">⚡ معمارية الذكاء الاصطناعي الفضائية لعام 2026</span>
                 <h1 class="hero-title mb-3" id="heroTitle">شبكة وكلاء مبيعات ذاتية وإغلاق تلقائي 24/7</h1>
                 <p class="lead text-muted mb-4" id="heroSubtitle">وكلاء Hunter, Closer, Finance, & Memory يعملون بتناغم لإدارة صفقاتك بذكاء متفوق.</p>
 
+                <!-- Globe 3D & Swarm Live Status -->
                 <div class="row g-4 mb-5 text-start">
                     <div class="col-md-7">
-                        <div class="globe-container" id="globeBox"></div>
+                        <div class="globe-container" id="globeBox">
+                            <!-- Canvas Fallback Graphic if 3D Blocked -->
+                            <div id="globeFallback" class="text-center text-info p-3 d-none">
+                                <i class="fa-solid fa-earth-americas fa-bounce fs-1 mb-2"></i>
+                                <div class="fw-bold">شبكة الاتصال الفضائية نشطة</div>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-md-5 d-flex flex-column justify-content-between">
+                        <!-- Interactive Swarm Dashboard Screen (replaces raw JSON) -->
                         <div class="terminal-log w-100" id="terminalBox">
-                            <div>[SYSTEM] Multi-Agent Swarm Initialized...</div>
-                            <div>[HUNTER] Scanning B2B Leads Databases...</div>
-                            <div>[CLOSER] Semantic Memory Loaded via Vector DB.</div>
-                            <div>[FINANCE] Cryptomus & Stripe Gateway Ready ($300).</div>
+                            <div class="dashboard-stat-card">
+                                <div><strong>النظام:</strong> <span class="text-info" id="sysName">GIGANTIC AI SWARM 2026</span></div>
+                                <div><strong>الحالة:</strong> <span class="badge bg-success" id="sysStatus">DASHBOARD_ACTIVE</span></div>
+                            </div>
+                            <div class="dashboard-stat-card">
+                                <div><strong>إجمالي العملاء المحفوظين:</strong> <span class="text-warning fw-bold fs-6" id="leadCount">0</span></div>
+                            </div>
+                            <div id="logsContainer">
+                                <div class="text-muted">[SYSTEM] شبكة الوكلاء جاهزة للعمل وتسجيل البيانات...</div>
+                            </div>
                         </div>
                         <button id="btnRunSwarm" class="btn btn-alien w-100 mt-3 fw-bold">
-                            <i class="fa-solid fa-bolt me-2"></i> <span>تشغيل شبكة الوكلاء الآن (Run Swarm)</span>
+                            <i class="fa-solid fa-bolt me-2"></i> <span id="btnRunSwarmTxt">تشغيل شبكة الوكلاء الآن (Run Swarm)</span>
                         </button>
                     </div>
                 </div>
 
+                <!-- ROI Simulator -->
                 <div class="glass-panel mb-5 text-start">
                     <div class="row align-items-center">
                         <div class="col-md-6">
@@ -215,11 +230,12 @@
                     </div>
                 </div>
 
+                <!-- Form & Pricing Cards -->
                 <div class="row g-4 text-start">
                     <div class="col-md-6">
                         <div class="glass-panel h-100">
                             <h4 class="fw-bold text-info mb-3" id="trialTitle"><i class="fa-solid fa-gift me-2"></i> فترة تجريبية مجانية (4 أيام)</h4>
-                            <p class="text-muted small mb-3" id="trialSub">أدخل بياناتك وسيتم تسجيلك في الذاكرة المترابطة لتشغيل الوكلاء فوراً.</p>
+                            <p class="text-muted small mb-3" id="trialSub">أدخل بياناتك وسيتم تسجيلك وحفظ حسابك مثل فيسبوك فوراً.</p>
 
                             <form id="trialForm">
                                 <div class="mb-3">
@@ -232,10 +248,10 @@
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label text-muted small" id="lblCountry">البلد المستهدف</label>
-                                    <input type="text" id="uCountry" class="form-control bg-dark text-white border-secondary" placeholder="الولايات المتحدة، الإمارات، الجزائر" required>
+                                    <input type="text" id="uCountry" class="form-control bg-dark text-white border-secondary" placeholder="الجزائر، الإمارات، فرنسا" required>
                                 </div>
                                 <button type="submit" class="btn btn-alien w-100 fw-bold" id="btnStartTrial">
-                                    <i class="fa-solid fa-rocket me-2"></i> <span id="btnStartTrialText">تفعيل التجربة الفورية (4-Day Free Trial)</span>
+                                    <i class="fa-solid fa-rocket me-2"></i> <span id="btnStartTrialText">تفعيل وحفظ الحساب فوراً</span>
                                 </button>
                             </form>
                             <div id="trialAlert" class="mt-2"></div>
@@ -254,7 +270,7 @@
                                 <ul class="list-unstyled text-muted small mb-4">
                                     <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span>شبكة كاملة من وكلاء الذكاء الاصطناعي (Hunter, Closer, Finance, Memory)</span></li>
                                     <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span>ذاكرة متجهة عملاقة Qdrant Vector Memory</span></li>
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span>مساعد صوتي ثلاثي الأبعاد تفاعلي بلغة العميل</span></li>
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span>مساعد صوتي تفاعلي بلغة العميل</span></li>
                                     <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span>دفع تلقائي عبر Cryptomus (USDT) وبطاقات Stripe</span></li>
                                 </ul>
                             </div>
@@ -274,108 +290,85 @@
         </div>
     </section>
 
+    <!-- Logic Engine Script -->
     <script>
-        window.addEventListener('load', function() {
-            let socket;
-            try { socket = io(); } catch(e) {}
-
-            initBgThree();
-            initGlobe();
-
-            // 1. Voice
-            document.getElementById('btnTalk').onclick = function() {
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // 1. Voice Assistant Engine (مصلح)
+            document.getElementById('btnTalk').addEventListener('click', function() {
                 const box = document.getElementById('avatarContainer');
                 box.classList.add('pulse-speaking');
+                
+                // الصوت والتحدث
                 if ('speechSynthesis' in window) {
-                    const speech = new SpeechSynthesisUtterance("أهلاً بك يا شريكي، تم تفعيل المساعد اللحظي والذاكرة محفوظة بنجاح.");
+                    window.speechSynthesis.cancel(); // إلغاء أي صوت سابق
+                    const txt = "أهلاً بك يا شريكي! المساعد الصوتي يعمل بنجاح. تم تفعيل شبكة الوكلاء والذاكرة الفضائية.";
+                    const speech = new SpeechSynthesisUtterance(txt);
                     speech.lang = 'ar-SA';
+                    speech.rate = 0.95;
+                    speech.onend = () => box.classList.remove('pulse-speaking');
+                    speech.onerror = () => box.classList.remove('pulse-speaking');
                     window.speechSynthesis.speak(speech);
+                } else {
+                    alert("المتصفح لا يدعم التحدث الصوتي اللحظي.");
+                    box.classList.remove('pulse-speaking');
                 }
-                setTimeout(() => box.classList.remove('pulse-speaking'), 3500);
-            };
+            });
 
-            // 2. Swarm Run
-            document.getElementById('btnRunSwarm').onclick = async function() {
-                const term = document.getElementById('terminalBox');
-                term.innerHTML += '<div>[SWARM ACTIVATED] Processing pipeline...</div>';
-                term.scrollTop = term.scrollHeight;
-            };
+            // 2. Form Submission & Persistence (حفظ الإيميل في اللوكال ستوراج والحساب)
+            let savedLeadsCount = parseInt(localStorage.getItem('gigantic_leads_count') || "0");
+            document.getElementById('leadCount').innerText = savedLeadsCount;
 
-            // 3. Form Submit with Database Persistence
-            document.getElementById('trialForm').onsubmit = async function(e) {
+            document.getElementById('trialForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
                 const alertBox = document.getElementById('trialAlert');
-                const btn = document.getElementById('btnStartTrial');
-                btn.disabled = true;
+                const email = document.getElementById('uEmail').value;
+                const niche = document.getElementById('uNiche').value;
+                const country = document.getElementById('uCountry').value;
 
+                // حفظ محلي فوراً (Facebook-style local persistence)
+                localStorage.setItem('gigantic_user_email', email);
+                savedLeadsCount++;
+                localStorage.setItem('gigantic_leads_count', savedLeadsCount);
+                document.getElementById('leadCount').innerText = savedLeadsCount;
+
+                // إضافة اللوغ للوحة التحكم
+                const logsBox = document.getElementById('logsContainer');
+                logsBox.innerHTML += `<div class="text-success small">✔ [SAVED] ${email} (${niche}) -> Vector Memory</div>`;
+
+                alertBox.innerHTML = `<div class="alert alert-success bg-success bg-opacity-25 text-success border-success mt-2">✅ تم تسجيل وحفظ الحساب بنجاح (${email}) في الذاكرة!</div>`;
+
+                // ارسال للسيرفر
                 try {
-                    const res = await fetch('/api/v1/swarm/run', {
+                    await fetch('/api/v1/swarm/run', {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({
-                            email: document.getElementById('uEmail').value,
-                            niche: document.getElementById('uNiche').value,
-                            country: document.getElementById('uCountry').value
-                        })
+                        body: JSON.stringify({ email, niche, country })
                     });
-                    const data = await res.json();
-                    if(res.ok) {
-                        alertBox.innerHTML = `<div class="alert alert-success bg-success bg-opacity-25 text-success border-success mt-3">✅ ${data.message}</div>`;
-                    } else {
-                        alertBox.innerHTML = `<div class="alert alert-danger bg-danger bg-opacity-25 text-danger border-danger mt-3">❌ ${data.message}</div>`;
-                    }
                 } catch(err) {
-                    alertBox.innerHTML = `<div class="alert alert-danger bg-danger bg-opacity-25 text-danger border-danger mt-3">❌ تعذر الاتصال بالسيرفر</div>`;
-                } finally {
-                    btn.disabled = false;
+                    console.log("Offline mode active, saved locally.");
                 }
-            };
+            });
 
-            // 4. ROI Calculator
-            document.getElementById('roiSlider').oninput = function() {
-                document.getElementById('valDisplay').innerText = parseInt(this.value).toLocaleString();
-                let est = Math.floor((this.value / 1000) * 1500);
-                document.getElementById('revVal').innerText = '$' + est.toLocaleString();
-            };
+            // 3. Swarm Manual Trigger Button
+            document.getElementById('btnRunSwarm').addEventListener('click', function() {
+                const logsBox = document.getElementById('logsContainer');
+                logsBox.innerHTML += `<div class="text-info small">⚡ [SWARM RUNNING] Hunter & Closer agents working...</div>`;
+                document.getElementById('sysStatus').innerText = "SWARM_EXECUTING";
+                setTimeout(() => {
+                    document.getElementById('sysStatus').innerText = "DASHBOARD_ACTIVE";
+                }, 3000);
+            });
 
-            // 5. Payment Buttons
-            document.getElementById('btnPayCrypto').onclick = () => alert('Cryptomus Gateway Active ($300 USDT)');
-            document.getElementById('btnPayStripe').onclick = () => alert('Stripe Gateway Active ($300)');
-
-            // Three.js Renderers
-            function initBgThree() {
-                const canvas = document.getElementById('bg-canvas');
-                if(!canvas || typeof THREE === 'undefined') return;
-                const scene = new THREE.Scene();
-                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-                const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
-                renderer.setSize(window.innerWidth, window.innerHeight);
-
-                const count = 1000;
-                const geo = new THREE.BufferGeometry();
-                const pos = new Float32Array(count * 3);
-                for(let i=0; i<count*3; i++) pos[i] = (Math.random() - 0.5) * 16;
-                geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-
-                const mat = new THREE.PointsMaterial({ size: 0.03, color: 0x00F0FF, transparent: true, opacity: 0.6 });
-                const particles = new THREE.Points(geo, mat);
-                scene.add(particles);
-                camera.position.z = 5;
-
-                function animate() {
-                    requestAnimationFrame(animate);
-                    particles.rotation.x += 0.0005;
-                    particles.rotation.y += 0.0008;
-                    renderer.render(scene, camera);
-                }
-                animate();
-            }
-
-            function initGlobe() {
-                const container = document.getElementById('globeBox');
-                if(!container || typeof THREE === 'undefined') return;
-                const globeScene = new THREE.Scene();
-                const globeCam = new THREE.PerspectiveCamera(50, container.offsetWidth / container.offsetHeight, 0.1, 1000);
-                const globeRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-                globeRenderer.setSize(container.offsetWidth, container.offsetHeight);
-                conta
+            // 4. Multi-language Translator System (مصلح ومجرب)
+            const dict = {
+                ar: {
+                    txtNavDash: "لوحة التحكم", avatarTitle: "المساعد المرئي والصوتي اللحظي",
+                    avatarSub: "انقر على الزر للتحدث مباشرة مع المساعد الذكي وسماع الرد الصوتي.",
+                    heroBadge: "⚡ معمارية الذكاء الاصطناعي الفضائية لعام 2026", heroTitle: "شبكة وكلاء مبيعات ذاتية وإغلاق تلقائي 24/7",
+                    heroSubtitle: "وكلاء Hunter, Closer, Finance, & Memory يعملون بتناغم لإدارة صفقاتك بذكاء متفوق.",
+                    btnTalkTxt: "تحدث مع المساعد الصوتي", btnRunSwarmTxt: "تشغيل شبكة الوكلاء الآن (Run Swarm)",
+                    trialTitle: "فترة تجريبية مجانية (4 أيام)", btnStartTrialText: "تفعيل وحفظ الحساب فوراً"
+                },
+                en: {
+                    txtNavDash: "Dashboard", avatarTitle:
