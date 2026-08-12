@@ -4,7 +4,8 @@ import shutil
 from datetime import datetime
 from flask import Flask, render_template, request, jsonify
 
-app = Flask(__name__, template_folder='.')
+# تم تعديل هذا السطر ليبحث تلقائياً داخل مجلد templates/
+app = Flask(__name__)
 app.config['SECRET_KEY'] = 'GIGANTIC_FULL_EXPANDED_2026'
 
 DB_FILE = 'gigantic_database.db'
