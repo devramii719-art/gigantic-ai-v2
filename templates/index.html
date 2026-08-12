@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GIGANTIC AI 2026 — Alien Multimodal UI</title>
     
-    <!-- CSS & Libraries -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
-    <!-- Three.js & Socket.io -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 
@@ -125,10 +123,8 @@
 </head>
 <body>
 
-    <!-- Three.js Background Canvas -->
     <canvas id="bg-canvas"></canvas>
 
-    <!-- Top Navigation Bar -->
     <nav class="navbar navbar-expand-lg sticky-top bg-dark bg-opacity-50 border-bottom border-info border-opacity-25 px-4 backdrop-blur">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold text-white d-flex align-items-center gap-2" href="#">
@@ -156,10 +152,8 @@
         </div>
     </nav>
 
-    <!-- Main Container -->
     <section class="py-5 container">
 
-        <!-- 1. Realtime Avatar & AI Voice Stream Panel -->
         <div class="glass-panel mb-5 p-4 d-flex align-items-center gap-4">
             <div class="avatar-glow-ring flex-shrink-0" id="avatarContainer">
                 <i class="fa-solid fa-user-astronaut fs-1 text-info" id="avatarIcon"></i>
@@ -167,8 +161,8 @@
             <div class="w-100">
                 <div class="d-flex justify-content-between align-items-center mb-1">
                     <span class="badge bg-info text-dark" id="avatarStatus">مساعد 3D اللحظي نشط (120ms)</span>
-                    <button class="btn btn-sm btn-outline-success fw-bold" id="btnVoiceTalkAction">
-                        <i class="fa-solid fa-microphone me-1"></i> <span id="btnTalk">تحدث مع المساعد اللحظي</span>
+                    <button class="btn btn-sm btn-outline-success fw-bold" id="btnTalk">
+                        <i class="fa-solid fa-microphone me-1"></i> <span>تحدث مع المساعد اللحظي</span>
                     </button>
                 </div>
                 <h5 class="fw-bold mb-1" id="avatarTitle">المساعد المرئي والصوتي اللحظي</h5>
@@ -176,14 +170,12 @@
             </div>
         </div>
 
-        <!-- Hero Section Header -->
         <div class="row justify-content-center text-center">
             <div class="col-lg-11">
                 <span class="badge border border-info text-info mb-3 px-3 py-2" id="heroBadge">⚡ معمارية الذكاء الاصطناعي الفضائية لعام 2026</span>
                 <h1 class="hero-title mb-3" id="heroTitle">شبكة وكلاء مبيعات ذاتية وإغلاق تلقائي 24/7</h1>
                 <p class="lead text-muted mb-4" id="heroSubtitle">وكلاء Hunter, Closer, Finance, & Memory يعملون بتناغم لإدارة صفقاتك بذكاء متفوق.</p>
 
-                <!-- 2. Hologram Globe & Live Swarm Terminal -->
                 <div class="row g-4 mb-5 text-start">
                     <div class="col-md-7">
                         <div class="globe-container" id="globeBox"></div>
@@ -195,13 +187,12 @@
                             <div>[CLOSER] Semantic Memory Loaded via Vector DB.</div>
                             <div>[FINANCE] Cryptomus & Stripe Gateway Ready ($300).</div>
                         </div>
-                        <button id="btnRunSwarmAction" class="btn btn-alien w-100 mt-3 fw-bold">
-                            <i class="fa-solid fa-bolt me-2"></i> <span id="btnRunSwarm">تشغيل شبكة الوكلاء الآن (Run Swarm)</span>
+                        <button id="btnRunSwarm" class="btn btn-alien w-100 mt-3 fw-bold">
+                            <i class="fa-solid fa-bolt me-2"></i> <span>تشغيل شبكة الوكلاء الآن (Run Swarm)</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- 3. Interactive ROI Calculator Simulator -->
                 <div class="glass-panel mb-5 text-start">
                     <div class="row align-items-center">
                         <div class="col-md-6">
@@ -224,7 +215,6 @@
                     </div>
                 </div>
 
-                <!-- 4. Trial Registration Form & Pricing Cards -->
                 <div class="row g-4 text-start">
                     <div class="col-md-6">
                         <div class="glass-panel h-100">
@@ -262,10 +252,10 @@
                                 <p class="text-muted small mb-3" id="planSub">اشتراك شهري شامل لجميع شبكات الوكلاء وبوابات الدفع التلقائية</p>
                                 <h2 class="fw-bold my-3 text-white">$300 <span class="fs-6 text-muted" id="planPer">/ شهرياً</span></h2>
                                 <ul class="list-unstyled text-muted small mb-4">
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="pFeat1">شبكة كاملة من وكلاء الذكاء الاصطناعي (Hunter, Closer, Finance, Memory)</span></li>
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="pFeat2">ذاكرة متجهة عملاقة Qdrant Vector Memory</span></li>
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="pFeat3">مساعد صوتي ثلاثي الأبعاد تفاعلي بلغة العميل</span></li>
-                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span id="pFeat4">دفع تلقائي عبر Cryptomus (USDT) وبطاقات Stripe</span></li>
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span>شبكة كاملة من وكلاء الذكاء الاصطناعي (Hunter, Closer, Finance, Memory)</span></li>
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span>ذاكرة متجهة عملاقة Qdrant Vector Memory</span></li>
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span>مساعد صوتي ثلاثي الأبعاد تفاعلي بلغة العميل</span></li>
+                                    <li class="mb-2"><i class="fa-solid fa-check text-success me-2"></i> <span>دفع تلقائي عبر Cryptomus (USDT) وبطاقات Stripe</span></li>
                                 </ul>
                             </div>
                             <div class="d-flex gap-2">
@@ -284,115 +274,108 @@
         </div>
     </section>
 
-    <!-- JavaScript Execution Engine -->
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Socket Initialization with Error Catching
+        window.addEventListener('load', function() {
             let socket;
-            try {
-                socket = io();
-            } catch(e) {
-                console.warn("Socket.io fallback active.");
-            }
+            try { socket = io(); } catch(e) {}
 
-            // Init Graphics
             initBgThree();
             initGlobe();
 
-            // Direct Event Listeners Setup
-            document.getElementById('btnVoiceTalkAction').addEventListener('click', triggerVoiceTalk);
-            document.getElementById('btnRunSwarmAction').addEventListener('click', runFullSwarmWorkflow);
-            document.getElementById('trialForm').addEventListener('submit', submitTrial);
-            
-            document.getElementById('roiSlider').addEventListener('input', function() {
-                calculateROI(this.value);
-            });
-
-            document.getElementById('langSelect').addEventListener('change', function() {
-                changeLanguage(this.value);
-            });
-
-            document.getElementById('btnPayCrypto').addEventListener('click', function() {
-                alert('Cryptomus Gateway Active ($300 USDT)');
-            });
-
-            document.getElementById('btnPayStripe').addEventListener('click', function() {
-                alert('Stripe Gateway Active ($300)');
-            });
-
-            // 1. Voice Talking Engine
-            function triggerVoiceTalk() {
+            // 1. Voice
+            document.getElementById('btnTalk').onclick = function() {
                 const box = document.getElementById('avatarContainer');
                 box.classList.add('pulse-speaking');
-                
-                if (socket) {
-                    socket.emit('realtime_stream_ping', { country: document.getElementById('uCountry').value || 'Global' });
-                }
-
                 if ('speechSynthesis' in window) {
-                    const speech = new SpeechSynthesisUtterance("أهلاً بك يا شريكي، تم تفعيل المساعد الفضائي اللحظي. الذاكرة وشبكة الوكلاء جاهزة للعمل.");
+                    const speech = new SpeechSynthesisUtterance("أهلاً بك يا شريكي، تم تفعيل المساعد اللحظي والذاكرة محفوظة بنجاح.");
                     speech.lang = 'ar-SA';
-                    speech.rate = 0.95;
                     window.speechSynthesis.speak(speech);
                 }
+                setTimeout(() => box.classList.remove('pulse-speaking'), 3500);
+            };
 
-                setTimeout(() => {
-                    box.classList.remove('pulse-speaking');
-                }, 4000);
-            }
+            // 2. Swarm Run
+            document.getElementById('btnRunSwarm').onclick = async function() {
+                const term = document.getElementById('terminalBox');
+                term.innerHTML += '<div>[SWARM ACTIVATED] Processing pipeline...</div>';
+                term.scrollTop = term.scrollHeight;
+            };
 
-            if (socket) {
-                socket.on('realtime_stream_pong', (data) => {
-                    const term = document.getElementById('terminalBox');
-                    const d = document.createElement('div');
-                    d.innerText = data.logs;
-                    term.appendChild(d);
-                    term.scrollTop = term.scrollHeight;
-                });
-            }
-
-            // 2. Swarm Runner
-            async function runFullSwarmWorkflow() {
-                try {
-                    const res = await fetch('/api/v1/swarm/run', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({
-                            email: document.getElementById('uEmail').value || "demo@company.com",
-                            niche: document.getElementById('uNiche').value || "Software",
-                            country: document.getElementById('uCountry').value || "Global"
-                        })
-                    });
-                    const data = await res.json();
-                    const term = document.getElementById('terminalBox');
-                    const d = document.createElement('div');
-                    d.innerHTML = `<span style="color:#00F0FF">[SWARM SUCCESS] Memory logged for ${data.email || 'Lead'}. System Ready.</span>`;
-                    term.appendChild(d);
-                    term.scrollTop = term.scrollHeight;
-                } catch(err) {
-                    console.error(err);
-                }
-            }
-
-            // 3. Form Submit
-            async function submitTrial(e) {
+            // 3. Form Submit with Database Persistence
+            document.getElementById('trialForm').onsubmit = async function(e) {
                 e.preventDefault();
                 const alertBox = document.getElementById('trialAlert');
                 const btn = document.getElementById('btnStartTrial');
                 btn.disabled = true;
 
-                const payload = {
-                    email: document.getElementById('uEmail').value,
-                    niche: document.getElementById('uNiche').value,
-                    country: document.getElementById('uCountry').value
-                };
-
                 try {
                     const res = await fetch('/api/v1/swarm/run', {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify(payload)
+                        body: JSON.stringify({
+                            email: document.getElementById('uEmail').value,
+                            niche: document.getElementById('uNiche').value,
+                            country: document.getElementById('uCountry').value
+                        })
                     });
                     const data = await res.json();
-                    
                     if(res.ok) {
+                        alertBox.innerHTML = `<div class="alert alert-success bg-success bg-opacity-25 text-success border-success mt-3">✅ ${data.message}</div>`;
+                    } else {
+                        alertBox.innerHTML = `<div class="alert alert-danger bg-danger bg-opacity-25 text-danger border-danger mt-3">❌ ${data.message}</div>`;
+                    }
+                } catch(err) {
+                    alertBox.innerHTML = `<div class="alert alert-danger bg-danger bg-opacity-25 text-danger border-danger mt-3">❌ تعذر الاتصال بالسيرفر</div>`;
+                } finally {
+                    btn.disabled = false;
+                }
+            };
+
+            // 4. ROI Calculator
+            document.getElementById('roiSlider').oninput = function() {
+                document.getElementById('valDisplay').innerText = parseInt(this.value).toLocaleString();
+                let est = Math.floor((this.value / 1000) * 1500);
+                document.getElementById('revVal').innerText = '$' + est.toLocaleString();
+            };
+
+            // 5. Payment Buttons
+            document.getElementById('btnPayCrypto').onclick = () => alert('Cryptomus Gateway Active ($300 USDT)');
+            document.getElementById('btnPayStripe').onclick = () => alert('Stripe Gateway Active ($300)');
+
+            // Three.js Renderers
+            function initBgThree() {
+                const canvas = document.getElementById('bg-canvas');
+                if(!canvas || typeof THREE === 'undefined') return;
+                const scene = new THREE.Scene();
+                const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+                const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+                renderer.setSize(window.innerWidth, window.innerHeight);
+
+                const count = 1000;
+                const geo = new THREE.BufferGeometry();
+                const pos = new Float32Array(count * 3);
+                for(let i=0; i<count*3; i++) pos[i] = (Math.random() - 0.5) * 16;
+                geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+
+                const mat = new THREE.PointsMaterial({ size: 0.03, color: 0x00F0FF, transparent: true, opacity: 0.6 });
+                const particles = new THREE.Points(geo, mat);
+                scene.add(particles);
+                camera.position.z = 5;
+
+                function animate() {
+                    requestAnimationFrame(animate);
+                    particles.rotation.x += 0.0005;
+                    particles.rotation.y += 0.0008;
+                    renderer.render(scene, camera);
+                }
+                animate();
+            }
+
+            function initGlobe() {
+                const container = document.getElementById('globeBox');
+                if(!container || typeof THREE === 'undefined') return;
+                const globeScene = new THREE.Scene();
+                const globeCam = new THREE.PerspectiveCamera(50, container.offsetWidth / container.offsetHeight, 0.1, 1000);
+                const globeRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+                globeRenderer.setSize(container.offsetWidth, container.offsetHeight);
+                conta
